@@ -10,7 +10,16 @@
         android:layout_width="match_parent"
         android:layout_height="20dp"
         android:layout_margin="10dp"
-        android:text="Premi START per partire"
+        android:text="Premi START per iniziare e STOP per terminare"
+        tools:ignore="HardcodedText" />
+
+    <TextView
+        android:id="@+id/cronometro"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_margin="10dp"
+        android:textSize="30dp"
+        android:text="00:00:00:000"
         tools:ignore="HardcodedText" />
 
     <LinearLayout
@@ -22,26 +31,14 @@
             android:id="@+id/startButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:text="Start"
-            tools:ignore="HardcodedText" />
+            android:text="START" />
 
         <Button
             android:id="@+id/stopButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:text="Stop"
-            tools:ignore="HardcodedText" />
+            android:text="STOP" />
 
     </LinearLayout>
-
-    <TextView
-        android:id="@+id/numeri"
-        android:layout_width="match_parent"
-        android:layout_height="20dp"
-        android:layout_margin="10dp"
-        android:text=""
-        tools:ignore="HardcodedText" />
 
 </LinearLayout>
