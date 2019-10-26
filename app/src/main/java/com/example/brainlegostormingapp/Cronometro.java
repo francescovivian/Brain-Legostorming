@@ -1,7 +1,6 @@
-package com.example.myfirstapp;
+package com.example.brainlegostormingapp;
 
 import android.content.Context;
-import android.os.SystemClock;
 
 public class Cronometro implements Runnable
 {
