@@ -21,6 +21,7 @@ public class MainActivity extends AppCompatActivity
     private TextView testoCronometro;
     private Button start;
     private Button stop;
+    private Button reset;
 
     private Context contesto;
     private Cronometro cronometro;
@@ -36,6 +37,7 @@ public class MainActivity extends AppCompatActivity
         testoCronometro = findViewById(R.id.cronometro);
         start = findViewById(R.id.startButton);
         stop = findViewById(R.id.stopButton);
+        reset = findViewById(R.id.resetButton);
 
         start.setOnClickListener(v ->
         {
@@ -56,6 +58,14 @@ public class MainActivity extends AppCompatActivity
                 threadCronometro.interrupt();
                 threadCronometro = null;
                 cronometro = null;
+            }
+        });
+
+        reset.setOnClickListener(v ->
+        {
+            if(cronometro == null)
+            {
+                testoCronometro.setText("00:00:00:000");
             }
         });
     }
