@@ -90,10 +90,10 @@ public class MainActivity extends AppCompatActivity
                 }
                 try
                 {
-                    mdx.stop();
-                    msx.stop();
-                    /*mdx.brake();
-                    msx.brake();*/
+                    mdx.brake();
+                    msx.brake();
+                    /*mdx.stop();
+                    msx.stop();*/
                 }
                 catch (IOException e)
                 {
