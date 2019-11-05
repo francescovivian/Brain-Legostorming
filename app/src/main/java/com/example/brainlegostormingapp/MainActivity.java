@@ -30,13 +30,19 @@ public class MainActivity extends AppCompatActivity
     private Button start;
     private Button stop;
     private Button reset;
+    private Button left;
+    private Button right;
+    private Button retro;
+    private Button open;
+    private Button close;
 
     private Context contesto;
     private Cronometro cronometro;
     private Thread threadCronometro;
 
-    private TachoMotor mdx;
-    private TachoMotor msx;
+    private TachoMotor rm;
+    private TachoMotor lm;
+    private TachoMotor hand;
 
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -49,12 +55,18 @@ public class MainActivity extends AppCompatActivity
         start = findViewById(R.id.startButton);
         stop = findViewById(R.id.stopButton);
         reset = findViewById(R.id.resetButton);
+        left = findViewById(R.id.leftButton);
+        right = findViewById(R.id.rightButton);
+        retro = findViewById(R.id.retroButton);
+        open = findViewById(R.id.openButton);
+        close = findViewById(R.id.closeButton);
 
         try
         {
             BluetoothConnection.BluetoothChannel conn = new BluetoothConnection("EV3BL").connect();
 
             EV3 ev3 = new EV3(conn);
+            Prelude.trap(() -> ev3.run(this::legoMain));
 
             start.setOnClickListener(v ->
             {
@@ -65,18 +77,66 @@ public class MainActivity extends AppCompatActivity
                     threadCronometro.start();
                     cronometro.start();
                 }
-                Prelude.trap(() -> ev3.run(this::legoMain));
                 try
                 {
-                    mdx.setPower(25);
-                    mdx.start();
-                    mdx.setPower(25);
-                    msx.start();
+                    rm.setPolarity(TachoMotor.Polarity.BACKWARDS);
+                    lm.setPolarity(TachoMotor.Polarity.BACKWARDS);
                 }
                 catch (IOException e)
                 {
+                    Log.e(TAG, "Fatal error: Cannot connect to EV3");
                     e.printStackTrace();
                 }
+                startEngine(rm, 50);
+                startEngine(lm, 50);
+            });
+
+            left.setOnClickListener(v ->
+            {
+                try
+                {
+                    rm.setPolarity(TachoMotor.Polarity.BACKWARDS);
+                    lm.setPolarity(TachoMotor.Polarity.FORWARD);
+                }
+                catch (IOException e)
+                {
+                    Log.e(TAG, "Fatal error: Cannot connect to EV3");
+                    e.printStackTrace();
+                }
+                startEngine(rm, 40);
+                startEngine(lm, 40);
+            });
+
+            right.setOnClickListener(v ->
+            {
+                try
+                {
+                    rm.setPolarity(TachoMotor.Polarity.FORWARD);
+                    lm.setPolarity(TachoMotor.Polarity.BACKWARDS);
+                }
+                catch (IOException e)
+                {
+                    Log.e(TAG, "Fatal error: Cannot connect to EV3");
+                    e.printStackTrace();
+                }
+                startEngine(rm, 40);
+                startEngine(lm, 40);
+            });
+
+            retro.setOnClickListener(v ->
+            {
+                try
+                {
+                    rm.setPolarity(TachoMotor.Polarity.FORWARD);
+                    lm.setPolarity(TachoMotor.Polarity.FORWARD);
+                }
+                catch (IOException e)
+                {
+                    Log.e(TAG, "Fatal error: Cannot connect to EV3");
+                    e.printStackTrace();
+                }
+                startEngine(rm, 40);
+                startEngine(lm, 40);
             });
 
             stop.setOnClickListener(v ->
@@ -88,17 +148,9 @@ public class MainActivity extends AppCompatActivity
                     threadCronometro = null;
                     cronometro = null;
                 }
-                try
-                {
-                    mdx.brake();
-                    msx.brake();
-                    /*mdx.stop();
-                    msx.stop();*/
-                }
-                catch (IOException e)
-                {
-                    e.printStackTrace();
-                }
+                stopEngine(rm);
+                stopEngine(lm);
+                stopEngine(hand);
                 ev3.cancel();
             });
 
@@ -108,6 +160,34 @@ public class MainActivity extends AppCompatActivity
                 {
                     testoCronometro.setText("00:00:00:000");
                 }
+            });
+
+            open.setOnClickListener(v ->
+            {
+                try
+                {
+                    hand.setPolarity(TachoMotor.Polarity.FORWARD);
+                }
+                catch (IOException e)
+                {
+                    Log.e(TAG, "Fatal error: Cannot connect to EV3");
+                    e.printStackTrace();
+                }
+                startEngine(hand,10);
+            });
+
+            close.setOnClickListener(v ->
+            {
+                try
+                {
+                    hand.setPolarity(TachoMotor.Polarity.BACKWARDS);
+                }
+                catch (IOException e)
+                {
+                    Log.e(TAG, "Fatal error: Cannot connect to EV3");
+                    e.printStackTrace();
+                }
+                startEngine(hand,10);
             });
         }
         catch (IOException e)
@@ -122,28 +202,65 @@ public class MainActivity extends AppCompatActivity
         final String TAG = Prelude.ReTAG("legoMain");
 
         //final LightSensor lightSensor = api.getLightSensor(EV3.InputPort._3);
-        final UltrasonicSensor su = api.getUltrasonicSensor(EV3.InputPort._2);
+        final UltrasonicSensor us = api.getUltrasonicSensor(EV3.InputPort._2);
         //final GyroSensor gyroSensor = api.getGyroSensor(EV3.InputPort._4);
 
-        mdx = api.getTachoMotor(EV3.OutputPort.A);
-        msx = api.getTachoMotor(EV3.OutputPort.D);
+        rm = api.getTachoMotor(EV3.OutputPort.A);
+        lm = api.getTachoMotor(EV3.OutputPort.D);
+        hand = api.getTachoMotor(EV3.OutputPort.C);
+
+        try
+        {
+            rm.setType(TachoMotor.Type.LARGE);
+            lm.setType(TachoMotor.Type.LARGE);
+            hand.setType(TachoMotor.Type.MEDIUM);
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
 
         while (!api.ev3.isCancelled())
         {
             try
             {
-                Future<Float> distance = su.getDistance();
-                Future<Float> posdx = mdx.getPosition();
-                Future<Float> possx = msx.getPosition();
-                Future<Float> speeddx = mdx.getSpeed();
-                Future<Float> speedsx = msx.getSpeed();
+                Future<Float> distance = us.getDistance();
+                /*Future<Float> posdx = rm.getPosition();
+                Future<Float> possx = lm.getPosition();
+                Future<Float> speeddx = rm.getSpeed();
+                Future<Float> speedsx = lm.getSpeed();
                 //System.out.println(su.getDistance());
-                System.out.println(testoCronometro.getText());
+                //System.out.println(testoCronometro.getText());*/
             }
             catch (IOException e)
             {
                 e.printStackTrace();
             }
+        }
+    }
+
+    private void startEngine(TachoMotor m, int i)
+    {
+        try
+        {
+            m.setSpeed(i);
+            m.start();
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    private void stopEngine(TachoMotor m)
+    {
+        try
+        {
+            m.stop();
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
         }
     }
 
