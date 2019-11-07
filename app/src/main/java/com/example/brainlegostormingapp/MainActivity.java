@@ -29,12 +29,13 @@ public class MainActivity extends AppCompatActivity
     private TextView testoCronometro;
     private Button start;
     private Button stop;
-    private Button reset;
     private Button left;
     private Button right;
     private Button retro;
     private Button open;
     private Button close;
+    private Button conn;
+    private Button cancel;
 
     private Context contesto;
     private Cronometro cronometro;
@@ -54,29 +55,32 @@ public class MainActivity extends AppCompatActivity
         testoCronometro = findViewById(R.id.cronometro);
         start = findViewById(R.id.startButton);
         stop = findViewById(R.id.stopButton);
-        reset = findViewById(R.id.resetButton);
         left = findViewById(R.id.leftButton);
         right = findViewById(R.id.rightButton);
         retro = findViewById(R.id.retroButton);
         open = findViewById(R.id.openButton);
         close = findViewById(R.id.closeButton);
+        conn = findViewById(R.id.connButton);
+        cancel = findViewById(R.id.cancelButton);
 
         try
         {
-            BluetoothConnection.BluetoothChannel conn = new BluetoothConnection("EV3BL").connect();
-
-            EV3 ev3 = new EV3(conn);
+            //BluetoothConnection.BluetoothChannel conn = new BluetoothConnection("EV3BL").connect();
+            BluetoothConnection blueconn = new BluetoothConnection("EV3BL");
+            BluetoothConnection.BluetoothChannel bluechan = blueconn.connect();
+            EV3 ev3 = new EV3(bluechan);
             Prelude.trap(() -> ev3.run(this::legoMain));
+            //ev3.cancel();
 
             start.setOnClickListener(v ->
             {
-                if (cronometro == null)
+                /*if (cronometro == null)
                 {
                     cronometro = new Cronometro(contesto);
                     threadCronometro = new Thread(cronometro);
                     threadCronometro.start();
                     cronometro.start();
-                }
+                }*/
                 try
                 {
                     rm.setPolarity(TachoMotor.Polarity.BACKWARDS);
@@ -89,6 +93,29 @@ public class MainActivity extends AppCompatActivity
                 }
                 startEngine(rm, 50);
                 startEngine(lm, 50);
+            });
+
+            stop.setOnClickListener(v ->
+            {
+                stopEngine(rm);
+                stopEngine(lm);
+                stopEngine(hand);
+            });
+
+            retro.setOnClickListener(v ->
+            {
+                try
+                {
+                    rm.setPolarity(TachoMotor.Polarity.FORWARD);
+                    lm.setPolarity(TachoMotor.Polarity.FORWARD);
+                }
+                catch (IOException e)
+                {
+                    Log.e(TAG, "Fatal error: Cannot connect to EV3");
+                    e.printStackTrace();
+                }
+                startEngine(rm, 40);
+                startEngine(lm, 40);
             });
 
             left.setOnClickListener(v ->
@@ -123,45 +150,6 @@ public class MainActivity extends AppCompatActivity
                 startEngine(lm, 40);
             });
 
-            retro.setOnClickListener(v ->
-            {
-                try
-                {
-                    rm.setPolarity(TachoMotor.Polarity.FORWARD);
-                    lm.setPolarity(TachoMotor.Polarity.FORWARD);
-                }
-                catch (IOException e)
-                {
-                    Log.e(TAG, "Fatal error: Cannot connect to EV3");
-                    e.printStackTrace();
-                }
-                startEngine(rm, 40);
-                startEngine(lm, 40);
-            });
-
-            stop.setOnClickListener(v ->
-            {
-                if(cronometro != null)
-                {
-                    cronometro.stop();
-                    threadCronometro.interrupt();
-                    threadCronometro = null;
-                    cronometro = null;
-                }
-                stopEngine(rm);
-                stopEngine(lm);
-                stopEngine(hand);
-                ev3.cancel();
-            });
-
-            reset.setOnClickListener(v ->
-            {
-                if(cronometro == null)
-                {
-                    testoCronometro.setText("00:00:00:000");
-                }
-            });
-
             open.setOnClickListener(v ->
             {
                 try
@@ -188,6 +176,30 @@ public class MainActivity extends AppCompatActivity
                     e.printStackTrace();
                 }
                 startEngine(hand,10);
+            });
+
+            conn.setOnClickListener(v ->
+            {
+                if(cronometro != null)
+                {
+                    cronometro.stop();
+                    threadCronometro.interrupt();
+                    threadCronometro = null;
+                    cronometro = null;
+                }
+                System.out.println("La connessione è già stata effettuata e pure il lancio del LegoMain");
+            });
+
+            cancel.setOnClickListener(v ->
+            {
+                /*if(cronometro != null)
+                {
+                    cronometro.stop();
+                    threadCronometro.interrupt();
+                    threadCronometro = null;
+                    cronometro = null;
+                }*/
+                bluechan.close();
             });
         }
         catch (IOException e)
