@@ -11,15 +11,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
-        android:text="Premi START per iniziare e STOP per terminare" />
+        android:text="Premi START per iniziare e STOP per terminare"
+        tools:ignore="HardcodedText" />
 
     <TextView
         android:id="@+id/cronometro"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
-        android:textSize="30dp"
-        android:text="00:00:00:000" />
+        android:text="00:00:00:000"
+        android:textSize="30sp"
+        tools:ignore="HardcodedText" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -30,19 +32,22 @@
             android:id="@+id/startButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="START" />
+            android:text="START"
+            tools:ignore="HardcodedText" />
 
         <Button
             android:id="@+id/stopButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="STOP" />
+            android:text="STOP"
+            tools:ignore="HardcodedText" />
 
         <Button
             android:id="@+id/retroButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="RETRO" />
+            android:text="RETRO"
+            tools:ignore="HardcodedText" />
     </LinearLayout>
 
     <LinearLayout
@@ -54,13 +59,15 @@
             android:id="@+id/leftButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="LEFT" />
+            android:text="LEFT"
+            tools:ignore="HardcodedText" />
 
         <Button
             android:id="@+id/rightButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="RIGHT" />
+            android:text="RIGHT"
+            tools:ignore="HardcodedText" />
     </LinearLayout>
 
     <LinearLayout
@@ -72,13 +79,15 @@
             android:id="@+id/openButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="OPEN" />
+            android:text="OPEN"
+            tools:ignore="HardcodedText" />
 
         <Button
             android:id="@+id/closeButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="CLOSE" />
+            android:text="CLOSE"
+            tools:ignore="HardcodedText" />
     </LinearLayout>
 
     <LinearLayout
@@ -90,12 +99,21 @@
             android:id="@+id/connButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="CONN" />
+            android:text="CONN"
+            tools:ignore="HardcodedText" />
 
         <Button
             android:id="@+id/cancelButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="CANCEL" />
+            android:text="CANCEL"
+            tools:ignore="HardcodedText" />
     </LinearLayout>
+
+    <View
+        android:id="@+id/colorView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="30dp"
+        android:background="#ffffff" />
 </LinearLayout>

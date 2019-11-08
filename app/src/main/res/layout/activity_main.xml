@@ -11,7 +11,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
-        android:text="Premi MANUAL per usare la macchina manualmente" />
+        android:text="Premi MANUAL per usare la macchina manualmente"
+        tools:ignore="HardcodedText" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -22,6 +23,7 @@
             android:id="@+id/manualButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="MANUAL" />
+            android:text="MANUAL"
+            tools:ignore="HardcodedText" />
     </LinearLayout>
 </LinearLayout>

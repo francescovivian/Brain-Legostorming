@@ -12,6 +12,7 @@ import java.util.concurrent.Future;
 
 import it.unive.dais.legodroid.lib.EV3;
 import it.unive.dais.legodroid.lib.comm.BluetoothConnection;
+import it.unive.dais.legodroid.lib.plugs.LightSensor;
 import it.unive.dais.legodroid.lib.plugs.TachoMotor;
 import it.unive.dais.legodroid.lib.plugs.UltrasonicSensor;
 import it.unive.dais.legodroid.lib.util.Prelude;
@@ -227,8 +228,8 @@ public class ManualActivity extends AppCompatActivity
     {
         //final String TAG = Prelude.ReTAG("legoMain");
 
-        //final LightSensor lightSensor = api.getLightSensor(EV3.InputPort._3);
-        final UltrasonicSensor us = api.getUltrasonicSensor(EV3.InputPort._2);
+        //final UltrasonicSensor us = api.getUltrasonicSensor(EV3.InputPort._1);
+        final LightSensor ls = api.getLightSensor(EV3.InputPort._4);
         //final GyroSensor gyroSensor = api.getGyroSensor(EV3.InputPort._4);
 
         rm = api.getTachoMotor(EV3.OutputPort.A);
@@ -250,24 +251,18 @@ public class ManualActivity extends AppCompatActivity
         {
             try
             {
-                Future<Float> distance = us.getDistance();
-                /*Future<Float> posdx = rm.getPosition();
-                Future<Float> possx = lm.getPosition();
-                Future<Float> speeddx = rm.getSpeed();
-                Future<Float> speedsx = lm.getSpeed();*/
-                while (!distance.isCancelled())
-                {
-                    try
-                    {
-                        distance.get();
-                    }
-                    catch (InterruptedException | ExecutionException e)
-                    {
-                        e.printStackTrace();
-                    }
-                }
+                //Future<Float> distance = us.getDistance();
+                //Future<Short> ambient = ls.getAmbient();
+                Future<LightSensor.Color> tempcol = ls.getColor();
+                LightSensor.Color col = tempcol.get();
+                runOnUiThread(() -> findViewById(R.id.colorView).setBackgroundColor(col.toARGB32()));
+
+                //System.out.println(distance.get());
+                //System.out.println(ambient.get());
+                //System.out.println(reflected.get());
+                //System.out.println(col);
             }
-            catch (IOException e)
+            catch (IOException | InterruptedException | ExecutionException e)
             {
                 e.printStackTrace();
             }
