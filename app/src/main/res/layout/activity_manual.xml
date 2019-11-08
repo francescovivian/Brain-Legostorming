@@ -7,11 +7,39 @@
     tools:context="com.example.brainlegostormingapp.ManualActivity">
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/buttonDescription"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
-        android:text="Premi START per iniziare e STOP per terminare"
+        android:text="Premi MAIN per il menù principale o AUTO per la funzione automatica"
+        tools:ignore="HardcodedText" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/mainButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="MAIN"
+            tools:ignore="HardcodedText" />
+
+        <Button
+            android:id="@+id/autoButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="AUTO"
+            tools:ignore="HardcodedText" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/functionDescription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:text="Premi i vari bottoni per usare il robot"
         tools:ignore="HardcodedText" />
 
     <TextView

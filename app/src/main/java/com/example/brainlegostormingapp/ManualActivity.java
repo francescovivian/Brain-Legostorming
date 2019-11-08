@@ -1,5 +1,6 @@
 package com.example.brainlegostormingapp;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -20,14 +21,12 @@ import it.unive.dais.legodroid.lib.util.Prelude;
 public class ManualActivity extends AppCompatActivity
 {
     private static final String TAG = "MainActivity";
-    //private TextView textView;
 
     private Thread cronometro;
+    boolean conta;
 
     BluetoothConnection.BluetoothChannel bluechan;
     EV3 ev3;
-    boolean conta;
-
     private TachoMotor rm;
     private TachoMotor lm;
     private TachoMotor hand;
@@ -36,6 +35,21 @@ public class ManualActivity extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manual);
+
+        Button mainButton = findViewById(R.id.mainButton);
+        Button autoButton = findViewById(R.id.autoButton);
+
+        mainButton.setOnClickListener(v ->
+        {
+            Intent mainIntent = new Intent(getBaseContext(),MainActivity.class);
+            startActivity(mainIntent);
+        });
+
+        autoButton.setOnClickListener(v ->
+        {
+            Intent autoIntent = new Intent(getBaseContext(),AutoActivity.class);
+            startActivity(autoIntent);
+        });
 
         TextView testoCronometro = findViewById(R.id.cronometro);
         Button start = findViewById(R.id.startButton);
@@ -59,28 +73,6 @@ public class ManualActivity extends AppCompatActivity
 
         start.setOnClickListener(v ->
         {
-            if (cronometro == null)
-            {
-                cronometro = new Thread(() ->
-                {
-                    long attuale, MINUTO = 60000, ORA = 3600000, tempoInizio = System.currentTimeMillis();
-                    int secondi, minuti, ore, millisecondi;
-                    conta = true;
-
-                    while(conta)
-                    {
-                        attuale = System.currentTimeMillis() - tempoInizio;
-
-                        secondi = (int) (attuale/1000) % 60;
-                        minuti = (int) (attuale/MINUTO) % 60;
-                        ore = (int) (attuale/ORA) % 24;
-                        millisecondi = (int) attuale % 1000;
-
-                        aggiornaTimer(testoCronometro, String.format("%02d:%02d:%02d:%03d", ore, minuti, secondi, millisecondi));
-                    }
-                });
-                cronometro.start();
-            }
             try
             {
                 rm.setPolarity(TachoMotor.Polarity.BACKWARDS);
@@ -187,6 +179,28 @@ public class ManualActivity extends AppCompatActivity
                 bluechan = blueconn.connect();
                 ev3 = new EV3(bluechan);
                 Prelude.trap(() -> ev3.run(this::legoMain));
+                if (cronometro == null)
+                {
+                    cronometro = new Thread(() ->
+                    {
+                        long attuale, MINUTO = 60000, ORA = 3600000, tempoInizio = System.currentTimeMillis();
+                        int secondi, minuti, ore, millisecondi;
+                        conta = true;
+
+                        while(conta)
+                        {
+                            attuale = System.currentTimeMillis() - tempoInizio;
+
+                            secondi = (int) (attuale/1000) % 60;
+                            minuti = (int) (attuale/MINUTO) % 60;
+                            ore = (int) (attuale/ORA) % 24;
+                            millisecondi = (int) attuale % 1000;
+
+                            aggiornaTimer(testoCronometro, String.format("%02d:%02d:%02d:%03d", ore, minuti, secondi, millisecondi));
+                        }
+                    });
+                    cronometro.start();
+                }
             }
             catch (IOException e)
             {
