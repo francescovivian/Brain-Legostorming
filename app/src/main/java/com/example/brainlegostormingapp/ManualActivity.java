@@ -36,16 +36,16 @@ public class ManualActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manual);
 
-        Button mainButton = findViewById(R.id.mainButton);
-        Button autoButton = findViewById(R.id.autoButton);
+        Button main = findViewById(R.id.mainButton);
+        Button auto = findViewById(R.id.autoButton);
 
-        mainButton.setOnClickListener(v ->
+        main.setOnClickListener(v ->
         {
             Intent mainIntent = new Intent(getBaseContext(),MainActivity.class);
             startActivity(mainIntent);
         });
 
-        autoButton.setOnClickListener(v ->
+        auto.setOnClickListener(v ->
         {
             Intent autoIntent = new Intent(getBaseContext(),AutoActivity.class);
             startActivity(autoIntent);
@@ -167,12 +167,14 @@ public class ManualActivity extends AppCompatActivity
                 Log.e(TAG, "Fatal error: Cannot connect to EV3");
                 e.printStackTrace();
             }
-            startEngine(hand,15);
+            startEngine(hand,25);
         });
 
         conn.setOnClickListener(v ->
         {
             conn.setEnabled(false);
+            main.setEnabled(false);
+            auto.setEnabled(false);
             try
             {
                 BluetoothConnection blueconn = new BluetoothConnection("EV3BL");
@@ -235,6 +237,8 @@ public class ManualActivity extends AppCompatActivity
             open.setEnabled(false);
             close.setEnabled(false);
             conn.setEnabled(true);
+            main.setEnabled(true);
+            auto.setEnabled(true);
         });
     }
 

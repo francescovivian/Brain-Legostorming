@@ -33,16 +33,16 @@ public class AutoActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_auto);
 
-        Button mainButton = findViewById(R.id.mainButton);
-        Button manualButton = findViewById(R.id.manualButton);
+        Button main = findViewById(R.id.mainButton);
+        Button manual = findViewById(R.id.manualButton);
 
-        mainButton.setOnClickListener(v ->
+        main.setOnClickListener(v ->
         {
             Intent mainIntent = new Intent(getBaseContext(),MainActivity.class);
             startActivity(mainIntent);
         });
 
-        manualButton.setOnClickListener(v ->
+        manual.setOnClickListener(v ->
         {
             Intent manualIntent = new Intent(getBaseContext(),ManualActivity.class);
             startActivity(manualIntent);
@@ -52,8 +52,14 @@ public class AutoActivity extends AppCompatActivity
         Button start = findViewById(R.id.startButton);
         Button stop = findViewById(R.id.stopButton);
 
+        stop.setEnabled(false);
+
         start.setOnClickListener(v ->
         {
+            start.setEnabled(false);
+            stop.setEnabled(true);
+            main.setEnabled(false);
+            manual.setEnabled(false);
             try
             {
                 BluetoothConnection blueconn = new BluetoothConnection("EV3BL");
@@ -91,6 +97,7 @@ public class AutoActivity extends AppCompatActivity
 
         stop.setOnClickListener(v ->
         {
+            stop.setEnabled(false);
             if(cronometro != null)
             {
                 conta = false;
@@ -99,6 +106,9 @@ public class AutoActivity extends AppCompatActivity
             }
             ev3.cancel();
             bluechan.close();
+            start.setEnabled(true);
+            main.setEnabled(true);
+            manual.setEnabled(true);
         });
     }
 

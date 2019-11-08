@@ -13,16 +13,16 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Button manualButton = findViewById(R.id.manualButton);
-        Button autoButton = findViewById(R.id.autoButton);
+        Button manual = findViewById(R.id.manualButton);
+        Button auto = findViewById(R.id.autoButton);
 
-        manualButton.setOnClickListener(v ->
+        manual.setOnClickListener(v ->
         {
             Intent manualIntent = new Intent(getBaseContext(),ManualActivity.class);
             startActivity(manualIntent);
         });
 
-        autoButton.setOnClickListener(v ->
+        auto.setOnClickListener(v ->
         {
             Intent autoIntent = new Intent(getBaseContext(),AutoActivity.class);
             startActivity(autoIntent);
