@@ -14,6 +14,7 @@ import it.unive.dais.legodroid.lib.EV3;
 import it.unive.dais.legodroid.lib.comm.BluetoothConnection;
 import it.unive.dais.legodroid.lib.plugs.LightSensor;
 import it.unive.dais.legodroid.lib.plugs.TachoMotor;
+import it.unive.dais.legodroid.lib.plugs.UltrasonicSensor;
 import it.unive.dais.legodroid.lib.util.Prelude;
 
 public class AutoActivity extends AppCompatActivity
@@ -66,7 +67,7 @@ public class AutoActivity extends AppCompatActivity
                 bluechan = blueconn.connect();
                 ev3 = new EV3(bluechan);
                 Prelude.trap(() -> ev3.run(this::legoMain));
-                if (cronometro == null)
+                /*if (cronometro == null)
                 {
                     cronometro = new Thread(() ->
                     {
@@ -87,7 +88,7 @@ public class AutoActivity extends AppCompatActivity
                         }
                     });
                     cronometro.start();
-                }
+                }*/
             }
             catch (IOException e)
             {
@@ -97,13 +98,16 @@ public class AutoActivity extends AppCompatActivity
 
         stop.setOnClickListener(v ->
         {
+            autoMoveHand(hand,25,'o');
+            stopEngine(rm);
+            stopEngine(lm);
             stop.setEnabled(false);
-            if(cronometro != null)
+            /*if(cronometro != null)
             {
                 conta = false;
                 cronometro.interrupt();
                 cronometro = null;
-            }
+            }*/
             ev3.cancel();
             bluechan.close();
             start.setEnabled(true);
@@ -116,8 +120,8 @@ public class AutoActivity extends AppCompatActivity
     {
         //final String TAG = Prelude.ReTAG("legoMain");
 
-        //final UltrasonicSensor us = api.getUltrasonicSensor(EV3.InputPort._1);
-        final LightSensor ls = api.getLightSensor(EV3.InputPort._4);
+        final UltrasonicSensor us = api.getUltrasonicSensor(EV3.InputPort._1);
+        //final LightSensor ls = api.getLightSensor(EV3.InputPort._4);
         //final GyroSensor gyroSensor = api.getGyroSensor(EV3.InputPort._4);
 
         rm = api.getTachoMotor(EV3.OutputPort.A);
@@ -135,31 +139,64 @@ public class AutoActivity extends AppCompatActivity
             e.printStackTrace();
         }
 
+        /*autoMoveHand(hand,15,'o');
+
+        try
+        {
+            hand.waitUntilReady();
+        }
+        catch (IOException | InterruptedException | ExecutionException e)
+        {
+            e.printStackTrace();
+        }*/
+
+        Future<Float> Fdistance;
+        Float distance;
+
         while (!api.ev3.isCancelled())
         {
             try
             {
-                //Future<Float> distance = us.getDistance();
-                //Future<Short> ambient = ls.getAmbient();
-                Future<LightSensor.Color> col = ls.getColor();
-                //System.out.println(distance.get());
-                //System.out.println(ambient.get());
-                //System.out.println(reflected.get());
-                //System.out.println(col.get());
+                Fdistance = us.getDistance();
+                distance = Fdistance.get();
+
+                if (distance <= 30 && distance > 10)
+                {
+                    startEngine(rm,50,'b');
+                    startEngine(lm,50,'b');
+                }
+
+                if (distance <= 10) autoMoveHand(hand,25,'c');
+
+                /*Future<Short> Fambient = ls.getAmbient();
+                Short ambient = Fambient.get();
+
+                Future<LightSensor.Color> Fcol = ls.getColor();
+                LightSensor.Color col = Fcol.get();*/
             }
-            catch (IOException e)
+            catch (IOException | InterruptedException | ExecutionException e)
             {
                 e.printStackTrace();
             }
         }
     }
 
-    private void startEngine(TachoMotor m, int i)
+    private void startEngine(TachoMotor m, int i, char c)
     {
         try
         {
-            m.setSpeed(i);
-            m.start();
+            if (c == 'f')
+            {
+                m.setPolarity(TachoMotor.Polarity.FORWARD);
+                m.setSpeed(i);
+                m.start();
+            }
+            if (c == 'b')
+            {
+                m.setPolarity(TachoMotor.Polarity.BACKWARDS);
+                m.setSpeed(i);
+                m.start();
+            }
         }
         catch (IOException e)
         {
@@ -172,6 +209,27 @@ public class AutoActivity extends AppCompatActivity
         try
         {
             m.stop();
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    private void autoMoveHand(TachoMotor m, int i, char c)
+    {
+        try
+        {
+            if (c == 'o')
+            {
+                hand.setPolarity(TachoMotor.Polarity.BACKWARDS);
+                m.setTimeSpeed(i,0,3000,0,true);
+            }
+            if (c== 'c')
+            {
+                hand.setPolarity(TachoMotor.Polarity.FORWARD);
+                m.setTimeSpeed(i,0,3000,0,true);
+            }
         }
         catch (IOException e)
         {

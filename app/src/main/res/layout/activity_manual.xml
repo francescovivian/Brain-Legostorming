@@ -38,7 +38,7 @@
         android:id="@+id/functionDescription"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
+        android:layout_marginTop="5dp"
         android:text="Premi i vari bottoni per usare il robot"
         tools:ignore="HardcodedText" />
 
@@ -46,7 +46,6 @@
         android:id="@+id/cronometro"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
         android:text="00:00:00:000"
         android:textSize="30sp"
         tools:ignore="HardcodedText" />
@@ -142,6 +141,6 @@
         android:id="@+id/colorView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="30dp"
+        android:layout_margin="10dp"
         android:background="#ffffff" />
 </LinearLayout>
