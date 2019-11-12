@@ -25,8 +25,9 @@ public class ManualActivity extends AppCompatActivity
     private Thread cronometro;
     boolean conta;
 
-    BluetoothConnection.BluetoothChannel bluechan;
-    EV3 ev3;
+    private BluetoothConnection.BluetoothChannel bluechan;
+    private EV3 ev3;
+
     private TachoMotor rm;
     private TachoMotor lm;
     private TachoMotor hand;
@@ -188,8 +189,8 @@ public class ManualActivity extends AppCompatActivity
     {
         //final String TAG = Prelude.ReTAG("legoMain");
 
-        final UltrasonicSensor us = api.getUltrasonicSensor(EV3.InputPort._1);
-        final LightSensor ls = api.getLightSensor(EV3.InputPort._4);
+        //final UltrasonicSensor us = api.getUltrasonicSensor(EV3.InputPort._1);
+        //final LightSensor ls = api.getLightSensor(EV3.InputPort._4);
         //final GyroSensor gyroSensor = api.getGyroSensor(EV3.InputPort._4);
 
         rm = api.getTachoMotor(EV3.OutputPort.A);

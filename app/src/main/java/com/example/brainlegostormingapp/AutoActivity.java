@@ -9,6 +9,8 @@ import android.widget.TextView;
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import it.unive.dais.legodroid.lib.EV3;
 import it.unive.dais.legodroid.lib.comm.BluetoothConnection;
@@ -22,8 +24,9 @@ public class AutoActivity extends AppCompatActivity
     private Thread cronometro;
     boolean conta;
 
-    BluetoothConnection.BluetoothChannel bluechan;
-    EV3 ev3;
+    private BluetoothConnection.BluetoothChannel bluechan;
+    private EV3 ev3;
+
     private TachoMotor rm;
     private TachoMotor lm;
     private TachoMotor hand;
@@ -98,7 +101,7 @@ public class AutoActivity extends AppCompatActivity
 
         stop.setOnClickListener(v ->
         {
-            autoMoveHand(hand,25,'o');
+            //autoMoveHand(hand,25,'o');
             stopEngine(rm);
             stopEngine(lm);
             stop.setEnabled(false);
@@ -139,7 +142,7 @@ public class AutoActivity extends AppCompatActivity
             e.printStackTrace();
         }
 
-        /*autoMoveHand(hand,15,'o');
+        autoMoveHand(hand,15,'o');
 
         try
         {
@@ -148,25 +151,46 @@ public class AutoActivity extends AppCompatActivity
         catch (IOException | InterruptedException | ExecutionException e)
         {
             e.printStackTrace();
-        }*/
+        }
 
         Future<Float> Fdistance;
         Float distance;
+
+        boolean isRunning = false;
+        boolean isMiddle = false;
 
         while (!api.ev3.isCancelled())
         {
             try
             {
                 Fdistance = us.getDistance();
-                distance = Fdistance.get();
+                distance = Fdistance.get(1000, TimeUnit.MILLISECONDS);
 
-                if (distance <= 30 && distance > 10)
+                System.out.println(distance);
+
+                if (distance > 20 && distance <= 40 && !isRunning)
                 {
-                    startEngine(rm,50,'b');
-                    startEngine(lm,50,'b');
+                    startEngine(rm, 50, 'b');
+                    startEngine(lm, 50, 'b');
+                    isRunning = true;
+                    isMiddle = true;
                 }
 
-                if (distance <= 10) autoMoveHand(hand,25,'c');
+                if (distance > 8 && distance <= 20 && isMiddle)
+                {
+                    startEngine(rm, 30, 'b');
+                    startEngine(lm, 30, 'b');
+                    isMiddle = false;
+                }
+
+                if (distance <= 8 && isRunning)
+                {
+                    //stopEngine(rm);
+                    //stopEngine(lm);
+                    autoMoveHand(hand,25,'c');
+                    isRunning = false;
+                    isMiddle = false;
+                }
 
                 /*Future<Short> Fambient = ls.getAmbient();
                 Short ambient = Fambient.get();
@@ -174,7 +198,7 @@ public class AutoActivity extends AppCompatActivity
                 Future<LightSensor.Color> Fcol = ls.getColor();
                 LightSensor.Color col = Fcol.get();*/
             }
-            catch (IOException | InterruptedException | ExecutionException e)
+            catch (IOException | InterruptedException | ExecutionException | TimeoutException e)
             {
                 e.printStackTrace();
             }
