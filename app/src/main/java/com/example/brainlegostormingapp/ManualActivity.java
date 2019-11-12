@@ -25,8 +25,9 @@ public class ManualActivity extends AppCompatActivity
     private Thread cronometro;
     boolean conta;
 
-    BluetoothConnection.BluetoothChannel bluechan;
-    EV3 ev3;
+    private BluetoothConnection.BluetoothChannel bluechan;
+    private EV3 ev3;
+
     private TachoMotor rm;
     private TachoMotor lm;
     private TachoMotor hand;
@@ -73,18 +74,8 @@ public class ManualActivity extends AppCompatActivity
 
         start.setOnClickListener(v ->
         {
-            try
-            {
-                rm.setPolarity(TachoMotor.Polarity.BACKWARDS);
-                lm.setPolarity(TachoMotor.Polarity.BACKWARDS);
-            }
-            catch (IOException e)
-            {
-                Log.e(TAG, "Fatal error: Cannot connect to EV3");
-                e.printStackTrace();
-            }
-            startEngine(rm, 50);
-            startEngine(lm, 50);
+            startEngine(rm, 50,'b');
+            startEngine(lm, 50,'b');
         });
 
         stop.setOnClickListener(v ->
@@ -96,78 +87,30 @@ public class ManualActivity extends AppCompatActivity
 
         retro.setOnClickListener(v ->
         {
-            try
-            {
-                rm.setPolarity(TachoMotor.Polarity.FORWARD);
-                lm.setPolarity(TachoMotor.Polarity.FORWARD);
-            }
-            catch (IOException e)
-            {
-                Log.e(TAG, "Fatal error: Cannot connect to EV3");
-                e.printStackTrace();
-            }
-            startEngine(rm, 40);
-            startEngine(lm, 40);
+            startEngine(rm, 40,'f');
+            startEngine(lm, 40,'f');
         });
 
         left.setOnClickListener(v ->
         {
-            try
-            {
-                rm.setPolarity(TachoMotor.Polarity.BACKWARDS);
-                lm.setPolarity(TachoMotor.Polarity.FORWARD);
-            }
-            catch (IOException e)
-            {
-                Log.e(TAG, "Fatal error: Cannot connect to EV3");
-                e.printStackTrace();
-            }
-            startEngine(rm, 40);
-            startEngine(lm, 40);
+            startEngine(rm, 40,'b');
+            startEngine(lm, 40,'f');
         });
 
         right.setOnClickListener(v ->
         {
-            try
-            {
-                rm.setPolarity(TachoMotor.Polarity.FORWARD);
-                lm.setPolarity(TachoMotor.Polarity.BACKWARDS);
-            }
-            catch (IOException e)
-            {
-                Log.e(TAG, "Fatal error: Cannot connect to EV3");
-                e.printStackTrace();
-            }
-            startEngine(rm, 40);
-            startEngine(lm, 40);
+            startEngine(rm, 40,'f');
+            startEngine(lm, 40,'b');
         });
 
         open.setOnClickListener(v ->
         {
-            try
-            {
-                hand.setPolarity(TachoMotor.Polarity.BACKWARDS);
-            }
-            catch (IOException e)
-            {
-                Log.e(TAG, "Fatal error: Cannot connect to EV3");
-                e.printStackTrace();
-            }
-            startEngine(hand,15);
+            startEngine(hand,15,'b');
         });
 
         close.setOnClickListener(v ->
         {
-            try
-            {
-                hand.setPolarity(TachoMotor.Polarity.FORWARD);
-            }
-            catch (IOException e)
-            {
-                Log.e(TAG, "Fatal error: Cannot connect to EV3");
-                e.printStackTrace();
-            }
-            startEngine(hand,25);
+            startEngine(hand,25,'f');
         });
 
         conn.setOnClickListener(v ->
@@ -181,7 +124,7 @@ public class ManualActivity extends AppCompatActivity
                 bluechan = blueconn.connect();
                 ev3 = new EV3(bluechan);
                 Prelude.trap(() -> ev3.run(this::legoMain));
-                if (cronometro == null)
+                /*if (cronometro == null)
                 {
                     cronometro = new Thread(() ->
                     {
@@ -202,7 +145,7 @@ public class ManualActivity extends AppCompatActivity
                         }
                     });
                     cronometro.start();
-                }
+                }*/
             }
             catch (IOException e)
             {
@@ -221,12 +164,12 @@ public class ManualActivity extends AppCompatActivity
         cancel.setOnClickListener(v ->
         {
             cancel.setEnabled(false);
-            if(cronometro != null)
+            /*if(cronometro != null)
             {
                 conta = false;
                 cronometro.interrupt();
                 cronometro = null;
-            }
+            }*/
             ev3.cancel();
             bluechan.close();
             start.setEnabled(false);
@@ -247,7 +190,7 @@ public class ManualActivity extends AppCompatActivity
         //final String TAG = Prelude.ReTAG("legoMain");
 
         //final UltrasonicSensor us = api.getUltrasonicSensor(EV3.InputPort._1);
-        final LightSensor ls = api.getLightSensor(EV3.InputPort._4);
+        //final LightSensor ls = api.getLightSensor(EV3.InputPort._4);
         //final GyroSensor gyroSensor = api.getGyroSensor(EV3.InputPort._4);
 
         rm = api.getTachoMotor(EV3.OutputPort.A);
@@ -265,34 +208,47 @@ public class ManualActivity extends AppCompatActivity
             e.printStackTrace();
         }
 
-        while (!api.ev3.isCancelled())
+        /*while (!api.ev3.isCancelled())
         {
             try
             {
-                //Future<Float> distance = us.getDistance();
-                //Future<Short> ambient = ls.getAmbient();
-                Future<LightSensor.Color> tempcol = ls.getColor();
-                LightSensor.Color col = tempcol.get();
-                runOnUiThread(() -> findViewById(R.id.colorView).setBackgroundColor(col.toARGB32()));
+                Future<Float> Fdistance = us.getDistance();
+                Float distance = Fdistance.get();
 
-                //System.out.println(distance.get());
-                //System.out.println(ambient.get());
-                //System.out.println(reflected.get());
+                Future<Short> Fambient = ls.getAmbient();
+                Short ambient = Fambient.get();
+
+                Future<LightSensor.Color> Fcol = ls.getColor();
+                LightSensor.Color col = Fcol.get();
+
+                //System.out.println(distance);
+                //System.out.println(ambient);
                 //System.out.println(col);
+                runOnUiThread(() -> findViewById(R.id.colorView).setBackgroundColor(col.toARGB32()));
             }
             catch (IOException | InterruptedException | ExecutionException e)
             {
                 e.printStackTrace();
             }
-        }
+        }*/
     }
 
-    private void startEngine(TachoMotor m, int i)
+    private void startEngine(TachoMotor m, int i, char c)
     {
         try
         {
-            m.setSpeed(i);
-            m.start();
+            if (c == 'f')
+            {
+                m.setPolarity(TachoMotor.Polarity.FORWARD);
+                m.setSpeed(i);
+                m.start();
+            }
+            if (c == 'b')
+            {
+                m.setPolarity(TachoMotor.Polarity.BACKWARDS);
+                m.setSpeed(i);
+                m.start();
+            }
         }
         catch (IOException e)
         {

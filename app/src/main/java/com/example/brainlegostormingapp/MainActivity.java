@@ -5,6 +5,9 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Button;
 
+import it.unive.dais.legodroid.lib.EV3;
+import it.unive.dais.legodroid.lib.comm.BluetoothConnection;
+
 public class MainActivity extends AppCompatActivity
 {
     @Override
