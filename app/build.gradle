@@ -4,7 +4,7 @@ android {
     compileSdkVersion 28
     buildToolsVersion "28.0.3"
     defaultConfig {
-        applicationId 'com.example.brainlegostorming'
+        applicationId 'it.unive.dais.brainlegostorming.app'
         minSdkVersion 21
         targetSdkVersion 28
         versionCode Integer.valueOf(System.env.VERSION_CODE ?: 1)
