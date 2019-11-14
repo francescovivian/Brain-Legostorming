@@ -286,16 +286,4 @@ public class ManualActivity extends AppCompatActivity
     {
         runOnUiThread(() -> tv.setText(tempo));
     }
-
-    @Override
-    public void onResume()
-    {
-        super.onResume();
-    }
-
-    @Override
-    public void onPause()
-    {
-        super.onPause();
-    }
 }
