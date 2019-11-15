@@ -26,6 +26,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import org.opencv.android.CameraBridgeViewBase;
 import org.opencv.android.OpenCVLoader;
+import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.Point;
 import org.opencv.core.Scalar;
@@ -74,6 +75,7 @@ public class AutoActivity extends AppCompatActivity
         camera = findViewById(R.id.cameraView);
         camera.setVisibility(SurfaceView.VISIBLE);
         camera.setMaxFrameSize(320, 240);
+        //camera.disableFpsMeter();
         camera.setCvCameraViewListener(new CameraBridgeViewBase.CvCameraViewListener2()
         {
             @Override
@@ -92,7 +94,10 @@ public class AutoActivity extends AppCompatActivity
             public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame)
             {
                 Mat frame = inputFrame.rgba();
-                return frame;
+                Mat frameT = frame.t();
+                Core.flip(frameT, frameT, 1);
+                Imgproc.resize(frameT, frameT, frame.size());
+                return frameT;
             }
         });
 
