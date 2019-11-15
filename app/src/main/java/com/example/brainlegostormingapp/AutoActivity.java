@@ -5,6 +5,9 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Surface;
+import android.view.SurfaceView;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -18,7 +21,16 @@ import java.util.concurrent.TimeoutException;
 import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+
+import org.opencv.android.CameraBridgeViewBase;
+import org.opencv.android.OpenCVLoader;
+import org.opencv.core.Mat;
+import org.opencv.core.Point;
+import org.opencv.core.Scalar;
+import org.opencv.imgproc.Imgproc;
+
 import it.unive.dais.legodroid.lib.EV3;
 import it.unive.dais.legodroid.lib.GenEV3;
 import it.unive.dais.legodroid.lib.comm.BluetoothConnection;
@@ -34,6 +46,8 @@ import it.unive.dais.legodroid.lib.util.ThrowingConsumer;
 
 public class AutoActivity extends AppCompatActivity
 {
+    private static final String TAG = "AutoActivity";
+
     private Thread cronometro;
     boolean conta;
 
@@ -44,11 +58,45 @@ public class AutoActivity extends AppCompatActivity
     private TachoMotor lm;
     private TachoMotor hand;
 
+    private CameraBridgeViewBase camera;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_auto);
+
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
+        if (!OpenCVLoader.initDebug()) Log.e(TAG, "Unable to load OpenCV");
+        else Log.d(TAG, "OpenCV loaded");
+
+        camera = findViewById(R.id.cameraView);
+        camera.setVisibility(SurfaceView.VISIBLE);
+        camera.setMaxFrameSize(320, 240);
+        camera.setCvCameraViewListener(new CameraBridgeViewBase.CvCameraViewListener2()
+        {
+            @Override
+            public void onCameraViewStarted(int width, int height)
+            {
+                Log.d(TAG, "Camera Started");
+            }
+
+            @Override
+            public void onCameraViewStopped()
+            {
+                Log.d(TAG, "Camera Stopped");
+            }
+
+            @Override
+            public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame)
+            {
+                Mat frame = inputFrame.rgba();
+                return frame;
+            }
+        });
+
+        camera.enableView();
 
         Button main = findViewById(R.id.mainButton);
         Button manual = findViewById(R.id.manualButton);
@@ -73,16 +121,17 @@ public class AutoActivity extends AppCompatActivity
 
         start.setOnClickListener(v ->
         {
-            start.setEnabled(false);
-            stop.setEnabled(true);
-            main.setEnabled(false);
-            manual.setEnabled(false);
             try
             {
                 BluetoothConnection blueconn = new BluetoothConnection("EV3BL");
                 bluechan = blueconn.connect();
                 ev3 = new EV3(bluechan);
                 Prelude.trap(() -> ev3.run(this::legoMain));
+                new AlertDialog.Builder(this).setMessage("Connessione stabilita con successo").show();
+                start.setEnabled(false);
+                stop.setEnabled(true);
+                main.setEnabled(false);
+                manual.setEnabled(false);
                 /*if (cronometro == null)
                 {
                     cronometro = new Thread(() ->
@@ -109,6 +158,7 @@ public class AutoActivity extends AppCompatActivity
             catch (IOException e)
             {
                 e.printStackTrace();
+                new AlertDialog.Builder(this).setMessage("Connessione non stabilita").show();
             }
         });
 

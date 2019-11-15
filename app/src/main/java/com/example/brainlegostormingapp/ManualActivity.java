@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -18,6 +19,7 @@ import java.util.concurrent.Future;
 import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import it.unive.dais.legodroid.lib.EV3;
 import it.unive.dais.legodroid.lib.GenEV3;
@@ -34,7 +36,7 @@ import it.unive.dais.legodroid.lib.util.ThrowingConsumer;
 
 public class ManualActivity extends AppCompatActivity
 {
-    private static final String TAG = "MainActivity";
+    private static final String TAG = "ManualActivity";
 
     private Thread cronometro;
     boolean conta;
@@ -50,6 +52,8 @@ public class ManualActivity extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manual);
+
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         Button main = findViewById(R.id.mainButton);
         Button auto = findViewById(R.id.autoButton);
@@ -129,15 +133,24 @@ public class ManualActivity extends AppCompatActivity
 
         conn.setOnClickListener(v ->
         {
-            conn.setEnabled(false);
-            main.setEnabled(false);
-            auto.setEnabled(false);
             try
             {
                 BluetoothConnection blueconn = new BluetoothConnection("EV3BL");
                 bluechan = blueconn.connect();
                 ev3 = new EV3(bluechan);
                 Prelude.trap(() -> ev3.run(this::legoMain));
+                new AlertDialog.Builder(this).setMessage("Connessione stabilita con successo").show();
+                conn.setEnabled(false);
+                main.setEnabled(false);
+                auto.setEnabled(false);
+                start.setEnabled(true);
+                stop.setEnabled(true);
+                retro.setEnabled(true);
+                left.setEnabled(true);
+                right.setEnabled(true);
+                open.setEnabled(true);
+                close.setEnabled(true);
+                cancel.setEnabled(true);
                 /*if (cronometro == null)
                 {
                     cronometro = new Thread(() ->
@@ -164,15 +177,8 @@ public class ManualActivity extends AppCompatActivity
             catch (IOException e)
             {
                 e.printStackTrace();
+                new AlertDialog.Builder(this).setMessage("Connessione non stabilita").show();
             }
-            start.setEnabled(true);
-            stop.setEnabled(true);
-            retro.setEnabled(true);
-            left.setEnabled(true);
-            right.setEnabled(true);
-            open.setEnabled(true);
-            close.setEnabled(true);
-            cancel.setEnabled(true);
         });
 
         cancel.setOnClickListener(v ->
@@ -203,9 +209,7 @@ public class ManualActivity extends AppCompatActivity
     {
         //final String TAG = Prelude.ReTAG("legoMain");
 
-        //final UltrasonicSensor us = api.getUltrasonicSensor(EV3.InputPort._1);
-        //final LightSensor ls = api.getLightSensor(EV3.InputPort._4);
-        //final GyroSensor gyroSensor = api.getGyroSensor(EV3.InputPort._4);
+        final LightSensor ls = api.getLightSensor(EV3.InputPort._4);
 
         rm = api.getTachoMotor(EV3.OutputPort.A);
         lm = api.getTachoMotor(EV3.OutputPort.D);
@@ -222,29 +226,22 @@ public class ManualActivity extends AppCompatActivity
             e.printStackTrace();
         }
 
-        /*while (!api.ev3.isCancelled())
+        while (!api.ev3.isCancelled())
         {
             try
             {
-                Future<Float> Fdistance = us.getDistance();
-                Float distance = Fdistance.get();
-
-                Future<Short> Fambient = ls.getAmbient();
-                Short ambient = Fambient.get();
-
                 Future<LightSensor.Color> Fcol = ls.getColor();
                 LightSensor.Color col = Fcol.get();
 
-                //System.out.println(distance);
-                //System.out.println(ambient);
-                //System.out.println(col);
                 runOnUiThread(() -> findViewById(R.id.colorView).setBackgroundColor(col.toARGB32()));
             }
             catch (IOException | InterruptedException | ExecutionException e)
             {
                 e.printStackTrace();
             }
-        }*/
+        }
+
+        runOnUiThread(() -> findViewById(R.id.colorView).setBackgroundColor(LightSensor.Color.WHITE.toARGB32()));
     }
 
     private void startEngine(TachoMotor m, int i, char c)
