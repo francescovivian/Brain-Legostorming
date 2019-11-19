@@ -16,6 +16,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -343,11 +344,24 @@ public class AutoActivity extends AppCompatActivity
             public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame)
             {
                 Mat frame = inputFrame.rgba();
-                Mat frameT = frame.t();
+                /*Mat frameT = frame.t();
                 Core.flip(frameT, frameT, 1);
                 Imgproc.resize(frameT, frameT, frame.size());
-                Imgproc.circle(frameT, new Point(210,210), 10, new Scalar(100,10,10),3);
-                return frameT;
+                frame = frameT;*/
+                BallFinder ballFinder = new BallFinder(frame);
+                //ballFinder.setViewRatio(1);
+                //ballFinder.setMinArea(10);
+                ArrayList<Ball> balls = ballFinder.findBalls();
+
+                for (Ball b : balls)
+                {
+                    if (b.color.equals("red")) Imgproc.circle(frame, b.center, (int) b.radius,  new Scalar(255, 0, 0), 2);
+                    if (b.color.equals("yellow")) Imgproc.circle(frame, b.center, (int) b.radius,  new Scalar(255,255,0), 2);
+                    if (b.color.equals("blue")) Imgproc.circle(frame, b.center, (int) b.radius,  new Scalar(0,0,255), 2);
+                }
+
+                return frame;
+
             }
         });
 
