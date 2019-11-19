@@ -1,6 +1,9 @@
 package com.example.brainlegostormingapp;
 
+import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -23,8 +26,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import org.opencv.android.CameraBridgeViewBase;
+import org.opencv.android.JavaCameraView;
 import org.opencv.android.OpenCVLoader;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
@@ -73,35 +79,15 @@ public class AutoActivity extends AppCompatActivity
         else Log.d(TAG, "OpenCV loaded");
 
         camera = findViewById(R.id.cameraView);
-        camera.setVisibility(SurfaceView.VISIBLE);
-        camera.setMaxFrameSize(320, 240);
-        //camera.disableFpsMeter();
-        camera.setCvCameraViewListener(new CameraBridgeViewBase.CvCameraViewListener2()
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED)
         {
-            @Override
-            public void onCameraViewStarted(int width, int height)
-            {
-                Log.d(TAG, "Camera Started");
-            }
-
-            @Override
-            public void onCameraViewStopped()
-            {
-                Log.d(TAG, "Camera Stopped");
-            }
-
-            @Override
-            public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame)
-            {
-                Mat frame = inputFrame.rgba();
-                Mat frameT = frame.t();
-                Core.flip(frameT, frameT, 1);
-                Imgproc.resize(frameT, frameT, frame.size());
-                return frameT;
-            }
-        });
-
-        camera.enableView();
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, 1);
+        }
+        else
+        {
+            avviaFotocamera();
+        }
 
         Button main = findViewById(R.id.mainButton);
         Button manual = findViewById(R.id.manualButton);
@@ -332,5 +318,55 @@ public class AutoActivity extends AppCompatActivity
     public void aggiornaTimer(TextView tv, String tempo)
     {
         runOnUiThread(() -> tv.setText(tempo));
+    }
+
+    public void avviaFotocamera()
+    {
+        camera.setVisibility(SurfaceView.VISIBLE);
+        camera.setMaxFrameSize(1920, 1080);
+        //camera.disableFpsMeter();
+        camera.setCvCameraViewListener(new CameraBridgeViewBase.CvCameraViewListener2()
+        {
+            @Override
+            public void onCameraViewStarted(int width, int height)
+            {
+                Log.d(TAG, "Camera Started");
+            }
+
+            @Override
+            public void onCameraViewStopped()
+            {
+                Log.d(TAG, "Camera Stopped");
+            }
+
+            @Override
+            public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame)
+            {
+                Mat frame = inputFrame.rgba();
+                Mat frameT = frame.t();
+                Core.flip(frameT, frameT, 1);
+                Imgproc.resize(frameT, frameT, frame.size());
+                Imgproc.circle(frameT, new Point(210,210), 10, new Scalar(100,10,10),3);
+                return frameT;
+            }
+        });
+
+        camera.enableView();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int grantResult[])
+    {
+        switch (requestCode)
+        {
+            case 1:
+            {
+                if (grantResult.length > 0 && grantResult[0]==PackageManager.PERMISSION_GRANTED)
+                {
+                    avviaFotocamera();
+                }
+                break;
+            }
+        }
     }
 }
