@@ -13,6 +13,7 @@ public class PixelGridView extends View
     private int numColumns, numRows;
     private int cellWidth, cellHeight;
     private Paint blackPaint = new Paint();
+    private Paint textPaint = new Paint();
     private Paint redPaint = new Paint();
     private boolean[][] cellChecked;
     boolean start = false;
@@ -26,19 +27,23 @@ public class PixelGridView extends View
     {
         super(context, attrs);
         blackPaint.setStyle(Paint.Style.FILL_AND_STROKE);
+        blackPaint.setColor(Color.BLACK);
         redPaint.setStyle(Paint.Style.FILL_AND_STROKE);
-        redPaint.setARGB(255,255,0,0);
+        redPaint.setColor(Color.RED);
+        textPaint.setStyle(Paint.Style.FILL_AND_STROKE);
+        textPaint.setColor(Color.BLACK);
+        textPaint.setTextSize(25);
     }
 
     public void setNumRows(int numRows)
     {
-        this.numRows = numRows;
+        this.numRows = numRows+1;
         calculateDimensions();
     }
 
     public void setNumColumns(int numColumns)
     {
-        this.numColumns = numColumns;
+        this.numColumns = numColumns+1;
         calculateDimensions();
     }
 
@@ -108,11 +113,25 @@ public class PixelGridView extends View
         {
             canvas.drawLine(0, i * cellHeight, width, i * cellHeight, blackPaint);
         }
+
+        Integer nc;
+        for (Integer i = 1; i < numColumns; i++)
+        {
+            nc = i-1;
+            canvas.drawText(nc.toString(),(i+0.4f) * cellWidth,(0.7f) * cellHeight, textPaint);
+        }
+
+        Integer nr;
+        for (Integer j = 1; j < numRows; j++)
+        {
+            nr = j-1;
+            canvas.drawText(nr.toString(),(0.4f) * cellWidth,(j+0.7f) * cellHeight, textPaint);
+        }
     }
 
     public void changeCellChecked(int row, int column)
     {
-        cellChecked[column][row] = !cellChecked[column][row];
+        cellChecked[column+1][row+1] = !cellChecked[column+1][row+1];
         invalidate();
     }
 }

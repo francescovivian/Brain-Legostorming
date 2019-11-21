@@ -119,7 +119,7 @@ public class AutoActivity extends AppCompatActivity
         Button setMatrix = findViewById(R.id.setDimMatrix);
         EditText matrixM = findViewById(R.id.dimM);
         EditText matrixN = findViewById(R.id.dimN);
-        ViewGroup matrixView = findViewById(R.id.matrixView);
+        LinearLayout matrixView = findViewById(R.id.matrixView);
 
         setMatrix.setOnClickListener(v ->
         {
@@ -138,7 +138,6 @@ public class AutoActivity extends AppCompatActivity
 
                 //Per fare i quadrati rossi
                 //pixelGrid.changeCellChecked(2,3);
-                //pixelGrid.changeCellChecked(1,1);
 
                 matrixView.addView(pixelGrid);
             }
