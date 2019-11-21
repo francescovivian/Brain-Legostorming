@@ -4,24 +4,30 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Surface;
 import android.view.SurfaceView;
+import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.io.IOException;
+import java.security.acl.Group;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+import androidx.annotation.ColorInt;
 import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -56,8 +62,8 @@ public class AutoActivity extends AppCompatActivity
 {
     private static final String TAG = "AutoActivity";
 
-    private Thread cronometro;
-    boolean conta;
+    private long tempoInizio, attuale;
+    private int secondi, minuti, ore, millisecondi;
 
     private BluetoothConnection.BluetoothChannel bluechan;
     private EV3 ev3;
@@ -67,6 +73,8 @@ public class AutoActivity extends AppCompatActivity
     private TachoMotor hand;
 
     private CameraBridgeViewBase camera;
+
+    private int dimM, dimN;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -79,7 +87,7 @@ public class AutoActivity extends AppCompatActivity
         if (!OpenCVLoader.initDebug()) Log.e(TAG, "Unable to load OpenCV");
         else Log.d(TAG, "OpenCV loaded");
 
-        camera = findViewById(R.id.cameraView);
+        //camera = findViewById(R.id.cameraView);
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED)
         {
@@ -108,7 +116,39 @@ public class AutoActivity extends AppCompatActivity
         TextView testoCronometro = findViewById(R.id.cronometro);
         Button start = findViewById(R.id.startButton);
         Button stop = findViewById(R.id.stopButton);
+        Button setMatrix = findViewById(R.id.setDimMatrix);
+        EditText matrixM = findViewById(R.id.dimM);
+        EditText matrixN = findViewById(R.id.dimN);
+        ViewGroup matrixView = findViewById(R.id.matrixView);
 
+        setMatrix.setOnClickListener(v ->
+        {
+            try
+            {
+                dimM = Integer.parseInt(matrixM.getText().toString());
+                dimN = Integer.parseInt(matrixN.getText().toString());
+                setMatrix.setEnabled(false);
+                matrixM.setEnabled(false);
+                matrixN.setEnabled(false);
+                start.setEnabled(true);
+
+                PixelGridView pixelGrid = new PixelGridView(this);
+                pixelGrid.setNumRows(dimM);
+                pixelGrid.setNumColumns(dimN);
+
+                //Per fare i quadrati rossi
+                //pixelGrid.changeCellChecked(2,3);
+                //pixelGrid.changeCellChecked(1,1);
+
+                matrixView.addView(pixelGrid);
+            }
+            catch (NumberFormatException ignored)
+            {
+                ignored.printStackTrace();
+            }
+        });
+
+        start.setEnabled(false);
         stop.setEnabled(false);
 
         start.setOnClickListener(v ->
@@ -124,28 +164,7 @@ public class AutoActivity extends AppCompatActivity
                 stop.setEnabled(true);
                 main.setEnabled(false);
                 manual.setEnabled(false);
-                /*if (cronometro == null)
-                {
-                    cronometro = new Thread(() ->
-                    {
-                        long attuale, MINUTO = 60000, ORA = 3600000, tempoInizio = System.currentTimeMillis();
-                        int secondi, minuti, ore, millisecondi;
-                        conta = true;
-
-                        while(conta)
-                        {
-                            attuale = System.currentTimeMillis() - tempoInizio;
-
-                            secondi = (int) (attuale/1000) % 60;
-                            minuti = (int) (attuale/MINUTO) % 60;
-                            ore = (int) (attuale/ORA) % 24;
-                            millisecondi = (int) attuale % 1000;
-
-                            aggiornaTimer(testoCronometro, String.format("%02d:%02d:%02d:%03d", ore, minuti, secondi, millisecondi));
-                        }
-                    });
-                    cronometro.start();
-                }*/
+                tempoInizio = System.currentTimeMillis();
             }
             catch (IOException e)
             {
@@ -156,16 +175,15 @@ public class AutoActivity extends AppCompatActivity
 
         stop.setOnClickListener(v ->
         {
-            //autoMoveHand(hand,25,'o');
             stopEngine(rm);
             stopEngine(lm);
             stop.setEnabled(false);
-            /*if(cronometro != null)
-            {
-                conta = false;
-                cronometro.interrupt();
-                cronometro = null;
-            }*/
+            attuale = System.currentTimeMillis() - tempoInizio;
+            secondi = (int) (attuale/1000) % 60;
+            minuti = (int) (attuale/60000) % 60;
+            ore = (int) (attuale/3600000) % 24;
+            millisecondi = (int) attuale % 1000;
+            aggiornaTimer(testoCronometro, String.format("%02d:%02d:%02d:%03d", ore, minuti, secondi, millisecondi));
             ev3.cancel();
             bluechan.close();
             start.setEnabled(true);
@@ -197,17 +215,6 @@ public class AutoActivity extends AppCompatActivity
             e.printStackTrace();
         }
 
-        autoMoveHand(hand,15,'o');
-
-        try
-        {
-            hand.waitUntilReady();
-        }
-        catch (IOException | InterruptedException | ExecutionException e)
-        {
-            e.printStackTrace();
-        }
-
         Future<Float> Fdistance;
         Float distance;
 
@@ -218,13 +225,15 @@ public class AutoActivity extends AppCompatActivity
         {
             try
             {
+                Thread.sleep(100);
                 Fdistance = us.getDistance();
-                distance = Fdistance.get(1000, TimeUnit.MILLISECONDS);
+                distance = Fdistance.get(500, TimeUnit.MILLISECONDS);
 
                 System.out.println(distance);
 
                 if (distance > 20 && distance <= 40 && !isRunning)
                 {
+                    autoMoveHand(hand,15,'o');
                     startEngine(rm, 50, 'b');
                     startEngine(lm, 50, 'b');
                     isRunning = true;
@@ -301,16 +310,17 @@ public class AutoActivity extends AppCompatActivity
         {
             if (c == 'o')
             {
-                hand.setPolarity(TachoMotor.Polarity.BACKWARDS);
+                m.setPolarity(TachoMotor.Polarity.BACKWARDS);
                 m.setTimeSpeed(i,0,3000,0,true);
             }
             if (c== 'c')
             {
-                hand.setPolarity(TachoMotor.Polarity.FORWARD);
+                m.setPolarity(TachoMotor.Polarity.FORWARD);
                 m.setTimeSpeed(i,0,3000,0,true);
             }
+            m.waitUntilReady();
         }
-        catch (IOException e)
+        catch (IOException | InterruptedException | ExecutionException e)
         {
             e.printStackTrace();
         }
@@ -325,7 +335,7 @@ public class AutoActivity extends AppCompatActivity
     {
         camera.setVisibility(SurfaceView.VISIBLE);
         camera.setMaxFrameSize(1920, 1080);
-        //camera.disableFpsMeter();
+        camera.disableFpsMeter();
         camera.setCvCameraViewListener(new CameraBridgeViewBase.CvCameraViewListener2()
         {
             @Override
@@ -344,21 +354,21 @@ public class AutoActivity extends AppCompatActivity
             public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame)
             {
                 Mat frame = inputFrame.rgba();
-                /*Mat frameT = frame.t();
+                Mat frameT = frame.t();
                 Core.flip(frameT, frameT, 1);
                 Imgproc.resize(frameT, frameT, frame.size());
-                frame = frameT;*/
-                BallFinder ballFinder = new BallFinder(frame);
-                //ballFinder.setViewRatio(1);
+                frame = frameT;
+                BallFinder ballFinder = new BallFinder(frame,true);
+                ballFinder.setViewRatio(0.4f);
                 //ballFinder.setMinArea(10);
-                ArrayList<Ball> balls = ballFinder.findBalls();
+                //ArrayList<Ball> balls = ballFinder.findBalls();
 
-                for (Ball b : balls)
+                /*for (Ball b : balls)
                 {
                     if (b.color.equals("red")) Imgproc.circle(frame, b.center, (int) b.radius,  new Scalar(255, 0, 0), 2);
                     if (b.color.equals("yellow")) Imgproc.circle(frame, b.center, (int) b.radius,  new Scalar(255,255,0), 2);
                     if (b.color.equals("blue")) Imgproc.circle(frame, b.center, (int) b.radius,  new Scalar(0,0,255), 2);
-                }
+                }*/
 
                 return frame;
 
@@ -369,18 +379,8 @@ public class AutoActivity extends AppCompatActivity
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int grantResult[])
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResult)
     {
-        switch (requestCode)
-        {
-            case 1:
-            {
-                if (grantResult.length > 0 && grantResult[0]==PackageManager.PERMISSION_GRANTED)
-                {
-                    avviaFotocamera();
-                }
-                break;
-            }
-        }
+        if (requestCode == 1 && grantResult.length > 0 && grantResult[0]==PackageManager.PERMISSION_GRANTED) avviaFotocamera();
     }
 }

@@ -36,7 +36,7 @@ import it.unive.dais.legodroid.lib.util.ThrowingConsumer;
 
 public class ManualActivity extends AppCompatActivity
 {
-    private static final String TAG = "ManualActivity";
+    //private static final String TAG = "ManualActivity";
 
     private Thread cronometro;
     boolean conta;
@@ -121,15 +121,9 @@ public class ManualActivity extends AppCompatActivity
             startEngine(lm, 40,'b');
         });
 
-        open.setOnClickListener(v ->
-        {
-            startEngine(hand,15,'b');
-        });
+        open.setOnClickListener(v -> startEngine(hand,15,'b'));
 
-        close.setOnClickListener(v ->
-        {
-            startEngine(hand,25,'f');
-        });
+        close.setOnClickListener(v -> startEngine(hand,25,'f'));
 
         conn.setOnClickListener(v ->
         {
@@ -151,7 +145,7 @@ public class ManualActivity extends AppCompatActivity
                 open.setEnabled(true);
                 close.setEnabled(true);
                 cancel.setEnabled(true);
-                /*if (cronometro == null)
+                if (cronometro == null)
                 {
                     cronometro = new Thread(() ->
                     {
@@ -163,6 +157,14 @@ public class ManualActivity extends AppCompatActivity
                         {
                             attuale = System.currentTimeMillis() - tempoInizio;
 
+                            try
+                            {
+                                Thread.sleep(17);
+                            }
+                            catch (InterruptedException e)
+                            {
+                                e.printStackTrace();
+                            }
                             secondi = (int) (attuale/1000) % 60;
                             minuti = (int) (attuale/MINUTO) % 60;
                             ore = (int) (attuale/ORA) % 24;
@@ -172,7 +174,7 @@ public class ManualActivity extends AppCompatActivity
                         }
                     });
                     cronometro.start();
-                }*/
+                }
             }
             catch (IOException e)
             {
@@ -184,12 +186,12 @@ public class ManualActivity extends AppCompatActivity
         cancel.setOnClickListener(v ->
         {
             cancel.setEnabled(false);
-            /*if(cronometro != null)
+            if(cronometro != null)
             {
                 conta = false;
                 cronometro.interrupt();
                 cronometro = null;
-            }*/
+            }
             ev3.cancel();
             bluechan.close();
             start.setEnabled(false);

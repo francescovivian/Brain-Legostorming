@@ -43,14 +43,54 @@
         android:text="Premi START per iniziare e STOP per terminare"
         tools:ignore="HardcodedText" />
 
-    <TextView
-        android:id="@+id/cronometro"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:text="00:00:00:000"
-        android:textSize="30sp"
-        tools:ignore="HardcodedText" />
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/cronometro"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="5dp"
+            android:text="00:00:00:000"
+            android:textSize="30sp"
+            tools:ignore="HardcodedText" />
+
+        <TextView
+            android:id="@+id/textM"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="M:"
+            android:textSize="30sp"
+            tools:ignore="HardcodedText" />
+
+        <EditText
+            android:id="@+id/dimM"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="30sp"
+            android:text="0"
+            android:inputType="numberSigned"
+            android:importantForAutofill="no" />
+
+        <TextView
+            android:id="@+id/textN"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="N:"
+            android:textSize="30sp"
+            tools:ignore="HardcodedText" />
+
+        <EditText
+            android:id="@+id/dimN"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="30sp"
+            android:text="0"
+            android:inputType="numberSigned"
+            android:importantForAutofill="no" />
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -61,7 +101,6 @@
             android:id="@+id/startButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
             android:text="START"
             tools:ignore="HardcodedText" />
 
@@ -69,15 +108,30 @@
             android:id="@+id/stopButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginRight="25dp"
             android:text="STOP"
+            tools:ignore="HardcodedText" />
+
+        <Button
+            android:id="@+id/setDimMatrix"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="SETDIM"
             tools:ignore="HardcodedText" />
     </LinearLayout>
 
-    <org.opencv.android.JavaCameraView
+    <!--<org.opencv.android.JavaCameraView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:visibility="gone"
         android:id="@+id/cameraView"
         opencv:show_fps="true"
-        opencv:camera_id="any" />
+        opencv:camera_id="any" /> -->
+
+    <LinearLayout
+        android:id="@+id/matrixView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+    </LinearLayout>
 </LinearLayout>
