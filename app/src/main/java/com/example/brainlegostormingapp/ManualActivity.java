@@ -155,8 +155,6 @@ public class ManualActivity extends AppCompatActivity
 
                         while(conta)
                         {
-                            attuale = System.currentTimeMillis() - tempoInizio;
-
                             try
                             {
                                 Thread.sleep(17);
@@ -165,6 +163,8 @@ public class ManualActivity extends AppCompatActivity
                             {
                                 e.printStackTrace();
                             }
+                            
+                            attuale = System.currentTimeMillis() - tempoInizio;
                             secondi = (int) (attuale/1000) % 60;
                             minuti = (int) (attuale/MINUTO) % 60;
                             ore = (int) (attuale/ORA) % 24;

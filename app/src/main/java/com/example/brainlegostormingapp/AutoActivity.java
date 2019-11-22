@@ -87,16 +87,10 @@ public class AutoActivity extends AppCompatActivity
         if (!OpenCVLoader.initDebug()) Log.e(TAG, "Unable to load OpenCV");
         else Log.d(TAG, "OpenCV loaded");
 
-        //camera = findViewById(R.id.cameraView);
+        camera = findViewById(R.id.cameraView);
 
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED)
-        {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, 1);
-        }
-        else
-        {
-            avviaFotocamera();
-        }
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, 1);
+        else avviaFotocamera();
 
         Button main = findViewById(R.id.mainButton);
         Button manual = findViewById(R.id.manualButton);
@@ -119,7 +113,7 @@ public class AutoActivity extends AppCompatActivity
         Button setMatrix = findViewById(R.id.setDimMatrix);
         EditText matrixM = findViewById(R.id.dimM);
         EditText matrixN = findViewById(R.id.dimN);
-        LinearLayout matrixView = findViewById(R.id.matrixView);
+        //LinearLayout matrixView = findViewById(R.id.matrixView);
 
         setMatrix.setOnClickListener(v ->
         {
@@ -139,7 +133,7 @@ public class AutoActivity extends AppCompatActivity
                 //Per fare i quadrati rossi
                 //pixelGrid.changeCellChecked(2,3);
 
-                matrixView.addView(pixelGrid);
+                //matrixView.addView(pixelGrid);
             }
             catch (NumberFormatException ignored)
             {
@@ -224,12 +218,10 @@ public class AutoActivity extends AppCompatActivity
         {
             try
             {
-                Thread.sleep(100);
                 Fdistance = us.getDistance();
-                distance = Fdistance.get(500, TimeUnit.MILLISECONDS);
-
-                System.out.println(distance);
-
+                Thread.sleep(100);
+                distance = Fdistance.get();
+                
                 if (distance > 20 && distance <= 40 && !isRunning)
                 {
                     autoMoveHand(hand,15,'o');
@@ -261,7 +253,7 @@ public class AutoActivity extends AppCompatActivity
                 Future<LightSensor.Color> Fcol = ls.getColor();
                 LightSensor.Color col = Fcol.get();*/
             }
-            catch (IOException | InterruptedException | ExecutionException | TimeoutException e)
+            catch (IOException | InterruptedException | ExecutionException e)
             {
                 e.printStackTrace();
             }
