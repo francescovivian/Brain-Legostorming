@@ -228,20 +228,19 @@ public class AutoActivity extends AppCompatActivity
                     startEngine(rm, 50, 'b');
                     startEngine(lm, 50, 'b');
                     isRunning = true;
-                    isMiddle = true;
                 }
 
-                if (distance > 8 && distance <= 20 && isMiddle)
+                if (distance > 8 && distance <= 20 && isRunning)
                 {
                     startEngine(rm, 30, 'b');
                     startEngine(lm, 30, 'b');
-                    isMiddle = false;
+                    isMiddle = true;
                 }
 
-                if (distance <= 8 && isRunning)
+                if (distance <= 8 && isRunning && isMiddle)
                 {
-                    //stopEngine(rm);
-                    //stopEngine(lm);
+                    stopEngine(rm);
+                    stopEngine(lm);
                     autoMoveHand(hand,25,'c');
                     isRunning = false;
                     isMiddle = false;
@@ -325,7 +324,7 @@ public class AutoActivity extends AppCompatActivity
     public void avviaFotocamera()
     {
         camera.setVisibility(SurfaceView.VISIBLE);
-        camera.setMaxFrameSize(1920, 1080);
+        camera.setMaxFrameSize(640, 480);
         camera.disableFpsMeter();
         camera.setCvCameraViewListener(new CameraBridgeViewBase.CvCameraViewListener2()
         {
@@ -345,21 +344,23 @@ public class AutoActivity extends AppCompatActivity
             public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame)
             {
                 Mat frame = inputFrame.rgba();
-                Mat frameT = frame.t();
+                /*Mat frameT = frame.t();
                 Core.flip(frameT, frameT, 1);
                 Imgproc.resize(frameT, frameT, frame.size());
-                frame = frameT;
+                frame = frameT;*/
                 BallFinder ballFinder = new BallFinder(frame,true);
-                ballFinder.setViewRatio(0.4f);
-                //ballFinder.setMinArea(10);
-                //ArrayList<Ball> balls = ballFinder.findBalls();
+                ballFinder.setViewRatio(0.0f);
+                ballFinder.setOrientation("landscape");
+                ballFinder.setMinArea(2500);
+                ArrayList<Ball> balls = ballFinder.findBalls();
 
-                /*for (Ball b : balls)
+                for (Ball b : balls)
                 {
-                    if (b.color.equals("red")) Imgproc.circle(frame, b.center, (int) b.radius,  new Scalar(255, 0, 0), 2);
-                    if (b.color.equals("yellow")) Imgproc.circle(frame, b.center, (int) b.radius,  new Scalar(255,255,0), 2);
-                    if (b.color.equals("blue")) Imgproc.circle(frame, b.center, (int) b.radius,  new Scalar(0,0,255), 2);
-                }*/
+                    Log.e("ball", String.valueOf(b.center.x));
+                    Log.e("ball", String.valueOf(b.center.y));
+                    Log.e("ball", String.valueOf(b.radius));
+                    Log.e("ball", b.color);
+                }
 
                 return frame;
 
