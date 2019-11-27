@@ -81,8 +81,16 @@ public class AutoActivity extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_auto);
+        getSupportActionBar().hide();
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        View decorView = getWindow().getDecorView();
+        decorView.setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_FULLSCREEN);
 
         if (!OpenCVLoader.initDebug()) Log.e(TAG, "Unable to load OpenCV");
         else Log.d(TAG, "OpenCV loaded");
@@ -213,6 +221,7 @@ public class AutoActivity extends AppCompatActivity
 
         boolean isRunning = false;
         boolean isMiddle = false;
+        boolean open = false;
 
         while (!api.ev3.isCancelled())
         {
@@ -221,29 +230,37 @@ public class AutoActivity extends AppCompatActivity
                 Fdistance = us.getDistance();
                 Thread.sleep(100);
                 distance = Fdistance.get();
-                
-                if (distance > 20 && distance <= 40 && !isRunning)
+                Log.e("distance", String.valueOf(distance));
+
+                if (distance == 255 && !open)
                 {
                     autoMoveHand(hand,15,'o');
+                    open = true;
+                }
+
+                if (distance > 20 && distance <= 40 && !isRunning)
+                {
                     startEngine(rm, 50, 'b');
                     startEngine(lm, 50, 'b');
                     isRunning = true;
                 }
 
-                if (distance > 8 && distance <= 20 && isRunning)
+                if (distance > 10 && distance <= 20 && isRunning)
                 {
                     startEngine(rm, 30, 'b');
                     startEngine(lm, 30, 'b');
                     isMiddle = true;
                 }
 
-                if (distance <= 8 && isRunning && isMiddle)
+                if (distance <= 10 && isRunning && isMiddle)
                 {
+                    Thread.sleep(500);
                     stopEngine(rm);
                     stopEngine(lm);
                     autoMoveHand(hand,25,'c');
                     isRunning = false;
                     isMiddle = false;
+                    open = false;
                 }
 
                 /*Future<Short> Fambient = ls.getAmbient();
@@ -351,7 +368,7 @@ public class AutoActivity extends AppCompatActivity
                 BallFinder ballFinder = new BallFinder(frame,true);
                 ballFinder.setViewRatio(0.0f);
                 ballFinder.setOrientation("landscape");
-                ballFinder.setMinArea(2500);
+                //ballFinder.setMinArea(2500);
                 ArrayList<Ball> balls = ballFinder.findBalls();
 
                 for (Ball b : balls)
