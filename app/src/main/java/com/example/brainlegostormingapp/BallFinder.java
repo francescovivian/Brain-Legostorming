@@ -12,6 +12,7 @@ import org.opencv.imgproc.Imgproc;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
 public class BallFinder
 {
@@ -27,22 +28,14 @@ public class BallFinder
     private int yellow_lower = 16;
     private int yellow_upper = 25;
 
-    private boolean debug = false;
-    private String orientation = "portrait";
+    private boolean debug = true;
+    private String orientation = "landscape";
 
     private Mat frame;
 
-    public BallFinder(Mat frame) {
+    public BallFinder(Mat frame)
+    {
         this.frame = frame.clone();
-    }
-
-    public BallFinder(Mat frame, boolean debug) {
-        this(frame);
-
-        if (debug) {
-            this.frame = frame;
-            this.debug = true;
-        }
     }
 
     public void setOrientation(String orientation) {
@@ -87,9 +80,10 @@ public class BallFinder
         List <Mat> split_hsv = new ArrayList<>();
 
         Imgproc.cvtColor(frame, hsv, Imgproc.COLOR_RGB2HSV);
+
         Core.split(hsv, split_hsv);
 
-        Mat mask_sat = new Mat();
+        /*Mat mask_sat = new Mat();
         Imgproc.threshold(split_hsv.get(1), mask_sat, sat_lower, sat_upper, Imgproc.THRESH_BINARY);
 
         Mat kernel = new Mat(new Size(3, 3), CvType.CV_8UC1, new Scalar(255));
@@ -181,6 +175,22 @@ public class BallFinder
 
 
             }
+        }*/
+
+        // HOUGH CIRCLE TRANSFORMATION
+
+        Mat hsvBlur = new Mat();
+        Imgproc.GaussianBlur(hsv,hsvBlur, new Size(9,9),2,2);
+
+        Mat circles = new Mat();
+
+        Imgproc.HoughCircles(hsvBlur,circles, Imgproc.CV_HOUGH_GRADIENT,1,hsvBlur.rows()/8,200,100,0,0);
+
+        for(int i = 0; i < circles.cols() ; i++)
+        {
+            /*Ball b = new Ball(center,raggio.floatValue(),"red");
+            balls.add(b);*/
+            Imgproc.circle(frame, new Point(circles.get(0,i)[0], circles.get(0,i)[1]),(int) circles.get(0,i)[2],new Scalar(255, 0, 0),2);
         }
 
         return balls;

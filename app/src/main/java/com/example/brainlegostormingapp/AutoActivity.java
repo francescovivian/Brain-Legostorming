@@ -361,23 +361,16 @@ public class AutoActivity extends AppCompatActivity
             public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame)
             {
                 Mat frame = inputFrame.rgba();
-                /*Mat frameT = frame.t();
-                Core.flip(frameT, frameT, 1);
-                Imgproc.resize(frameT, frameT, frame.size());
-                frame = frameT;*/
-                BallFinder ballFinder = new BallFinder(frame,true);
-                ballFinder.setViewRatio(0.0f);
-                ballFinder.setOrientation("landscape");
-                //ballFinder.setMinArea(2500);
+                BallFinder ballFinder = new BallFinder(frame);
                 ArrayList<Ball> balls = ballFinder.findBalls();
 
-                for (Ball b : balls)
+                /*for (Ball b : balls)
                 {
                     Log.e("ball", String.valueOf(b.center.x));
                     Log.e("ball", String.valueOf(b.center.y));
                     Log.e("ball", String.valueOf(b.radius));
                     Log.e("ball", b.color);
-                }
+                }*/
 
                 return frame;
 
