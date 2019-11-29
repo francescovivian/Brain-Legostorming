@@ -76,14 +76,14 @@ public class BallFinder
     public ArrayList<Ball> findBalls() {
         ArrayList<Ball> balls = new ArrayList<>();
 
-        Mat hsv = new Mat();
-        List <Mat> split_hsv = new ArrayList<>();
+        /*Mat hsv = new Mat();
+        //List <Mat> split_hsv = new ArrayList<>();
 
         Imgproc.cvtColor(frame, hsv, Imgproc.COLOR_RGB2HSV);
 
         Core.split(hsv, split_hsv);
 
-        /*Mat mask_sat = new Mat();
+        Mat mask_sat = new Mat();
         Imgproc.threshold(split_hsv.get(1), mask_sat, sat_lower, sat_upper, Imgproc.THRESH_BINARY);
 
         Mat kernel = new Mat(new Size(3, 3), CvType.CV_8UC1, new Scalar(255));
@@ -179,12 +179,16 @@ public class BallFinder
 
         // HOUGH CIRCLE TRANSFORMATION
 
-        Mat hsvBlur = new Mat();
-        Imgproc.GaussianBlur(hsv,hsvBlur, new Size(9,9),2,2);
+        Imgproc.circle(frame, new Point(100, 100),20,new Scalar(255, 0, 0),10);
+
+        Mat grey = new Mat();
+        Mat greyBlur = new Mat();
+        Imgproc.cvtColor(frame, grey, Imgproc.COLOR_RGB2GRAY);
+        Imgproc.GaussianBlur(grey,greyBlur, new Size(9,9),2,2);
 
         Mat circles = new Mat();
 
-        Imgproc.HoughCircles(hsvBlur,circles, Imgproc.CV_HOUGH_GRADIENT,1,hsvBlur.rows()/8,200,100,0,0);
+        Imgproc.HoughCircles(greyBlur,circles, Imgproc.CV_HOUGH_GRADIENT,1,greyBlur.rows()/8,200,100,0,0);
 
         for(int i = 0; i < circles.cols() ; i++)
         {
