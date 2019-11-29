@@ -179,8 +179,6 @@ public class BallFinder
 
         // HOUGH CIRCLE TRANSFORMATION
 
-        Imgproc.circle(frame, new Point(100, 100),20,new Scalar(255, 0, 0),10);
-
         Mat grey = new Mat();
         Mat greyBlur = new Mat();
         Imgproc.cvtColor(frame, grey, Imgproc.COLOR_RGB2GRAY);
@@ -192,9 +190,9 @@ public class BallFinder
 
         for(int i = 0; i < circles.cols() ; i++)
         {
-            /*Ball b = new Ball(center,raggio.floatValue(),"red");
-            balls.add(b);*/
-            Imgproc.circle(frame, new Point(circles.get(0,i)[0], circles.get(0,i)[1]),(int) circles.get(0,i)[2],new Scalar(255, 0, 0),2);
+            Ball b = new Ball(new Point(circles.get(0,i)[0], circles.get(0,i)[1]),(float) circles.get(0,i)[2],"red");
+            balls.add(b);
+            //Imgproc.circle(frame, new Point(circles.get(0,i)[0], circles.get(0,i)[1]),(int) circles.get(0,i)[2],new Scalar(255, 0, 0),2);
         }
 
         return balls;

@@ -364,13 +364,14 @@ public class AutoActivity extends AppCompatActivity
                 BallFinder ballFinder = new BallFinder(frame);
                 ArrayList<Ball> balls = ballFinder.findBalls();
 
-                /*for (Ball b : balls)
+                for (Ball b : balls)
                 {
-                    Log.e("ball", String.valueOf(b.center.x));
-                    Log.e("ball", String.valueOf(b.center.y));
-                    Log.e("ball", String.valueOf(b.radius));
-                    Log.e("ball", b.color);
-                }*/
+                    Imgproc.circle(frame,new Point(b.center.x,b.center.y),(int) b.radius,new Scalar(255, 0, 0),2);
+                    /*Log.e("ball c x :", String.valueOf(b.center.x));
+                    Log.e("ball c y :", String.valueOf(b.center.y));
+                    Log.e("ball r :", String.valueOf(b.radius));
+                    Log.e("ball : color", b.color);*/
+                }
 
                 return frame;
 
