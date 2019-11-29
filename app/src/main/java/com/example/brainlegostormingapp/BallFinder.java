@@ -67,6 +67,7 @@ public class BallFinder
         Imgproc.cvtColor(frame, grey, Imgproc.COLOR_RGB2GRAY);
         Imgproc.GaussianBlur(grey,greyBlur, new Size(9,9),2,2);
         Imgproc.HoughCircles(greyBlur,circles, Imgproc.CV_HOUGH_GRADIENT,1,greyBlur.rows()/8,200,100,0,0);
+        //Imgproc.HoughCircles(greyBlur,circles, Imgproc.CV_HOUGH_GRADIENT,2.0,greyBlur.rows()/8,100,300,20,400);
 
 
         ArrayList<Ball> balls = new ArrayList<>();

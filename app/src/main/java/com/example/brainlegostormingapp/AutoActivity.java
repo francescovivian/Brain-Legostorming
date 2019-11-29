@@ -73,6 +73,9 @@ public class AutoActivity extends AppCompatActivity
     private TachoMotor hand;
 
     private CameraBridgeViewBase camera;
+    Mat frame;
+    BallFinder ballFinder;
+    ArrayList<Ball> balls;
 
     private int dimM, dimN;
 
@@ -341,7 +344,7 @@ public class AutoActivity extends AppCompatActivity
     public void avviaFotocamera()
     {
         camera.setVisibility(SurfaceView.VISIBLE);
-        camera.setMaxFrameSize(640, 480);
+        camera.setMaxFrameSize(480, 320);
         camera.disableFpsMeter();
         camera.setCvCameraViewListener(new CameraBridgeViewBase.CvCameraViewListener2()
         {
@@ -360,9 +363,9 @@ public class AutoActivity extends AppCompatActivity
             @Override
             public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame)
             {
-                Mat frame = inputFrame.rgba();
-                BallFinder ballFinder = new BallFinder(frame);
-                ArrayList<Ball> balls = ballFinder.findBalls();
+                frame = inputFrame.rgba();
+                ballFinder = new BallFinder(frame);
+                balls = ballFinder.findBalls();
 
                 for (Ball b : balls)
                 {
