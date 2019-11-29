@@ -366,6 +366,20 @@ public class AutoActivity extends AppCompatActivity
 
                 for (Ball b : balls)
                 {
+                    Point center = new Point(b.center.x,b.center.y);
+                    int radius = (int) b.radius;
+                    Scalar color_rgb;
+
+                    if (b.color == "red")
+                        color_rgb = new Scalar(255, 0, 0);
+                    else if (b.color == "blue")
+                        color_rgb = new Scalar(0, 0, 255);
+                    else if (b.color == "yellow")
+                        color_rgb = new Scalar(255, 255, 0);
+                    else
+                        color_rgb = new Scalar(0, 0, 0);
+
+                    Imgproc.circle(frame, center,radius,color_rgb,8);
                     Log.e("ball c x :", String.valueOf(b.center.x));
                     Log.e("ball c y :", String.valueOf(b.center.y));
                     Log.e("ball r :", String.valueOf(b.radius));

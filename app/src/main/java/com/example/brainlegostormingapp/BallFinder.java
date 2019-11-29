@@ -31,7 +31,7 @@ public class BallFinder
 
     public ArrayList<Ball> findBalls()
     {
-        /*Mat hsv = new Mat();
+        Mat hsv = new Mat();
         List <Mat> split_hsv = new ArrayList<>();
 
         Imgproc.cvtColor(frame, hsv, Imgproc.COLOR_RGB2HSV);
@@ -58,7 +58,7 @@ public class BallFinder
 
         Core.bitwise_or(mask_red, mask_blue, mask_hue);
         Core.bitwise_or(mask_hue, mask_yellow, mask_hue);
-        Core.bitwise_and(mask_sat, mask_hue, mask);*/
+        Core.bitwise_and(mask_sat, mask_hue, mask);
 
         Mat grey = new Mat();
         Mat greyBlur = new Mat();
@@ -76,7 +76,7 @@ public class BallFinder
             Point center = new Point(circles.get(0,i)[0], circles.get(0,i)[1]);
             Float radius = (float) circles.get(0,i)[2];
 
-            /*int area_hue = (int) hue.get((int) center.y, (int) center.x)[0];
+            int area_hue = (int) hue.get((int) center.y, (int) center.x)[0];
             String color;
 
             if (area_hue >= red_lower && area_hue <= red_upper)
@@ -86,9 +86,9 @@ public class BallFinder
             else if (area_hue >= yellow_lower && area_hue <= yellow_upper)
                 color = "yellow";
             else
-                color = "unknown";*/
+                color = "unknown";
 
-            Ball b = new Ball(center,radius,"red");
+            Ball b = new Ball(center,radius,color);
             balls.add(b);
 
             /*Scalar color_rgb;
@@ -100,9 +100,9 @@ public class BallFinder
             else if (color == "yellow")
                 color_rgb = new Scalar(255, 255, 0);
             else
-                color_rgb = new Scalar(0, 0, 0);*/
+                color_rgb = new Scalar(0, 0, 0);
 
-            Imgproc.circle(frame, center,radius.intValue(),new Scalar(255,0,0),8);
+            Imgproc.circle(frame, center,radius.intValue(),color_rgb,8);*/
         }
 
         return balls;
