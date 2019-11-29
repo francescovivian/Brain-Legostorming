@@ -366,15 +366,13 @@ public class AutoActivity extends AppCompatActivity
 
                 for (Ball b : balls)
                 {
-                    Imgproc.circle(frame,new Point(b.center.x,b.center.y),(int) b.radius,new Scalar(255, 0, 0),2);
-                    /*Log.e("ball c x :", String.valueOf(b.center.x));
+                    Log.e("ball c x :", String.valueOf(b.center.x));
                     Log.e("ball c y :", String.valueOf(b.center.y));
                     Log.e("ball r :", String.valueOf(b.radius));
-                    Log.e("ball : color", b.color);*/
+                    Log.e("ball : color", b.color);
                 }
 
                 return frame;
-
             }
         });
 
