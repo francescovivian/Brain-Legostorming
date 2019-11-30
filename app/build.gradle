@@ -11,9 +11,6 @@ android {
         // Manually bump the semver version part of the string as necessary
         versionName "1.0-${System.env.VERSION_SHA}"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        ndk {
-            abiFilters 'armeabi-v7a', 'arm64-v8a','x86_64'
-        }
     }
     buildTypes {
         release {
