@@ -106,6 +106,23 @@ public class BallFinder
             Imgproc.circle(frame, center,radius.intValue(),color_rgb,8);*/
         }
 
+        frame.release();
+        hsv.release();
+        split_hsv.removeAll(split_hsv);
+        hue.release();
+        kernel.release();
+        mask_sat.release();
+        mask_red.release();
+        mask_yellow.release();
+        mask_blue.release();
+        mask_hue.release();
+        mask.release();
+        grey.release();
+        greyBlur.release();
+        circles.release();
+
+        System.gc();
+
         return balls;
     }
 }

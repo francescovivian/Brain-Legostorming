@@ -363,6 +363,8 @@ public class AutoActivity extends AppCompatActivity
             @Override
             public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame)
             {
+                System.gc();
+
                 frame = inputFrame.rgba();
                 ballFinder = new BallFinder(frame);
                 balls = ballFinder.findBalls();
@@ -388,6 +390,9 @@ public class AutoActivity extends AppCompatActivity
                     Log.e("ball r :", String.valueOf(b.radius));
                     Log.e("ball : color", b.color);
                 }
+
+                balls.removeAll(balls);
+                System.gc();
 
                 return frame;
             }
