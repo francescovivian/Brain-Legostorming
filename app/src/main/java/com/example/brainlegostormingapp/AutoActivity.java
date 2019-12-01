@@ -76,6 +76,7 @@ public class AutoActivity extends AppCompatActivity
     Mat frame;
     BallFinder ballFinder;
     ArrayList<Ball> balls;
+    Ball ball;
 
     private int dimM, dimN;
 
@@ -369,29 +370,28 @@ public class AutoActivity extends AppCompatActivity
                 ballFinder = new BallFinder(frame);
                 balls = ballFinder.findBalls();
 
-                for (Ball b : balls)
+                for (int i = 0; i < balls.size(); i++)
                 {
-                    Point center = new Point(b.center.x,b.center.y);
-                    int radius = (int) b.radius;
+                    ball = balls.get(i);
+                    Point center = new Point(ball.center.x,ball.center.y);
+                    int radius = (int) ball.radius;
                     Scalar color_rgb;
 
-                    if (b.color.equals("red"))
-                        color_rgb = new Scalar(255, 0, 0);
-                    else if (b.color.equals("blue"))
-                        color_rgb = new Scalar(0, 0, 255);
-                    else if (b.color.equals("yellow"))
-                        color_rgb = new Scalar(255, 255, 0);
-                    else
-                        color_rgb = new Scalar(0, 0, 0);
+                    if (ball.color.equals("red")) color_rgb = new Scalar(255, 0, 0);
+                    else if (ball.color.equals("blue")) color_rgb = new Scalar(0, 0, 255);
+                    else if (ball.color.equals("yellow")) color_rgb = new Scalar(255, 255, 0);
+                    else color_rgb = new Scalar(0, 0, 0);
 
-                    Imgproc.circle(frame, center,radius,color_rgb,8);
-                    Log.e("ball center x ", String.valueOf(b.center.x));
-                    Log.e("ball center y ", String.valueOf(b.center.y));
-                    Log.e("ball radius ", String.valueOf(b.radius));
-                    Log.e("ball color ", b.color);
+                    Imgproc.circle(frame, center,radius,color_rgb,2);
+
+                    balls.remove(ball);
+
+                    /*Log.e("ball center x ", String.valueOf(ball.center.x));
+                    Log.e("ball center y ", String.valueOf(ball.center.y));
+                    Log.e("ball radius ", String.valueOf(ball.radius));
+                    Log.e("ball color ", ball.color);*/
                 }
 
-                balls.removeAll(balls);
                 System.gc();
 
                 return frame;

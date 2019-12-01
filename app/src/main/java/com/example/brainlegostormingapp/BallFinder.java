@@ -70,6 +70,7 @@ public class BallFinder
         Imgproc.HoughCircles(greyFiltered,circles, Imgproc.CV_HOUGH_GRADIENT,1,greyFiltered.rows()/4,30,30,5,40);
 
         ArrayList<Ball> balls = new ArrayList<>();
+        Ball b;
 
         for(int i = 0; i < circles.cols() ; i++)
         {
@@ -79,36 +80,32 @@ public class BallFinder
             int area_hue = (int) hue.get((int) center.y, (int) center.x)[0];
             String color;
 
-            if (area_hue >= red_lower && area_hue <= red_upper)
-                color = "red";
-            else if (area_hue >= blue_lower && area_hue <= blue_upper)
-                color = "blue";
-            else if (area_hue >= yellow_lower && area_hue <= yellow_upper)
-                color = "yellow";
-            else
-                color = "unknown";
+            if (area_hue >= red_lower && area_hue <= red_upper) color = "red";
+            else if (area_hue >= blue_lower && area_hue <= blue_upper) color = "blue";
+            else if (area_hue >= yellow_lower && area_hue <= yellow_upper) color = "yellow";
+            else color = "unknown";
 
-            Ball b = new Ball(center,radius,color);
-
-            if (!b.color.equals("unknown")) balls.add(b);
+            if (!color.equals("unknown"))
+            {
+                b = new Ball(center,radius,color);
+                balls.add(b);
+            }
 
             /*Scalar color_rgb;
 
-            if (color == "red")
-                color_rgb = new Scalar(255, 0, 0);
-            else if (color == "blue")
-                color_rgb = new Scalar(0, 0, 255);
-            else if (color == "yellow")
-                color_rgb = new Scalar(255, 255, 0);
-            else
-                color_rgb = new Scalar(0, 0, 0);
+            if (color == "red") color_rgb = new Scalar(255, 0, 0);
+            else if (color == "blue") color_rgb = new Scalar(0, 0, 255);
+            else if (color == "yellow") color_rgb = new Scalar(255, 255, 0);
+            else color_rgb = new Scalar(0, 0, 0);
 
             Imgproc.circle(frame, center,radius.intValue(),color_rgb,8);*/
         }
 
         frame.release();
         hsv.release();
-        split_hsv.removeAll(split_hsv);
+        split_hsv.get(0).release();
+        split_hsv.get(1).release();
+        split_hsv.get(2).release();
         hue.release();
         kernel.release();
         mask_sat.release();
