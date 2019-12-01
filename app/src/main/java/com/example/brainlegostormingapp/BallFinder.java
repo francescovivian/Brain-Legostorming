@@ -61,14 +61,13 @@ public class BallFinder
         Core.bitwise_and(mask_sat, mask_hue, mask);
 
         Mat grey = new Mat();
-        Mat greyBlur = new Mat();
+        Mat greyFiltered = new Mat();
         Mat circles = new Mat();
 
         Imgproc.cvtColor(frame, grey, Imgproc.COLOR_RGB2GRAY);
-        Imgproc.GaussianBlur(grey,greyBlur, new Size(9,9),2,2);
-        Imgproc.HoughCircles(greyBlur,circles, Imgproc.CV_HOUGH_GRADIENT,1,greyBlur.rows()/8,200,100,0,0);
-        //Imgproc.HoughCircles(greyBlur,circles, Imgproc.CV_HOUGH_GRADIENT,2.0,greyBlur.rows()/8,100,300,20,400);
-
+        //Imgproc.GaussianBlur(grey,greyBlur, new Size(9,9),2,2);
+        Imgproc.bilateralFilter(grey,greyFiltered, 10,10,10);
+        Imgproc.HoughCircles(greyFiltered,circles, Imgproc.CV_HOUGH_GRADIENT,1,greyFiltered.rows()/4,30,30,5,40);
 
         ArrayList<Ball> balls = new ArrayList<>();
 
@@ -90,7 +89,8 @@ public class BallFinder
                 color = "unknown";
 
             Ball b = new Ball(center,radius,color);
-            balls.add(b);
+
+            if (!b.color.equals("unknown")) balls.add(b);
 
             /*Scalar color_rgb;
 
@@ -118,7 +118,7 @@ public class BallFinder
         mask_hue.release();
         mask.release();
         grey.release();
-        greyBlur.release();
+        greyFiltered.release();
         circles.release();
 
         System.gc();

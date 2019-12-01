@@ -344,7 +344,7 @@ public class AutoActivity extends AppCompatActivity
     public void avviaFotocamera()
     {
         camera.setVisibility(SurfaceView.VISIBLE);
-        camera.setMaxFrameSize(480, 320);
+        camera.setMaxFrameSize(640, 480);
         camera.disableFpsMeter();
         camera.setCvCameraViewListener(new CameraBridgeViewBase.CvCameraViewListener2()
         {
@@ -375,20 +375,20 @@ public class AutoActivity extends AppCompatActivity
                     int radius = (int) b.radius;
                     Scalar color_rgb;
 
-                    if (b.color == "red")
+                    if (b.color.equals("red"))
                         color_rgb = new Scalar(255, 0, 0);
-                    else if (b.color == "blue")
+                    else if (b.color.equals("blue"))
                         color_rgb = new Scalar(0, 0, 255);
-                    else if (b.color == "yellow")
+                    else if (b.color.equals("yellow"))
                         color_rgb = new Scalar(255, 255, 0);
                     else
                         color_rgb = new Scalar(0, 0, 0);
 
                     Imgproc.circle(frame, center,radius,color_rgb,8);
-                    Log.e("ball c x :", String.valueOf(b.center.x));
-                    Log.e("ball c y :", String.valueOf(b.center.y));
-                    Log.e("ball r :", String.valueOf(b.radius));
-                    Log.e("ball : color", b.color);
+                    Log.e("ball center x ", String.valueOf(b.center.x));
+                    Log.e("ball center y ", String.valueOf(b.center.y));
+                    Log.e("ball radius ", String.valueOf(b.radius));
+                    Log.e("ball color ", b.color);
                 }
 
                 balls.removeAll(balls);
