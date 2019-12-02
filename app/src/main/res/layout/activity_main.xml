@@ -6,30 +6,32 @@
     android:orientation="vertical"
     tools:context="com.example.brainlegostormingapp.MainActivity">
 
-    <TextView
+    <!--<TextView
         android:id="@+id/buttonDescription"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:text="Premi MANUAL per usare la macchina manualmente o AUTO per la funzione automatica"
-        tools:ignore="HardcodedText" />
+        tools:ignore="HardcodedText" /> -->
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="horizontal">
 
         <Button
             android:id="@+id/manualButton"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
             android:text="MANUAL"
             tools:ignore="HardcodedText" />
 
         <Button
             android:id="@+id/autoButton"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
             android:text="AUTO"
             tools:ignore="HardcodedText" />
     </LinearLayout>

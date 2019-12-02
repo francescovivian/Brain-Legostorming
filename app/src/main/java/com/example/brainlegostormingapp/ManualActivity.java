@@ -10,6 +10,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -142,7 +143,7 @@ public class ManualActivity extends AppCompatActivity
                 bluechan = blueconn.connect();
                 ev3 = new EV3(bluechan);
                 Prelude.trap(() -> ev3.run(this::legoMain));
-                new AlertDialog.Builder(this).setMessage("Connessione stabilita con successo").show();
+                Toast.makeText(this,"Connessione stabilita con successo",Toast.LENGTH_SHORT).show();
                 conn.setEnabled(false);
                 main.setEnabled(false);
                 auto.setEnabled(false);
@@ -188,7 +189,7 @@ public class ManualActivity extends AppCompatActivity
             catch (IOException e)
             {
                 e.printStackTrace();
-                new AlertDialog.Builder(this).setMessage("Connessione non stabilita").show();
+                Toast.makeText(this,"Connessione non stabilita",Toast.LENGTH_SHORT).show();
             }
         });
 

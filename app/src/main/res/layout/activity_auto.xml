@@ -7,13 +7,13 @@
     android:orientation="vertical"
     tools:context="com.example.brainlegostormingapp.AutoActivity">
 
-    <TextView
+    <!--<TextView
         android:id="@+id/buttonDescription"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:text="Premi MAIN per il menù principale o MANUAL per usare la macchina manualmente"
-        tools:ignore="HardcodedText" />
+        tools:ignore="HardcodedText" /> -->
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -24,6 +24,7 @@
             android:id="@+id/mainButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:text="MAIN"
             tools:ignore="HardcodedText" />
 
@@ -31,17 +32,18 @@
             android:id="@+id/manualButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:text="MANUAL"
             tools:ignore="HardcodedText" />
     </LinearLayout>
 
-    <TextView
+    <!--<TextView
         android:id="@+id/functionDescription"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:text="Premi START per iniziare e STOP per terminare"
-        tools:ignore="HardcodedText" />
+        tools:ignore="HardcodedText" /> -->
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -52,7 +54,7 @@
             android:id="@+id/cronometro"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="5dp"
+            android:layout_marginRight="10dp"
             android:text="00:00:00:000"
             android:textSize="30sp"
             tools:ignore="HardcodedText" />
@@ -101,6 +103,7 @@
             android:id="@+id/startButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:text="START"
             tools:ignore="HardcodedText" />
 
@@ -108,7 +111,7 @@
             android:id="@+id/stopButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="25dp"
+            android:layout_weight="1"
             android:text="STOP"
             tools:ignore="HardcodedText" />
 
@@ -116,6 +119,7 @@
             android:id="@+id/setDimMatrix"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:text="SETDIM"
             tools:ignore="HardcodedText" />
     </LinearLayout>
