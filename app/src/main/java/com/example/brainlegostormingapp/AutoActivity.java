@@ -241,40 +241,62 @@ public class AutoActivity extends AppCompatActivity
         {
             try
             {
-                Fdistance = us.getDistance();
-                Thread.sleep(100);
-                distance = Fdistance.get();
-                Log.e("distance", String.valueOf(distance));
-
-                if (distance == 255 && !open)
+                for (int i = 0; i < balls.size(); i++)
                 {
-                    autoMoveHand(hand,15,'o');
-                    open = true;
-                }
+                    ball = balls.get(i);
+                    // ball.center.x > 300 && ball.center.x < 340 &&
+                    if (ball.color.equals("blue"))
+                    {
+                        if (ball.radius >= 30)
+                        {
+                            if (!isRunning && !open)
+                            {
+                                startEngine(rm, 50, 'b');
+                                startEngine(lm, 50, 'b');
+                                autoMoveHand(hand,15,'o');
+                                isRunning = true;
+                                open = true;
+                            }
 
-                if (distance > 20 && distance <= 40 && !isRunning)
-                {
-                    startEngine(rm, 50, 'b');
-                    startEngine(lm, 50, 'b');
-                    isRunning = true;
-                }
+                            Fdistance = us.getDistance();
+                            Thread.sleep(100);
+                            distance = Fdistance.get();
+                            Log.e("distance", String.valueOf(distance));
 
-                if (distance > 10 && distance <= 20 && isRunning)
-                {
-                    startEngine(rm, 30, 'b');
-                    startEngine(lm, 30, 'b');
-                    isMiddle = true;
-                }
+                            /*if (distance == 255 && !open)
+                            {
+                                autoMoveHand(hand,15,'o');
+                                open = true;
+                            }*/
 
-                if (distance <= 10 && isRunning && isMiddle)
-                {
-                    Thread.sleep(500);
-                    stopEngine(rm);
-                    stopEngine(lm);
-                    autoMoveHand(hand,25,'c');
-                    isRunning = false;
-                    isMiddle = false;
-                    open = false;
+                            /*if (distance > 20 && distance <= 40 && !isRunning)
+                            {
+                                startEngine(rm, 50, 'b');
+                                startEngine(lm, 50, 'b');
+                                isRunning = true;
+                            }*/
+
+                            if (distance > 10 && distance <= 20 && isRunning)
+                            {
+                                startEngine(rm, 30, 'b');
+                                startEngine(lm, 30, 'b');
+                                isMiddle = true;
+                            }
+
+                            if (distance <= 10 && isRunning && isMiddle)
+                            {
+                                Thread.sleep(600);
+                                stopEngine(rm);
+                                stopEngine(lm);
+                                autoMoveHand(hand, 25, 'c');
+                                /*isRunning = false;
+                                isMiddle = false;
+                                open = false;*/
+                            }
+                        }
+                    }
+
+                    balls.remove(ball);
                 }
 
                 /*Future<Short> Fambient = ls.getAmbient();
@@ -374,6 +396,15 @@ public class AutoActivity extends AppCompatActivity
             @Override
             public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame)
             {
+                try
+                {
+                    Thread.sleep(20);
+                }
+                catch (InterruptedException e)
+                {
+                    e.printStackTrace();
+                }
+
                 System.gc();
 
                 frame = inputFrame.rgba();
@@ -394,7 +425,9 @@ public class AutoActivity extends AppCompatActivity
 
                     Imgproc.circle(frame, center,radius,color_rgb,2);
 
-                    balls.remove(ball);
+                    Imgproc.circle(frame, new Point(320,240),10,new Scalar(0,0,0),2);
+                    Imgproc.line(frame, new Point(310,240), new Point(330,240),new Scalar(0,0,0),2);
+                    Imgproc.line(frame, new Point(320,230), new Point(320,250),new Scalar(0,0,0),2);
 
                     /*Log.e("ball center x ", String.valueOf(ball.center.x));
                     Log.e("ball center y ", String.valueOf(ball.center.y));
