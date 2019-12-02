@@ -58,9 +58,10 @@
             android:id="@+id/cronometro"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
             android:layout_marginRight="10dp"
             android:text="00:00:00:000"
-            android:textSize="30sp"
+            android:textSize="25sp"
             tools:ignore="HardcodedText" />
 
         <TextView
@@ -68,14 +69,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="M:"
-            android:textSize="30sp"
+            android:textSize="25sp"
             tools:ignore="HardcodedText" />
 
         <EditText
             android:id="@+id/dimM"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="30sp"
+            android:textSize="25sp"
             android:text="0"
             android:inputType="numberSigned"
             android:importantForAutofill="no" />
@@ -85,14 +86,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="N:"
-            android:textSize="30sp"
+            android:textSize="25sp"
             tools:ignore="HardcodedText" />
 
         <EditText
             android:id="@+id/dimN"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="30sp"
+            android:textSize="25sp"
             android:text="0"
             android:inputType="numberSigned"
             android:importantForAutofill="no" />
