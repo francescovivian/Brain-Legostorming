@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#D1E0D3"
     android:orientation="vertical"
     tools:context="com.example.brainlegostormingapp.MainActivity">
 
@@ -21,6 +22,7 @@
 
         <Button
             android:id="@+id/manualButton"
+            android:background="@drawable/layout_bg_scuro"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -29,6 +31,7 @@
 
         <Button
             android:id="@+id/autoButton"
+            android:background="@drawable/layout_bg_chiaro"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"

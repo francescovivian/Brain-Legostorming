@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#D1E0D3"
     xmlns:opencv="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     tools:context="com.example.brainlegostormingapp.AutoActivity">
@@ -24,6 +25,7 @@
             android:id="@+id/mainButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@drawable/layout_bg_piu_scuro"
             android:layout_weight="1"
             android:text="MAIN"
             tools:ignore="HardcodedText" />
@@ -32,6 +34,8 @@
             android:id="@+id/manualButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@drawable/layout_bg_scuro"
+
             android:layout_weight="1"
             android:text="MANUAL"
             tools:ignore="HardcodedText" />
@@ -103,6 +107,7 @@
             android:id="@+id/startButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@drawable/layout_bg"
             android:layout_weight="1"
             android:text="START"
             tools:ignore="HardcodedText" />
@@ -111,6 +116,7 @@
             android:id="@+id/stopButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@drawable/layout_bg"
             android:layout_weight="1"
             android:text="STOP"
             tools:ignore="HardcodedText" />
@@ -119,6 +125,7 @@
             android:id="@+id/setDimMatrix"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@drawable/layout_bg"
             android:layout_weight="1"
             android:text="SETDIM"
             tools:ignore="HardcodedText" />

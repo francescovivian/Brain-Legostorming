@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#D1E0D3"
     android:orientation="vertical"
     tools:context="com.example.brainlegostormingapp.ManualActivity">
 
@@ -23,6 +24,7 @@
             android:id="@+id/mainButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@drawable/layout_bg_piu_scuro"
             android:layout_weight="1"
             android:text="MAIN"
             tools:ignore="HardcodedText" />
@@ -31,6 +33,7 @@
             android:id="@+id/autoButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@drawable/layout_bg_chiaro"
             android:layout_weight="1"
             android:text="AUTO"
             tools:ignore="HardcodedText" />
@@ -61,6 +64,7 @@
             android:id="@+id/startButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@drawable/layout_bg"
             android:layout_weight="1"
             android:text="START"
             tools:ignore="HardcodedText" />
@@ -69,6 +73,7 @@
             android:id="@+id/stopButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@drawable/layout_bg"
             android:layout_weight="1"
             android:text="STOP"
             tools:ignore="HardcodedText" />
@@ -77,6 +82,7 @@
             android:id="@+id/retroButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@drawable/layout_bg"
             android:layout_weight="1"
             android:text="RETRO"
             tools:ignore="HardcodedText" />
@@ -91,6 +97,7 @@
             android:id="@+id/leftButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@drawable/layout_bg"
             android:layout_weight="1"
             android:text="LEFT"
             tools:ignore="HardcodedText" />
@@ -99,6 +106,7 @@
             android:id="@+id/rightButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@drawable/layout_bg"
             android:layout_weight="1"
             android:text="RIGHT"
             tools:ignore="HardcodedText" />
@@ -113,6 +121,7 @@
             android:id="@+id/openButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@drawable/layout_bg"
             android:layout_weight="1"
             android:text="OPEN"
             tools:ignore="HardcodedText" />
@@ -121,6 +130,7 @@
             android:id="@+id/closeButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@drawable/layout_bg"
             android:layout_weight="1"
             android:text="CLOSE"
             tools:ignore="HardcodedText" />
@@ -135,6 +145,7 @@
             android:id="@+id/connButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@drawable/layout_bg"
             android:layout_weight="1"
             android:text="CONN"
             tools:ignore="HardcodedText" />
@@ -143,6 +154,7 @@
             android:id="@+id/cancelButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@drawable/layout_bg"
             android:layout_weight="1"
             android:text="CANCEL"
             tools:ignore="HardcodedText" />
