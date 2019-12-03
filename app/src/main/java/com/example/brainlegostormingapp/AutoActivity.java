@@ -234,8 +234,10 @@ public class AutoActivity extends AppCompatActivity
         Float distance;
 
         boolean isRunning = false;
-        boolean isMiddle = false;
-        boolean open = false;
+        boolean isFind = false;
+        boolean isSearching = false;
+        boolean isStraightening = false;
+        boolean isApproached = false;
 
         while (!api.ev3.isCancelled())
         {
@@ -244,55 +246,59 @@ public class AutoActivity extends AppCompatActivity
                 for (int i = 0; i < balls.size(); i++)
                 {
                     ball = balls.get(i);
-                    // ball.center.x > 300 && ball.center.x < 340 &&
-                    if (ball.color.equals("blue"))
+
+                    if (!isSearching)
                     {
-                        if (ball.radius >= 30)
+                        startEngine(rm, 40, 'f');
+                        startEngine(lm, 40, 'b');
+                        isSearching = true;
+                    }
+
+                    if (ball.center.y > 200 && ball.center.y < 280 && ball.color.equals("blue") && isSearching && !isFind)
+                    {
+                        if (!isStraightening)
                         {
-                            if (!isRunning && !open)
-                            {
-                                startEngine(rm, 50, 'b');
-                                startEngine(lm, 50, 'b');
-                                autoMoveHand(hand,15,'o');
-                                isRunning = true;
-                                open = true;
-                            }
+                            startEngine(rm, 10, 'b');
+                            startEngine(lm, 10, 'f');
+                            isStraightening = true;
+                        }
 
-                            Fdistance = us.getDistance();
-                            Thread.sleep(100);
-                            distance = Fdistance.get();
-                            Log.e("distance", String.valueOf(distance));
+                        if (ball.center.y > 232 && ball.center.y < 248)
+                        {
+                            startEngine(rm, 50, 'b');
+                            startEngine(lm, 50, 'b');
+                            //stopEngine(rm);
+                            //stopEngine(lm);
+                            autoMoveHand(hand, 15, 'o');
+                            isFind = true;
+                        }
+                    }
 
-                            /*if (distance == 255 && !open)
-                            {
-                                autoMoveHand(hand,15,'o');
-                                open = true;
-                            }*/
+                    if (ball.radius >= 30 && !isApproached)
+                    {
+                        isApproached = true;
+                    }
 
-                            /*if (distance > 20 && distance <= 40 && !isRunning)
-                            {
-                                startEngine(rm, 50, 'b');
-                                startEngine(lm, 50, 'b');
-                                isRunning = true;
-                            }*/
+                    if (isApproached)
+                    {
+                        Fdistance = us.getDistance();
+                        Thread.sleep(100);
+                        distance = Fdistance.get();
+                        //Log.e("distance", String.valueOf(distance));
 
-                            if (distance > 10 && distance <= 20 && isRunning)
-                            {
-                                startEngine(rm, 30, 'b');
-                                startEngine(lm, 30, 'b');
-                                isMiddle = true;
-                            }
+                        if (distance > 10 && distance <= 20 && !isRunning)
+                        {
+                            startEngine(rm, 30, 'b');
+                            startEngine(lm, 30, 'b');
+                            isRunning = true;
+                        }
 
-                            if (distance <= 10 && isRunning && isMiddle)
-                            {
-                                Thread.sleep(600);
-                                stopEngine(rm);
-                                stopEngine(lm);
-                                autoMoveHand(hand, 25, 'c');
-                                /*isRunning = false;
-                                isMiddle = false;
-                                open = false;*/
-                            }
+                        if (distance <= 10 && isRunning)
+                        {
+                            Thread.sleep(600);
+                            stopEngine(rm);
+                            stopEngine(lm);
+                            autoMoveHand(hand, 25, 'c');
                         }
                     }
 

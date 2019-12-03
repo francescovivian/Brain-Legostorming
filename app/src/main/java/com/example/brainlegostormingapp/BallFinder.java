@@ -85,7 +85,7 @@ public class BallFinder
             else if (area_hue >= yellow_lower && area_hue <= yellow_upper) color = "yellow";
             else color = "unknown";
 
-            if (!color.equals("unknown"))
+            if (!color.equals("unknown") && center.x != 0 && center.y != 0 && radius != 0)
             {
                 b = new Ball(center,radius,color);
                 balls.add(b);
