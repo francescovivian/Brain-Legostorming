@@ -122,4 +122,9 @@ public class BallFinder
 
         return balls;
     }
+
+    public Mat getFrame()
+    {
+        return frame;
+    }
 }

@@ -255,24 +255,25 @@ public class AutoActivity extends AppCompatActivity
                         isSearching = true;
                     }
 
-                    if (ball.center.y > 220 && ball.center.y < 260 && !ball.color.equals("yellow") && !isFind)
+                    if (ball.center.y > 220 && ball.center.y < 260 && !ball.color.equals("yellow") && isSearching && !isFind)
                     {
-                        if (!isStraightening && isSearching)
+                        if (!isStraightening)
                         {
                             rm.startEngine(10, 'f');
                             lm.startEngine(10, 'b');
                             isStraightening = true;
                         }
-                        else if (ball.center.y > 230 && ball.center.y < 250 && !ball.color.equals("yellow"))
+
+                        if (ball.center.y > 230 && ball.center.y < 250)
                         {
-                            rm.startEngine(30, 'f');
-                            lm.startEngine(30, 'f');
+                            rm.startEngine(20, 'f');
+                            lm.startEngine(20, 'f');
                             hand.autoMoveHand(15, 'o');
                             isFind = true;
                         }
                     }
 
-                    if (!isCentered && isSearching && !isApproached && isFind)
+                    if (isFind && !isApproached)
                     {
                         if (ball.center.y > 150 && ball.center.y < 240)
                         {
@@ -294,10 +295,10 @@ public class AutoActivity extends AppCompatActivity
                             //(int)(10 + (240 - ball.center.y)/40)
                         }
 
-                        if (ball.radius >= 30)
+                        if (ball.radius >= 35)
                         {
-                            rm.setSpeed(30);
-                            lm.setSpeed(30);
+                            rm.setSpeed(20);
+                            lm.setSpeed(20);
                             isApproached = true;
                         }
                     }
@@ -309,16 +310,16 @@ public class AutoActivity extends AppCompatActivity
                         distance = Fdistance.get();
                         //Log.e("distance", String.valueOf(distance));
 
-                        if (distance > 10 && distance <= 30 && !isRunning)
+                        if (distance > 15 && distance <= 30 && !isRunning)
                         {
-                            rm.startEngine(30, 'f');
-                            lm.startEngine(30, 'f');
+                            rm.setSpeed(20);
+                            lm.setSpeed(20);
                             isRunning = true;
                         }
 
                         if (distance <= 15 && isRunning)
                         {
-                            Thread.sleep(1500);
+                            Thread.sleep(1000);
                             rm.stopEngine();
                             lm.stopEngine();
                             hand.autoMoveHand(25, 'c');
