@@ -47,14 +47,6 @@ public class PixelGridView extends View
         calculateDimensions();
     }
 
-    public int getNumRows() {
-        return numRows;
-    }
-
-    public int getNumColumns() {
-        return numColumns;
-    }
-
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh)
     {

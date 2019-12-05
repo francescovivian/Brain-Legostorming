@@ -236,8 +236,8 @@ public class AutoActivity extends AppCompatActivity
         boolean isRunning = false;
         boolean isFind = false;
         boolean isSearching = false;
-        boolean isStraightening = false;
         boolean isApproached = false;
+        boolean isCentered = false;
 
         while (!api.ev3.isCancelled())
         {
@@ -249,34 +249,47 @@ public class AutoActivity extends AppCompatActivity
 
                     if (!isSearching)
                     {
-                        startEngine(rm, 40, 'f');
-                        startEngine(lm, 40, 'b');
+                        startEngine(rm, 20, 'f');
+                        startEngine(lm, 20, 'b');
                         isSearching = true;
                     }
 
-                    if (ball.center.y > 200 && ball.center.y < 280 && ball.color.equals("blue") && isSearching && !isFind)
+                    if (ball.center.y > 220 && ball.center.y < 260 && !ball.color.equals("yellow") && !isFind)
                     {
-                        if (!isStraightening)
-                        {
-                            startEngine(rm, 10, 'b');
-                            startEngine(lm, 10, 'f');
-                            isStraightening = true;
-                        }
-
-                        if (ball.center.y > 232 && ball.center.y < 248)
-                        {
-                            startEngine(rm, 50, 'b');
-                            startEngine(lm, 50, 'b');
-                            //stopEngine(rm);
-                            //stopEngine(lm);
-                            autoMoveHand(hand, 15, 'o');
-                            isFind = true;
-                        }
+                        startEngine(rm, 30, 'b');
+                        startEngine(lm, 30, 'b');
+                        autoMoveHand(hand, 15, 'o');
+                        isFind = true;
                     }
 
-                    if (ball.radius >= 30 && !isApproached)
+                    if (!isCentered && !isApproached && isFind)
                     {
-                        isApproached = true;
+                        if (ball.center.y > 150 && ball.center.y < 240)
+                        {
+                            rm.setSpeed(0);
+                            lm.setSpeed(30);
+                            //(int)(10 + (240 - ball.center.y + 240)/40)
+                        }
+
+                        if (ball.center.y == 241)
+                        {
+                            rm.setSpeed(30);
+                            lm.setSpeed(30);
+                        }
+
+                        if (ball.center.y > 240 && ball.center.y < 300)
+                        {
+                            lm.setSpeed(0);
+                            rm.setSpeed(30);
+                            //(int)(10 + (240 - ball.center.y)/40)
+                        }
+
+                        if (ball.radius >= 30)
+                        {
+                            isApproached = true;
+                            rm.setSpeed(50);
+                            lm.setSpeed(50);
+                        }
                     }
 
                     if (isApproached)
@@ -286,16 +299,16 @@ public class AutoActivity extends AppCompatActivity
                         distance = Fdistance.get();
                         //Log.e("distance", String.valueOf(distance));
 
-                        if (distance > 10 && distance <= 20 && !isRunning)
+                        if (distance > 10 && distance <= 30 && !isRunning)
                         {
                             startEngine(rm, 30, 'b');
                             startEngine(lm, 30, 'b');
                             isRunning = true;
                         }
 
-                        if (distance <= 10 && isRunning)
+                        if (distance <= 15 && isRunning)
                         {
-                            Thread.sleep(600);
+                            Thread.sleep(1500);
                             stopEngine(rm);
                             stopEngine(lm);
                             autoMoveHand(hand, 25, 'c');
@@ -404,7 +417,7 @@ public class AutoActivity extends AppCompatActivity
             {
                 try
                 {
-                    Thread.sleep(20);
+                    Thread.sleep(100);
                 }
                 catch (InterruptedException e)
                 {
