@@ -69,9 +69,9 @@ public class AutoActivity extends AppCompatActivity
     private BluetoothConnection.BluetoothChannel bluechan;
     private EV3 ev3;
 
-    private TachoMotor rm;
-    private TachoMotor lm;
-    private TachoMotor hand;
+    private Motor rm;
+    private Motor lm;
+    private Motor hand;
 
     private CameraBridgeViewBase camera;
     Mat frame;
@@ -190,8 +190,8 @@ public class AutoActivity extends AppCompatActivity
 
         stop.setOnClickListener(v ->
         {
-            stopEngine(rm);
-            stopEngine(lm);
+            rm.stopEngine();
+            lm.stopEngine();
             stop.setEnabled(false);
             attuale = System.currentTimeMillis() - tempoInizio;
             secondi = (int) (attuale/1000) % 60;
@@ -215,9 +215,9 @@ public class AutoActivity extends AppCompatActivity
         //final LightSensor ls = api.getLightSensor(EV3.InputPort._4);
         //final GyroSensor gyroSensor = api.getGyroSensor(EV3.InputPort._4);
 
-        rm = api.getTachoMotor(EV3.OutputPort.A);
-        lm = api.getTachoMotor(EV3.OutputPort.D);
-        hand = api.getTachoMotor(EV3.OutputPort.C);
+        rm = new Motor(api, EV3.OutputPort.A);
+        lm = new Motor(api, EV3.OutputPort.D);
+        hand = new Motor(api, EV3.OutputPort.C);
 
         try
         {
@@ -249,16 +249,16 @@ public class AutoActivity extends AppCompatActivity
 
                     if (!isSearching)
                     {
-                        startEngine(rm, 20, 'f');
-                        startEngine(lm, 20, 'b');
+                        rm.startEngine(20, 'b');
+                        lm.startEngine(20, 'f');
                         isSearching = true;
                     }
 
                     if (ball.center.y > 220 && ball.center.y < 260 && !ball.color.equals("yellow") && !isFind)
                     {
-                        startEngine(rm, 30, 'b');
-                        startEngine(lm, 30, 'b');
-                        autoMoveHand(hand, 15, 'o');
+                        rm.startEngine(30, 'f');
+                        lm.startEngine(30, 'f');
+                        hand.autoMoveHand(15, 'o');
                         isFind = true;
                     }
 
@@ -301,17 +301,17 @@ public class AutoActivity extends AppCompatActivity
 
                         if (distance > 10 && distance <= 30 && !isRunning)
                         {
-                            startEngine(rm, 30, 'b');
-                            startEngine(lm, 30, 'b');
+                            rm.startEngine(30, 'f');
+                            lm.startEngine(30, 'f');
                             isRunning = true;
                         }
 
                         if (distance <= 15 && isRunning)
                         {
                             Thread.sleep(1500);
-                            stopEngine(rm);
-                            stopEngine(lm);
-                            autoMoveHand(hand, 25, 'c');
+                            rm.stopEngine();
+                            lm.stopEngine();
+                            hand.autoMoveHand(25, 'c');
                         }
                     }
 
@@ -328,63 +328,6 @@ public class AutoActivity extends AppCompatActivity
             {
                 e.printStackTrace();
             }
-        }
-    }
-
-    private void startEngine(TachoMotor m, int i, char c)
-    {
-        try
-        {
-            if (c == 'f')
-            {
-                m.setPolarity(TachoMotor.Polarity.FORWARD);
-                m.setSpeed(i);
-                m.start();
-            }
-            if (c == 'b')
-            {
-                m.setPolarity(TachoMotor.Polarity.BACKWARDS);
-                m.setSpeed(i);
-                m.start();
-            }
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
-    }
-
-    private void stopEngine(TachoMotor m)
-    {
-        try
-        {
-            m.stop();
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
-    }
-
-    private void autoMoveHand(TachoMotor m, int i, char c)
-    {
-        try
-        {
-            if (c == 'o')
-            {
-                m.setPolarity(TachoMotor.Polarity.BACKWARDS);
-                m.setTimeSpeed(i,0,3000,0,true);
-            }
-            if (c== 'c')
-            {
-                m.setPolarity(TachoMotor.Polarity.FORWARD);
-                m.setTimeSpeed(i,0,3000,0,true);
-            }
-            m.waitUntilReady();
-        }
-        catch (IOException | InterruptedException | ExecutionException e)
-        {
-            e.printStackTrace();
         }
     }
 

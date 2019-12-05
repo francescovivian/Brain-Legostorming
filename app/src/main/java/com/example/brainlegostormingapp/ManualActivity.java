@@ -46,9 +46,9 @@ public class ManualActivity extends AppCompatActivity
     private BluetoothConnection.BluetoothChannel bluechan;
     private EV3 ev3;
 
-    private TachoMotor rm;
-    private TachoMotor lm;
-    private TachoMotor hand;
+    private Motor rm;
+    private Motor lm;
+    private Motor hand;
 
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -110,38 +110,38 @@ public class ManualActivity extends AppCompatActivity
 
         start.setOnClickListener(v ->
         {
-            startEngine(rm, 50,'b');
-            startEngine(lm, 50,'b');
+            rm.startEngine(50,'f');
+            lm.startEngine(50,'f');
         });
 
         stop.setOnClickListener(v ->
         {
-            stopEngine(rm);
-            stopEngine(lm);
-            stopEngine(hand);
+            rm.stopEngine();
+            lm.stopEngine();
+            hand.stopEngine();
         });
 
         retro.setOnClickListener(v ->
         {
-            startEngine(rm, 40,'f');
-            startEngine(lm, 40,'f');
+            rm.startEngine(40,'b');
+            lm.startEngine(40,'b');
         });
 
         left.setOnClickListener(v ->
         {
-            startEngine(rm, 40,'b');
-            startEngine(lm, 40,'f');
+            rm.startEngine(40,'f');
+            lm.startEngine(40,'b');
         });
 
         right.setOnClickListener(v ->
         {
-            startEngine(rm, 40,'f');
-            startEngine(lm, 40,'b');
+            rm.startEngine(40,'b');
+            lm.startEngine(40,'f');
         });
 
-        open.setOnClickListener(v -> startEngine(hand,15,'b'));
+        open.setOnClickListener(v -> hand.startEngine(15,'f'));
 
-        close.setOnClickListener(v -> startEngine(hand,25,'f'));
+        close.setOnClickListener(v -> hand.startEngine(25,'b'));
 
         conn.setOnClickListener(v ->
         {
@@ -231,9 +231,9 @@ public class ManualActivity extends AppCompatActivity
 
         final LightSensor ls = api.getLightSensor(EV3.InputPort._4);
 
-        rm = api.getTachoMotor(EV3.OutputPort.A);
-        lm = api.getTachoMotor(EV3.OutputPort.D);
-        hand = api.getTachoMotor(EV3.OutputPort.C);
+        rm = new Motor(api, EV3.OutputPort.A);
+        lm = new Motor(api, EV3.OutputPort.D);
+        hand = new Motor(api, EV3.OutputPort.C);
 
         try
         {
@@ -262,41 +262,6 @@ public class ManualActivity extends AppCompatActivity
         }
 
         runOnUiThread(() -> findViewById(R.id.colorView).setBackgroundColor(LightSensor.Color.WHITE.toARGB32()));
-    }
-
-    private void startEngine(TachoMotor m, int i, char c)
-    {
-        try
-        {
-            if (c == 'f')
-            {
-                m.setPolarity(TachoMotor.Polarity.FORWARD);
-                m.setSpeed(i);
-                m.start();
-            }
-            if (c == 'b')
-            {
-                m.setPolarity(TachoMotor.Polarity.BACKWARDS);
-                m.setSpeed(i);
-                m.start();
-            }
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
-    }
-
-    private void stopEngine(TachoMotor m)
-    {
-        try
-        {
-            m.stop();
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
     }
 
     public void aggiornaTimer(TextView tv, String tempo)
