@@ -54,12 +54,12 @@ public class Motor extends TachoMotor
         {
             if (direction == 'o')
             {
-                this.setPolarity(TachoMotor.Polarity.FORWARD);
+                this.setPolarity(TachoMotor.Polarity.BACKWARDS);
                 this.setTimeSpeed(speed,0,3000,0,true);
             }
             if (direction == 'c')
             {
-                this.setPolarity(TachoMotor.Polarity.BACKWARDS);
+                this.setPolarity(TachoMotor.Polarity.FORWARD);
                 this.setTimeSpeed(speed,0,3000,0,true);
             }
             this.waitUntilReady();

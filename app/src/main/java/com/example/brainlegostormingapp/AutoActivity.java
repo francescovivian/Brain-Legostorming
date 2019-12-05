@@ -238,6 +238,7 @@ public class AutoActivity extends AppCompatActivity
         boolean isSearching = false;
         boolean isApproached = false;
         boolean isCentered = false;
+        boolean isStraightening = false;
 
         while (!api.ev3.isCancelled())
         {
@@ -256,39 +257,48 @@ public class AutoActivity extends AppCompatActivity
 
                     if (ball.center.y > 220 && ball.center.y < 260 && !ball.color.equals("yellow") && !isFind)
                     {
-                        rm.startEngine(30, 'f');
-                        lm.startEngine(30, 'f');
-                        hand.autoMoveHand(15, 'o');
-                        isFind = true;
+                        if (!isStraightening && isSearching)
+                        {
+                            rm.startEngine(10, 'f');
+                            lm.startEngine(10, 'b');
+                            isStraightening = true;
+                        }
+                        else if (ball.center.y > 230 && ball.center.y < 250 && !ball.color.equals("yellow"))
+                        {
+                            rm.startEngine(30, 'f');
+                            lm.startEngine(30, 'f');
+                            hand.autoMoveHand(15, 'o');
+                            isFind = true;
+                        }
                     }
 
-                    if (!isCentered && !isApproached && isFind)
+                    if (!isCentered && isSearching && !isApproached && isFind)
                     {
                         if (ball.center.y > 150 && ball.center.y < 240)
                         {
-                            rm.setSpeed(0);
+                            rm.setSpeed(10);
                             lm.setSpeed(30);
                             //(int)(10 + (240 - ball.center.y + 240)/40)
                         }
 
                         if (ball.center.y == 241)
                         {
-                            rm.setSpeed(30);
-                            lm.setSpeed(30);
+                            rm.setSpeed(10);
+                            lm.setSpeed(10);
                         }
 
                         if (ball.center.y > 240 && ball.center.y < 300)
                         {
-                            lm.setSpeed(0);
+                            lm.setSpeed(10);
                             rm.setSpeed(30);
                             //(int)(10 + (240 - ball.center.y)/40)
                         }
 
                         if (ball.radius >= 30)
                         {
+                            rm.setSpeed(30);
+                            lm.setSpeed(30);
                             isApproached = true;
-                            rm.setSpeed(50);
-                            lm.setSpeed(50);
                         }
                     }
 
