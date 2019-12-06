@@ -74,10 +74,14 @@ public class AutoActivity extends AppCompatActivity
     private Motor hand;
 
     private CameraBridgeViewBase camera;
-    Mat frame;
-    BallFinder ballFinder;
-    ArrayList<Ball> balls;
-    Ball ball;
+    private Mat frame;
+    private BallFinder ballFinder;
+    private ArrayList<Ball> balls;
+    private Ball ball;
+
+    private int[][] campo;
+    private char orientation = 'n';
+    private int startR, startC;
 
     private int dimM, dimN;
 
@@ -152,6 +156,11 @@ public class AutoActivity extends AppCompatActivity
                 pixelGrid.setNumRows(dimM);
                 pixelGrid.setNumColumns(dimN);
 
+                campo = new int[dimM][dimN];
+
+                startR = dimM-1;
+                startC = 1;
+
                 //Per fare i quadrati rossi
                 //pixelGrid.changeCellChecked(2,3);
 
@@ -211,9 +220,8 @@ public class AutoActivity extends AppCompatActivity
     {
         //final String TAG = Prelude.ReTAG("legoMain");
 
-        final UltrasonicSensor us = api.getUltrasonicSensor(EV3.InputPort._1);
-        //final LightSensor ls = api.getLightSensor(EV3.InputPort._4);
-        //final GyroSensor gyroSensor = api.getGyroSensor(EV3.InputPort._4);
+        //final UltrasonicSensor us = api.getUltrasonicSensor(EV3.InputPort._1);
+        final LightSensor ls = api.getLightSensor(EV3.InputPort._4);
 
         rm = new Motor(api, EV3.OutputPort.A);
         lm = new Motor(api, EV3.OutputPort.D);
@@ -230,10 +238,142 @@ public class AutoActivity extends AppCompatActivity
             e.printStackTrace();
         }
 
-        Future<Float> Fdistance;
-        Float distance;
+        //Future<Float> Fdistance;
+        //Float distance;
+        Future<LightSensor.Color> Fcol;
+        LightSensor.Color col;
 
-        boolean isRunning = false;
+        while (!api.ev3.isCancelled())
+        {
+            try
+            {
+                Fcol = ls.getColor();
+                col = Fcol.get();
+                if (col == LightSensor.Color.BLACK)
+                {
+                    rm.stop();
+                    lm.stop();
+                }
+
+            }
+            catch (IOException | InterruptedException | ExecutionException e)
+            {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void aggiornaTimer(TextView tv, String tempo)
+    {
+        runOnUiThread(() -> tv.setText(tempo));
+    }
+
+    public void avviaFotocamera()
+    {
+        camera.setVisibility(SurfaceView.VISIBLE);
+        camera.setMaxFrameSize(640, 480);
+        camera.disableFpsMeter();
+        camera.setCvCameraViewListener(new CameraBridgeViewBase.CvCameraViewListener2()
+        {
+            @Override
+            public void onCameraViewStarted(int width, int height)
+            {
+                Log.d(TAG, "Camera Started");
+            }
+
+            @Override
+            public void onCameraViewStopped()
+            {
+                Log.d(TAG, "Camera Stopped");
+            }
+
+            @Override
+            public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame)
+            {
+                try
+                {
+                    Thread.sleep(100);
+                }
+                catch (InterruptedException e)
+                {
+                    e.printStackTrace();
+                }
+
+                System.gc();
+
+                frame = inputFrame.rgba();
+                ballFinder = new BallFinder(frame);
+                balls = ballFinder.findBalls();
+
+                for (int i = 0; i < balls.size(); i++)
+                {
+                    ball = balls.get(i);
+                    Point center = new Point(ball.center.x,ball.center.y);
+                    int radius = (int) ball.radius;
+                    Scalar color_rgb;
+
+                    if (ball.color.equals("red")) color_rgb = new Scalar(255, 0, 0);
+                    else if (ball.color.equals("blue")) color_rgb = new Scalar(0, 0, 255);
+                    else if (ball.color.equals("yellow")) color_rgb = new Scalar(255, 255, 0);
+                    else color_rgb = new Scalar(0, 0, 0);
+
+                    Imgproc.circle(frame, center,radius,color_rgb,2);
+
+                    Imgproc.circle(frame, new Point(320,240),10,new Scalar(0,0,0),2);
+                    Imgproc.line(frame, new Point(310,240), new Point(330,240),new Scalar(0,0,0),2);
+                    Imgproc.line(frame, new Point(320,230), new Point(320,250),new Scalar(0,0,0),2);
+
+                    /*Log.e("ball center x ", String.valueOf(ball.center.x));
+                    Log.e("ball center y ", String.valueOf(ball.center.y));
+                    Log.e("ball radius ", String.valueOf(ball.radius));
+                    Log.e("ball color ", ball.color);*/
+                }
+
+                System.gc();
+
+                return frame;
+            }
+        });
+
+        camera.enableView();
+    }
+
+    public void autoMove90(Motor rm, Motor lm, char direction)
+    {
+        try
+        {
+            if (direction == 'r')
+            {
+                rm.setPolarity(TachoMotor.Polarity.FORWARD);
+                rm.setTimeSpeed(20,0,3000,0,true);
+                lm.setPolarity(TachoMotor.Polarity.BACKWARDS);
+                lm.setTimeSpeed(20,0,3000,0,true);
+            }
+            if (direction == 'l')
+            {
+                lm.setPolarity(TachoMotor.Polarity.BACKWARDS);
+                lm.setTimeSpeed(20,0,3000,0,true);
+                rm.setPolarity(TachoMotor.Polarity.FORWARD);
+                rm.setTimeSpeed(20,0,3000,0,true);
+            }
+            rm.waitUntilReady();
+            lm.waitUntilReady();
+        }
+        catch (IOException | InterruptedException | ExecutionException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResult)
+    {
+        if (requestCode == 1 && grantResult.length > 0 && grantResult[0]==PackageManager.PERMISSION_GRANTED) avviaFotocamera();
+    }
+}
+
+/*
+boolean isRunning = false;
         boolean isFind = false;
         boolean isSearching = false;
         boolean isApproached = false;
@@ -328,97 +468,11 @@ public class AutoActivity extends AppCompatActivity
                     balls.remove(ball);
                 }
 
-                /*Future<Short> Fambient = ls.getAmbient();
+                Future<Short> Fambient = ls.getAmbient();
                 Short ambient = Fambient.get();
-
-                Future<LightSensor.Color> Fcol = ls.getColor();
-                LightSensor.Color col = Fcol.get();*/
             }
             catch (IOException | InterruptedException | ExecutionException e)
             {
                 e.printStackTrace();
             }
-        }
-    }
-
-    public void aggiornaTimer(TextView tv, String tempo)
-    {
-        runOnUiThread(() -> tv.setText(tempo));
-    }
-
-    public void avviaFotocamera()
-    {
-        camera.setVisibility(SurfaceView.VISIBLE);
-        camera.setMaxFrameSize(640, 480);
-        camera.disableFpsMeter();
-        camera.setCvCameraViewListener(new CameraBridgeViewBase.CvCameraViewListener2()
-        {
-            @Override
-            public void onCameraViewStarted(int width, int height)
-            {
-                Log.d(TAG, "Camera Started");
-            }
-
-            @Override
-            public void onCameraViewStopped()
-            {
-                Log.d(TAG, "Camera Stopped");
-            }
-
-            @Override
-            public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame)
-            {
-                try
-                {
-                    Thread.sleep(100);
-                }
-                catch (InterruptedException e)
-                {
-                    e.printStackTrace();
-                }
-
-                System.gc();
-
-                frame = inputFrame.rgba();
-                ballFinder = new BallFinder(frame);
-                balls = ballFinder.findBalls();
-
-                for (int i = 0; i < balls.size(); i++)
-                {
-                    ball = balls.get(i);
-                    Point center = new Point(ball.center.x,ball.center.y);
-                    int radius = (int) ball.radius;
-                    Scalar color_rgb;
-
-                    if (ball.color.equals("red")) color_rgb = new Scalar(255, 0, 0);
-                    else if (ball.color.equals("blue")) color_rgb = new Scalar(0, 0, 255);
-                    else if (ball.color.equals("yellow")) color_rgb = new Scalar(255, 255, 0);
-                    else color_rgb = new Scalar(0, 0, 0);
-
-                    Imgproc.circle(frame, center,radius,color_rgb,2);
-
-                    Imgproc.circle(frame, new Point(320,240),10,new Scalar(0,0,0),2);
-                    Imgproc.line(frame, new Point(310,240), new Point(330,240),new Scalar(0,0,0),2);
-                    Imgproc.line(frame, new Point(320,230), new Point(320,250),new Scalar(0,0,0),2);
-
-                    /*Log.e("ball center x ", String.valueOf(ball.center.x));
-                    Log.e("ball center y ", String.valueOf(ball.center.y));
-                    Log.e("ball radius ", String.valueOf(ball.radius));
-                    Log.e("ball color ", ball.color);*/
-                }
-
-                System.gc();
-
-                return frame;
-            }
-        });
-
-        camera.enableView();
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResult)
-    {
-        if (requestCode == 1 && grantResult.length > 0 && grantResult[0]==PackageManager.PERMISSION_GRANTED) avviaFotocamera();
-    }
-}
+}*/
