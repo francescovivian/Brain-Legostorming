@@ -237,7 +237,6 @@ public class AutoActivity extends AppCompatActivity
         boolean isFind = false;
         boolean isSearching = false;
         boolean isApproached = false;
-        boolean isCentered = false;
         boolean isStraightening = false;
 
         while (!api.ev3.isCancelled())
@@ -275,27 +274,27 @@ public class AutoActivity extends AppCompatActivity
 
                     if (isFind && !isApproached)
                     {
-                        if (ball.center.y > 150 && ball.center.y < 240)
+                        if (ball.center.y >= 220 && ball.center.y < 240)
                         {
                             rm.setSpeed(10);
                             lm.setSpeed(30);
                             //(int)(10 + (240 - ball.center.y + 240)/40)
                         }
 
-                        if (ball.center.y == 241)
+                        if (ball.center.y == 240)
                         {
                             rm.setSpeed(10);
                             lm.setSpeed(10);
                         }
 
-                        if (ball.center.y > 240 && ball.center.y < 300)
+                        if (ball.center.y > 240 && ball.center.y <= 260)
                         {
                             lm.setSpeed(10);
                             rm.setSpeed(30);
                             //(int)(10 + (240 - ball.center.y)/40)
                         }
 
-                        if (ball.radius >= 35)
+                        if (ball.radius >= 30)
                         {
                             rm.setSpeed(20);
                             lm.setSpeed(20);
