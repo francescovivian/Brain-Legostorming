@@ -69,9 +69,7 @@ public class AutoActivity extends AppCompatActivity
     private BluetoothConnection.BluetoothChannel bluechan;
     private EV3 ev3;
 
-    private Motor rm;
-    private Motor lm;
-    private Motor hand;
+    private Robot robot;
 
     private CameraBridgeViewBase camera;
     private Mat frame;
@@ -80,7 +78,7 @@ public class AutoActivity extends AppCompatActivity
     private Ball ball;
 
     private int[][] campo;
-    private char orientation = 'n';
+    private char orientation;
     private int startR, startC;
 
     private int dimM, dimN;
@@ -199,8 +197,8 @@ public class AutoActivity extends AppCompatActivity
 
         stop.setOnClickListener(v ->
         {
-            rm.stopEngine();
-            lm.stopEngine();
+            robot.stopEngine('r');
+            robot.stopEngine('l');
             stop.setEnabled(false);
             attuale = System.currentTimeMillis() - tempoInizio;
             secondi = (int) (attuale/1000) % 60;
@@ -220,43 +218,28 @@ public class AutoActivity extends AppCompatActivity
     {
         //final String TAG = Prelude.ReTAG("legoMain");
 
-        //final UltrasonicSensor us = api.getUltrasonicSensor(EV3.InputPort._1);
-        final LightSensor ls = api.getLightSensor(EV3.InputPort._4);
+        robot = new Robot(api);
 
-        rm = new Motor(api, EV3.OutputPort.A);
-        lm = new Motor(api, EV3.OutputPort.D);
-        hand = new Motor(api, EV3.OutputPort.C);
-
-        try
-        {
-            rm.setType(TachoMotor.Type.LARGE);
-            lm.setType(TachoMotor.Type.LARGE);
-            hand.setType(TachoMotor.Type.MEDIUM);
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
-
-        //Future<Float> Fdistance;
+        //Future<Float> fDistance;
         //Float distance;
-        Future<LightSensor.Color> Fcol;
+        Future<LightSensor.Color> fCol;
         LightSensor.Color col;
 
         while (!api.ev3.isCancelled())
         {
             try
             {
-                Fcol = ls.getColor();
-                col = Fcol.get();
+                fCol = robot.getColor();
+                col = fCol.get();
+
                 if (col == LightSensor.Color.BLACK)
                 {
-                    rm.stop();
-                    lm.stop();
+                    robot.stopEngine('r');
+                    robot.stopEngine('l');
                 }
 
             }
-            catch (IOException | InterruptedException | ExecutionException e)
+            catch (InterruptedException | ExecutionException e)
             {
                 e.printStackTrace();
             }
@@ -336,33 +319,6 @@ public class AutoActivity extends AppCompatActivity
         });
 
         camera.enableView();
-    }
-
-    public void autoMove90(Motor rm, Motor lm, char direction)
-    {
-        try
-        {
-            if (direction == 'r')
-            {
-                rm.setPolarity(TachoMotor.Polarity.FORWARD);
-                rm.setTimeSpeed(20,0,3000,0,true);
-                lm.setPolarity(TachoMotor.Polarity.BACKWARDS);
-                lm.setTimeSpeed(20,0,3000,0,true);
-            }
-            if (direction == 'l')
-            {
-                lm.setPolarity(TachoMotor.Polarity.BACKWARDS);
-                lm.setTimeSpeed(20,0,3000,0,true);
-                rm.setPolarity(TachoMotor.Polarity.FORWARD);
-                rm.setTimeSpeed(20,0,3000,0,true);
-            }
-            rm.waitUntilReady();
-            lm.waitUntilReady();
-        }
-        catch (IOException | InterruptedException | ExecutionException e)
-        {
-            e.printStackTrace();
-        }
     }
 
     @Override

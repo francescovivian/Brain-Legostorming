@@ -46,9 +46,7 @@ public class ManualActivity extends AppCompatActivity
     private BluetoothConnection.BluetoothChannel bluechan;
     private EV3 ev3;
 
-    private Motor rm;
-    private Motor lm;
-    private Motor hand;
+    private Robot robot;
 
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -110,38 +108,38 @@ public class ManualActivity extends AppCompatActivity
 
         start.setOnClickListener(v ->
         {
-            rm.startEngine(50,'f');
-            lm.startEngine(50,'f');
+            robot.startEngine('r',50,'f');
+            robot.startEngine('l',50,'f');
         });
 
         stop.setOnClickListener(v ->
         {
-            rm.stopEngine();
-            lm.stopEngine();
-            hand.stopEngine();
+            robot.stopEngine('r');
+            robot.stopEngine('l');
+            robot.stopEngine('h');
         });
 
         retro.setOnClickListener(v ->
         {
-            rm.startEngine(40,'b');
-            lm.startEngine(40,'b');
+            robot.startEngine('r',40,'b');
+            robot.startEngine('l',40,'b');
         });
 
         left.setOnClickListener(v ->
         {
-            rm.startEngine(40,'f');
-            lm.startEngine(40,'b');
+            robot.startEngine('r',40,'f');
+            robot.startEngine('l',40,'b');
         });
 
         right.setOnClickListener(v ->
         {
-            rm.startEngine(40,'b');
-            lm.startEngine(40,'f');
+            robot.startEngine('r',40,'b');
+            robot.startEngine('l',40,'f');
         });
 
-        open.setOnClickListener(v -> hand.startEngine(15,'f'));
+        open.setOnClickListener(v -> robot.startEngine('h',15,'f'));
 
-        close.setOnClickListener(v -> hand.startEngine(25,'b'));
+        close.setOnClickListener(v -> robot.startEngine('h',25,'b'));
 
         conn.setOnClickListener(v ->
         {
@@ -229,33 +227,18 @@ public class ManualActivity extends AppCompatActivity
     {
         //final String TAG = Prelude.ReTAG("legoMain");
 
-        final LightSensor ls = api.getLightSensor(EV3.InputPort._4);
-
-        rm = new Motor(api, EV3.OutputPort.A);
-        lm = new Motor(api, EV3.OutputPort.D);
-        hand = new Motor(api, EV3.OutputPort.C);
-
-        try
-        {
-            rm.setType(TachoMotor.Type.LARGE);
-            lm.setType(TachoMotor.Type.LARGE);
-            hand.setType(TachoMotor.Type.MEDIUM);
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
+        robot = new Robot(api);
 
         while (!api.ev3.isCancelled())
         {
             try
             {
-                Future<LightSensor.Color> Fcol = ls.getColor();
+                Future<LightSensor.Color> Fcol = robot.getColor();
                 LightSensor.Color col = Fcol.get();
 
                 runOnUiThread(() -> findViewById(R.id.colorView).setBackgroundColor(col.toARGB32()));
             }
-            catch (IOException | InterruptedException | ExecutionException e)
+            catch (InterruptedException | ExecutionException e)
             {
                 e.printStackTrace();
             }
