@@ -137,9 +137,9 @@ public class ManualActivity extends AppCompatActivity
             robot.startEngine('l',40,'f');
         });
 
-        open.setOnClickListener(v -> robot.startEngine('h',15,'f'));
+        open.setOnClickListener(v -> robot.startEngine('h',15,'b'));
 
-        close.setOnClickListener(v -> robot.startEngine('h',25,'b'));
+        close.setOnClickListener(v -> robot.startEngine('h',25,'f'));
 
         conn.setOnClickListener(v ->
         {

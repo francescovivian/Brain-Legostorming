@@ -220,24 +220,108 @@ public class AutoActivity extends AppCompatActivity
 
         robot = new Robot(api);
 
-        //Future<Float> fDistance;
-        //Float distance;
-        Future<LightSensor.Color> fCol;
-        LightSensor.Color col;
+        Future<Float> fDistance;
+        Float distance;
+        /*Future<LightSensor.Color> fCol;
+        LightSensor.Color col;*/
+
+        boolean isRunning = false;
+        boolean isFind = false;
+        boolean isSearching = false;
+        boolean isApproached = false;
+        boolean isStraightening = false;
 
         while (!api.ev3.isCancelled())
         {
             try
             {
-                fCol = robot.getColor();
-                col = fCol.get();
-
-                if (col == LightSensor.Color.BLACK)
+                for (int i = 0; i < balls.size(); i++)
                 {
-                    robot.stopEngine('r');
-                    robot.stopEngine('l');
+                    ball = balls.get(i);
+
+                    if (!isSearching)
+                    {
+                        robot.startEngine('r',10, 'b');
+                        robot.startEngine('l',10, 'f');
+                        isSearching = true;
+                    }
+
+                    if (ball.center.y > 220 && ball.center.y < 260 && !ball.color.equals("yellow") && isSearching && !isFind)
+                    {
+                        if (!isStraightening)
+                        {
+                            robot.startEngine('r',5, 'f');
+                            robot.startEngine('l',5, 'b');
+                            isStraightening = true;
+                        }
+
+                        if (ball.center.y > 230 && ball.center.y < 250)
+                        {
+                            robot.startEngine('r',10, 'f');
+                            robot.startEngine('l',10, 'f');
+                            robot.openHand(15);
+                            isFind = true;
+                        }
+                    }
+
+                    if (isFind && !isApproached)
+                    {
+                        if (ball.center.y >= 220 && ball.center.y < 240)
+                        {
+                            robot.setMotorSpeed('r',5);
+                            robot.setMotorSpeed('l',10);
+                            //(int)(10 + (240 - ball.center.y + 240)/40)
+                        }
+
+                        if (ball.center.y == 240)
+                        {
+                            robot.setMotorSpeed('r',10);
+                            robot.setMotorSpeed('l',10);
+                        }
+
+                        if (ball.center.y > 240 && ball.center.y <= 260)
+                        {
+                            robot.setMotorSpeed('l',5);
+                            robot.setMotorSpeed('r',10);
+                            //(int)(10 + (240 - ball.center.y)/40)
+                        }
+
+                        if (ball.radius >= 30)
+                        {
+                            robot.setMotorSpeed('r',10);
+                            robot.setMotorSpeed('l',10);
+                            isApproached = true;
+                        }
+                    }
+
+                    if (isApproached)
+                    {
+                        fDistance = robot.getDistance();
+                        Thread.sleep(100);
+                        distance = fDistance.get();
+                        //Log.e("distance", String.valueOf(distance));
+
+                        /*if (distance > 15 && distance <= 30 && !isRunning)
+                        {
+                            robot.setMotorSpeed('r',10);
+                            robot.setMotorSpeed('l',10);
+                            isRunning = true;
+                        }*/
+
+                        if (distance <= 15)
+                        {
+                            Thread.sleep(1000);
+                            robot.stopEngine('r');
+                            robot.stopEngine('l');
+                            robot.closeHand(25);
+                        }
+                    }
+
+                    balls.remove(ball);
                 }
 
+                /*Future<Short> Fambient = ls.getAmbient();
+                Short ambient = Fambient.get();*/
             }
             catch (InterruptedException | ExecutionException e)
             {
@@ -327,108 +411,3 @@ public class AutoActivity extends AppCompatActivity
         if (requestCode == 1 && grantResult.length > 0 && grantResult[0]==PackageManager.PERMISSION_GRANTED) avviaFotocamera();
     }
 }
-
-/*
-boolean isRunning = false;
-        boolean isFind = false;
-        boolean isSearching = false;
-        boolean isApproached = false;
-        boolean isStraightening = false;
-
-        while (!api.ev3.isCancelled())
-        {
-            try
-            {
-                for (int i = 0; i < balls.size(); i++)
-                {
-                    ball = balls.get(i);
-
-                    if (!isSearching)
-                    {
-                        rm.startEngine(20, 'b');
-                        lm.startEngine(20, 'f');
-                        isSearching = true;
-                    }
-
-                    if (ball.center.y > 220 && ball.center.y < 260 && !ball.color.equals("yellow") && isSearching && !isFind)
-                    {
-                        if (!isStraightening)
-                        {
-                            rm.startEngine(10, 'f');
-                            lm.startEngine(10, 'b');
-                            isStraightening = true;
-                        }
-
-                        if (ball.center.y > 230 && ball.center.y < 250)
-                        {
-                            rm.startEngine(20, 'f');
-                            lm.startEngine(20, 'f');
-                            hand.autoMoveHand(15, 'o');
-                            isFind = true;
-                        }
-                    }
-
-                    if (isFind && !isApproached)
-                    {
-                        if (ball.center.y >= 220 && ball.center.y < 240)
-                        {
-                            rm.setSpeed(10);
-                            lm.setSpeed(30);
-                            //(int)(10 + (240 - ball.center.y + 240)/40)
-                        }
-
-                        if (ball.center.y == 240)
-                        {
-                            rm.setSpeed(10);
-                            lm.setSpeed(10);
-                        }
-
-                        if (ball.center.y > 240 && ball.center.y <= 260)
-                        {
-                            lm.setSpeed(10);
-                            rm.setSpeed(30);
-                            //(int)(10 + (240 - ball.center.y)/40)
-                        }
-
-                        if (ball.radius >= 30)
-                        {
-                            rm.setSpeed(20);
-                            lm.setSpeed(20);
-                            isApproached = true;
-                        }
-                    }
-
-                    if (isApproached)
-                    {
-                        Fdistance = us.getDistance();
-                        Thread.sleep(100);
-                        distance = Fdistance.get();
-                        //Log.e("distance", String.valueOf(distance));
-
-                        if (distance > 15 && distance <= 30 && !isRunning)
-                        {
-                            rm.setSpeed(20);
-                            lm.setSpeed(20);
-                            isRunning = true;
-                        }
-
-                        if (distance <= 15 && isRunning)
-                        {
-                            Thread.sleep(1000);
-                            rm.stopEngine();
-                            lm.stopEngine();
-                            hand.autoMoveHand(25, 'c');
-                        }
-                    }
-
-                    balls.remove(ball);
-                }
-
-                Future<Short> Fambient = ls.getAmbient();
-                Short ambient = Fambient.get();
-            }
-            catch (IOException | InterruptedException | ExecutionException e)
-            {
-                e.printStackTrace();
-            }
-}*/

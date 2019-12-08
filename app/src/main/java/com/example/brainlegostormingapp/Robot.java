@@ -20,8 +20,8 @@ public class Robot
 
     public Robot(EV3.Api api)
     {
-        rm = new Motor(api, EV3.OutputPort.A);
-        lm = new Motor(api, EV3.OutputPort.D);
+        rm = new Motor(api, EV3.OutputPort.D);
+        lm = new Motor(api, EV3.OutputPort.A);
         hand = new Motor(api, EV3.OutputPort.C);
 
         us = api.getUltrasonicSensor(EV3.InputPort._1);
@@ -55,17 +55,17 @@ public class Robot
         {
             if (direction == 'r')
             {
-                rm.setPolarity(TachoMotor.Polarity.FORWARD);
-                rm.setTimeSpeed(20,0,3000,0,true);
-                lm.setPolarity(TachoMotor.Polarity.BACKWARDS);
+                lm.setPolarity(TachoMotor.Polarity.FORWARD);
                 lm.setTimeSpeed(20,0,3000,0,true);
+                rm.setPolarity(TachoMotor.Polarity.BACKWARDS);
+                rm.setTimeSpeed(20,0,3000,0,true);
             }
             if (direction == 'l')
             {
-                lm.setPolarity(TachoMotor.Polarity.BACKWARDS);
-                lm.setTimeSpeed(20,0,3000,0,true);
                 rm.setPolarity(TachoMotor.Polarity.FORWARD);
                 rm.setTimeSpeed(20,0,3000,0,true);
+                lm.setPolarity(TachoMotor.Polarity.BACKWARDS);
+                lm.setTimeSpeed(20,0,3000,0,true);
             }
             rm.waitUntilReady();
             lm.waitUntilReady();
@@ -90,6 +90,20 @@ public class Robot
         if (motor == 'h') hand.stopEngine();
     }
 
+    public void setMotorSpeed(char motor, int speed)
+    {
+        try
+        {
+            if (motor == 'r') rm.setSpeed(speed);
+            if (motor == 'l') lm.setSpeed(speed);
+            if (motor == 'h') hand.setSpeed(speed);
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
     public void openHand(int speed)
     {
         hand.autoMoveHand(speed, 'o');
@@ -98,6 +112,19 @@ public class Robot
     public void closeHand(int speed)
     {
         hand.autoMoveHand(speed, 'c');
+    }
+
+    public Future<Float> getDistance()
+    {
+        try
+        {
+            return us.getDistance();
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+        return null; //Questo non era previsto, potrebbe causare problemi
     }
 
     public Future<LightSensor.Color> getColor()

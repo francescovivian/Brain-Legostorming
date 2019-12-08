@@ -17,15 +17,15 @@ public class Motor extends TachoMotor
     {
         try
         {
-            if (direction == 'b')
+            if (direction == 'f')
             {
-                this.setPolarity(TachoMotor.Polarity.FORWARD);
+                this.setPolarity(Polarity.FORWARD);
                 this.setSpeed(speed);
                 this.start();
             }
-            if (direction == 'f')
+            if (direction == 'b')
             {
-                this.setPolarity(TachoMotor.Polarity.BACKWARDS);
+                this.setPolarity(Polarity.BACKWARDS);
                 this.setSpeed(speed);
                 this.start();
             }
