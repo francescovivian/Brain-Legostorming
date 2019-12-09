@@ -97,6 +97,40 @@
             android:text="0"
             android:inputType="numberSigned"
             android:importantForAutofill="no" />
+
+        <TextView
+            android:id="@+id/startM"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="SM:"
+            android:textSize="25sp"
+            tools:ignore="HardcodedText" />
+
+        <EditText
+            android:id="@+id/pM"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="25sp"
+            android:text="0"
+            android:inputType="numberSigned"
+            android:importantForAutofill="no" />
+
+        <TextView
+            android:id="@+id/startN"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="SN:"
+            android:textSize="25sp"
+            tools:ignore="HardcodedText" />
+
+        <EditText
+            android:id="@+id/pN"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="25sp"
+            android:text="0"
+            android:inputType="numberSigned"
+            android:importantForAutofill="no" />
     </LinearLayout>
 
     <LinearLayout

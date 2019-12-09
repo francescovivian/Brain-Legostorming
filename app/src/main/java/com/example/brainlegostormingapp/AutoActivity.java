@@ -59,15 +59,14 @@ import it.unive.dais.legodroid.lib.util.Consumer;
 import it.unive.dais.legodroid.lib.util.Prelude;
 import it.unive.dais.legodroid.lib.util.ThrowingConsumer;
 
-public class AutoActivity extends AppCompatActivity
-{
+public class AutoActivity extends AppCompatActivity {
     private static final String TAG = "AutoActivity";
-
     private long tempoInizio, attuale;
     private int secondi, minuti, ore, millisecondi;
 
     private BluetoothConnection.BluetoothChannel bluechan;
     private EV3 ev3;
+
 
     private Robot robot;
 
@@ -79,12 +78,10 @@ public class AutoActivity extends AppCompatActivity
     private Campo campo;
 
 
-
     private int dimM, dimN;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_auto);
         getSupportActionBar().hide();
@@ -100,19 +97,20 @@ public class AutoActivity extends AppCompatActivity
                         | View.SYSTEM_UI_FLAG_FULLSCREEN);
 
         decorView.setOnSystemUiVisibilityChangeListener((v) ->
-            decorView.setSystemUiVisibility(
-                    View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-                            | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                            | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                            | View.SYSTEM_UI_FLAG_FULLSCREEN));
+                decorView.setSystemUiVisibility(
+                        View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                                | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                                | View.SYSTEM_UI_FLAG_FULLSCREEN));
 
         if (!OpenCVLoader.initDebug()) Log.e(TAG, "Unable to load OpenCV");
         else Log.d(TAG, "OpenCV loaded");
 
         camera = findViewById(R.id.cameraView);
 
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, 1);
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED)
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, 1);
         else avviaFotocamera();
 
         Button main = findViewById(R.id.mainButton);
@@ -120,13 +118,13 @@ public class AutoActivity extends AppCompatActivity
 
         main.setOnClickListener(v ->
         {
-            Intent mainIntent = new Intent(getBaseContext(),MainActivity.class);
+            Intent mainIntent = new Intent(getBaseContext(), MainActivity.class);
             startActivity(mainIntent);
         });
 
         manual.setOnClickListener(v ->
         {
-            Intent manualIntent = new Intent(getBaseContext(),ManualActivity.class);
+            Intent manualIntent = new Intent(getBaseContext(), ManualActivity.class);
             startActivity(manualIntent);
         });
 
@@ -136,32 +134,33 @@ public class AutoActivity extends AppCompatActivity
         Button setMatrix = findViewById(R.id.setDimMatrix);
         EditText matrixM = findViewById(R.id.dimM);
         EditText matrixN = findViewById(R.id.dimN);
+        EditText pM = findViewById(R.id.pM);
+        EditText pN = findViewById(R.id.pN);
         //LinearLayout matrixView = findViewById(R.id.matrixView);
 
         setMatrix.setOnClickListener(v ->
         {
-            try
-            {
+            try {
                 dimM = Integer.parseInt(matrixM.getText().toString());
                 dimN = Integer.parseInt(matrixN.getText().toString());
                 setMatrix.setEnabled(false);
                 matrixM.setEnabled(false);
                 matrixN.setEnabled(false);
+                pM.setEnabled(false);
+                pN.setEnabled(false);
                 start.setEnabled(true);
 
                 PixelGridView pixelGrid = new PixelGridView(this);
                 pixelGrid.setNumRows(dimM);
                 pixelGrid.setNumColumns(dimN);
 
-                campo = new Campo(dimM,dimN,'N',dimM-1,1);
+                campo = new Campo(dimM, dimN, 'N', Integer.parseInt(pM.getText().toString()), Integer.parseInt(pN.getText().toString()));
 
                 //Per fare i quadrati rossi
                 //pixelGrid.changeCellChecked(2,3);
 
                 //matrixView.addView(pixelGrid);
-            }
-            catch (NumberFormatException ignored)
-            {
+            } catch (NumberFormatException ignored) {
                 ignored.printStackTrace();
             }
         });
@@ -171,23 +170,20 @@ public class AutoActivity extends AppCompatActivity
 
         start.setOnClickListener(v ->
         {
-            try
-            {
+            try {
                 BluetoothConnection blueconn = new BluetoothConnection("EV3BL");
                 bluechan = blueconn.connect();
                 ev3 = new EV3(bluechan);
                 Prelude.trap(() -> ev3.run(this::legoMain));
-                Toast.makeText(this,"Connessione stabilita con successo",Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Connessione stabilita con successo", Toast.LENGTH_SHORT).show();
                 start.setEnabled(false);
                 stop.setEnabled(true);
                 main.setEnabled(false);
                 manual.setEnabled(false);
                 tempoInizio = System.currentTimeMillis();
-            }
-            catch (IOException e)
-            {
+            } catch (IOException e) {
                 e.printStackTrace();
-                Toast.makeText(this,"Connessione non stabilita",Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Connessione non stabilita", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -196,9 +192,9 @@ public class AutoActivity extends AppCompatActivity
             robot.stopRLEngines();
             stop.setEnabled(false);
             attuale = System.currentTimeMillis() - tempoInizio;
-            secondi = (int) (attuale/1000) % 60;
-            minuti = (int) (attuale/60000) % 60;
-            ore = (int) (attuale/3600000) % 24;
+            secondi = (int) (attuale / 1000) % 60;
+            minuti = (int) (attuale / 60000) % 60;
+            ore = (int) (attuale / 3600000) % 24;
             millisecondi = (int) attuale % 1000;
             aggiornaTimer(testoCronometro, String.format("%02d:%02d:%02d:%03d", ore, minuti, secondi, millisecondi));
             ev3.cancel();
@@ -209,45 +205,35 @@ public class AutoActivity extends AppCompatActivity
         });
     }
 
-    private void legoMain(EV3.Api api)
-    {
+    private void legoMain(EV3.Api api) {
         //final String TAG = Prelude.ReTAG("legoMain");
 
     }
 
-    public void aggiornaTimer(TextView tv, String tempo)
-    {
+    public void aggiornaTimer(TextView tv, String tempo) {
         runOnUiThread(() -> tv.setText(tempo));
     }
 
-    public void avviaFotocamera()
-    {
+    public void avviaFotocamera() {
         camera.setVisibility(SurfaceView.VISIBLE);
         camera.setMaxFrameSize(640, 480);
         camera.disableFpsMeter();
-        camera.setCvCameraViewListener(new CameraBridgeViewBase.CvCameraViewListener2()
-        {
+        camera.setCvCameraViewListener(new CameraBridgeViewBase.CvCameraViewListener2() {
             @Override
-            public void onCameraViewStarted(int width, int height)
-            {
+            public void onCameraViewStarted(int width, int height) {
                 Log.d(TAG, "Camera Started");
             }
 
             @Override
-            public void onCameraViewStopped()
-            {
+            public void onCameraViewStopped() {
                 Log.d(TAG, "Camera Stopped");
             }
 
             @Override
-            public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame)
-            {
-                try
-                {
+            public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
+                try {
                     Thread.sleep(100);
-                }
-                catch (InterruptedException e)
-                {
+                } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
 
@@ -257,10 +243,9 @@ public class AutoActivity extends AppCompatActivity
                 ballFinder = new BallFinder(frame);
                 balls = ballFinder.findBalls();
 
-                for (int i = 0; i < balls.size(); i++)
-                {
+                for (int i = 0; i < balls.size(); i++) {
                     ball = balls.get(i);
-                    Point center = new Point(ball.center.x,ball.center.y);
+                    Point center = new Point(ball.center.x, ball.center.y);
                     int radius = (int) ball.radius;
                     Scalar color_rgb;
 
@@ -269,11 +254,11 @@ public class AutoActivity extends AppCompatActivity
                     else if (ball.color.equals("yellow")) color_rgb = new Scalar(255, 255, 0);
                     else color_rgb = new Scalar(0, 0, 0);
 
-                    Imgproc.circle(frame, center,radius,color_rgb,2);
+                    Imgproc.circle(frame, center, radius, color_rgb, 2);
 
-                    Imgproc.circle(frame, new Point(320,240),10,new Scalar(0,0,0),2);
-                    Imgproc.line(frame, new Point(310,240), new Point(330,240),new Scalar(0,0,0),2);
-                    Imgproc.line(frame, new Point(320,230), new Point(320,250),new Scalar(0,0,0),2);
+                    Imgproc.circle(frame, new Point(320, 240), 10, new Scalar(0, 0, 0), 2);
+                    Imgproc.line(frame, new Point(310, 240), new Point(330, 240), new Scalar(0, 0, 0), 2);
+                    Imgproc.line(frame, new Point(320, 230), new Point(320, 250), new Scalar(0, 0, 0), 2);
 
                     /*Log.e("ball center x ", String.valueOf(ball.center.x));
                     Log.e("ball center y ", String.valueOf(ball.center.y));
@@ -291,9 +276,9 @@ public class AutoActivity extends AppCompatActivity
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResult)
-    {
-        if (requestCode == 1 && grantResult.length > 0 && grantResult[0]==PackageManager.PERMISSION_GRANTED) avviaFotocamera();
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResult) {
+        if (requestCode == 1 && grantResult.length > 0 && grantResult[0] == PackageManager.PERMISSION_GRANTED)
+            avviaFotocamera();
     }
 }
 
