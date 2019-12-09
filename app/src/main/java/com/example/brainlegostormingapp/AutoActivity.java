@@ -40,16 +40,14 @@ public class AutoActivity extends AppCompatActivity {
 
     private BluetoothConnection.BluetoothChannel bluechan;
     private EV3 ev3;
-
-
     private Robot robot;
-
-
     private Mat frame;
     private BallFinder ballFinder;
+    private LineFinder lineFinder;
     private ArrayList<Ball> balls;
+    private ArrayList<Line> lines;
     private Ball ball;
-    private GameField campo;
+    private GameField gameField;
 
 
     private int dimM, dimN;
@@ -143,7 +141,7 @@ public class AutoActivity extends AppCompatActivity {
                 pixelGrid.setNumRows(dimM);
                 pixelGrid.setNumColumns(dimN);
 
-                campo = new GameField(dimM, dimN, orientation, startX, startY);
+                gameField = new GameField(dimM, dimN, orientation, startX, startY);
 
                 //Per fare i quadrati rossi
                 //pixelGrid.changeCellChecked(2,3);
@@ -253,10 +251,11 @@ public class AutoActivity extends AppCompatActivity {
 
                 frame = inputFrame.rgba();
                 ballFinder = new BallFinder(frame);
+                lineFinder = new LineFinder(frame);
                 balls = ballFinder.findBalls();
+                lines = lineFinder.findLines();
 
-                for (int i = 0; i < balls.size(); i++) {
-                    ball = balls.get(i);
+                for (Ball ball : balls) {
                     Point center = new Point(ball.center.x, ball.center.y);
                     int radius = (int) ball.radius;
                     Scalar color_rgb;
@@ -276,6 +275,9 @@ public class AutoActivity extends AppCompatActivity {
                     Log.e("ball center y ", String.valueOf(ball.center.y));
                     Log.e("ball radius ", String.valueOf(ball.radius));
                     Log.e("ball color ", ball.color);*/
+                }
+                for(Line line : lines){
+                    Imgproc.line(frame, line.p1, line.p2, new Scalar(255, 0, 0), 3);
                 }
 
                 System.gc();
