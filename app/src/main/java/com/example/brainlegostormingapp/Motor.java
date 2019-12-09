@@ -6,66 +6,48 @@ import java.util.concurrent.ExecutionException;
 import it.unive.dais.legodroid.lib.EV3;
 import it.unive.dais.legodroid.lib.plugs.TachoMotor;
 
-public class Motor extends TachoMotor
-{
-    public Motor(EV3.Api api, EV3.OutputPort op)
-    {
+public class Motor extends TachoMotor {
+    public Motor(EV3.Api api, EV3.OutputPort op) {
         super(api, op);
     }
 
-    public void startEngine(int speed, char direction)
-    {
-        try
-        {
-            if (direction == 'f')
-            {
+    public void startEngine(int speed, char direction) {
+        try {
+            if (direction == 'f') {
                 this.setPolarity(Polarity.FORWARD);
                 this.setSpeed(speed);
                 this.start();
             }
-            if (direction == 'b')
-            {
+            if (direction == 'b') {
                 this.setPolarity(Polarity.BACKWARDS);
                 this.setSpeed(speed);
                 this.start();
             }
-        }
-        catch (IOException e)
-        {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public void stopEngine()
-    {
-        try
-        {
+    public void stopEngine() {
+        try {
             this.stop();
-        }
-        catch (IOException e)
-        {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public void autoMoveHand(int speed, char direction)
-    {
-        try
-        {
-            if (direction == 'o')
-            {
+    public void autoMoveHand(int speed, char direction) {
+        try {
+            if (direction == 'o') {
                 this.setPolarity(TachoMotor.Polarity.BACKWARDS);
-                this.setTimeSpeed(speed,0,3000,0,true);
+                this.setTimeSpeed(speed, 0, 3000, 0, true);
             }
-            if (direction == 'c')
-            {
+            if (direction == 'c') {
                 this.setPolarity(TachoMotor.Polarity.FORWARD);
-                this.setTimeSpeed(speed,0,3000,0,true);
+                this.setTimeSpeed(speed, 0, 3000, 0, true);
             }
             this.waitUntilReady();
-        }
-        catch (IOException | InterruptedException | ExecutionException e)
-        {
+        } catch (IOException | InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
     }

@@ -76,10 +76,9 @@ public class AutoActivity extends AppCompatActivity
     private BallFinder ballFinder;
     private ArrayList<Ball> balls;
     private Ball ball;
+    private Campo campo;
 
-    private int[][] campo;
-    private char orientation;
-    private int startR, startC;
+
 
     private int dimM, dimN;
 
@@ -154,10 +153,7 @@ public class AutoActivity extends AppCompatActivity
                 pixelGrid.setNumRows(dimM);
                 pixelGrid.setNumColumns(dimN);
 
-                campo = new int[dimM][dimN];
-
-                startR = dimM-1;
-                startC = 1;
+                campo = new Campo(dimM,dimN,'N',dimM-1,1);
 
                 //Per fare i quadrati rossi
                 //pixelGrid.changeCellChecked(2,3);
@@ -197,8 +193,7 @@ public class AutoActivity extends AppCompatActivity
 
         stop.setOnClickListener(v ->
         {
-            robot.stopEngine('r');
-            robot.stopEngine('l');
+            robot.stopRLEngines();
             stop.setEnabled(false);
             attuale = System.currentTimeMillis() - tempoInizio;
             secondi = (int) (attuale/1000) % 60;
@@ -217,7 +212,6 @@ public class AutoActivity extends AppCompatActivity
     private void legoMain(EV3.Api api)
     {
         //final String TAG = Prelude.ReTAG("legoMain");
-
 
     }
 
@@ -396,8 +390,7 @@ public class AutoActivity extends AppCompatActivity
                     if (distance <= 15)
                     {
                         Thread.sleep(1000);
-                        robot.stopEngine('r');
-                        robot.stopEngine('l');
+                        robot.stopRLEngine();
                         robot.closeHand(25);
                     }
                 }
