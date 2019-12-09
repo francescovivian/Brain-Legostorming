@@ -1,35 +1,63 @@
 package com.example.brainlegostormingapp;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Surface;
 import android.view.SurfaceView;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.IOException;
+import java.security.acl.Group;
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
+import androidx.annotation.ColorInt;
+import androidx.annotation.IdRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import org.opencv.android.CameraBridgeViewBase;
+import org.opencv.android.JavaCameraView;
 import org.opencv.android.OpenCVLoader;
+import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.Point;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 
 import it.unive.dais.legodroid.lib.EV3;
+import it.unive.dais.legodroid.lib.GenEV3;
 import it.unive.dais.legodroid.lib.comm.BluetoothConnection;
+import it.unive.dais.legodroid.lib.plugs.GyroSensor;
+import it.unive.dais.legodroid.lib.plugs.LightSensor;
+import it.unive.dais.legodroid.lib.plugs.Plug;
+import it.unive.dais.legodroid.lib.plugs.TachoMotor;
+import it.unive.dais.legodroid.lib.plugs.TouchSensor;
+import it.unive.dais.legodroid.lib.plugs.UltrasonicSensor;
+import it.unive.dais.legodroid.lib.util.Consumer;
 import it.unive.dais.legodroid.lib.util.Prelude;
+import it.unive.dais.legodroid.lib.util.ThrowingConsumer;
 
 public class AutoActivity extends AppCompatActivity {
     private static final String TAG = "AutoActivity";
@@ -51,6 +79,11 @@ public class AutoActivity extends AppCompatActivity {
 
 
     private int dimM, dimN;
+
+
+    private TextView txtCronometro;
+    private Button btnMain,btnManual,btnStart,btnStop,btnSetMatrix,btnResetMatrix;
+    private EditText eTxtMatrixM,eTxtMatrixN,eTxtPosM,eTxtPosN;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,47 +114,54 @@ public class AutoActivity extends AppCompatActivity {
 
         camera = findViewById(R.id.cameraView);
 
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED)
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, 1);
+        }
         else avviaFotocamera();
 
-        Button main = findViewById(R.id.mainButton);
-        Button manual = findViewById(R.id.manualButton);
+        btnMain = findViewById(R.id.mainButton);
+        btnManual = findViewById(R.id.manualButton);
 
-        main.setOnClickListener(v ->
+        btnMain.setOnClickListener(v ->
         {
             Intent mainIntent = new Intent(getBaseContext(), MainActivity.class);
             startActivity(mainIntent);
         });
 
-        manual.setOnClickListener(v ->
+        btnManual.setOnClickListener(v ->
         {
             Intent manualIntent = new Intent(getBaseContext(), ManualActivity.class);
             startActivity(manualIntent);
         });
 
-        TextView testoCronometro = findViewById(R.id.cronometro);
-        Button start = findViewById(R.id.startButton);
-        Button stop = findViewById(R.id.stopButton);
-        Button setMatrix = findViewById(R.id.setDimMatrix);
-        EditText matrixM = findViewById(R.id.dimM);
-        EditText matrixN = findViewById(R.id.dimN);
-        EditText pM = findViewById(R.id.pM);
-        EditText pN = findViewById(R.id.pN);
+        txtCronometro = findViewById(R.id.cronometro);
+        btnStart = findViewById(R.id.startButton);
+        btnStop = findViewById(R.id.stopButton);
+        btnSetMatrix = findViewById(R.id.setDimMatrix);
+        btnResetMatrix = findViewById(R.id.resetDimMatrix);
+        eTxtMatrixM = findViewById(R.id.dimM);
+        eTxtMatrixN = findViewById(R.id.dimN);
+        eTxtPosM = findViewById(R.id.pM);
+        eTxtPosN = findViewById(R.id.pN);
+        btnStart.setEnabled(false);
+        btnStop.setEnabled(false);
         //LinearLayout matrixView = findViewById(R.id.matrixView);
 
-        setMatrix.setOnClickListener(v ->
+
+
+        btnSetMatrix.setOnClickListener(v ->
         {
             try {
-                dimM = Integer.parseInt(matrixM.getText().toString());
-                dimN = Integer.parseInt(matrixN.getText().toString());
-                setMatrix.setEnabled(false);
-                matrixM.setEnabled(false);
-                matrixN.setEnabled(false);
-                pM.setEnabled(false);
-                pN.setEnabled(false);
-                start.setEnabled(true);
-
+                btnResetMatrix.setVisibility(LinearLayout.VISIBLE);
+                btnSetMatrix.setVisibility(LinearLayout.GONE);
+                dimM = Integer.parseInt(eTxtMatrixM.getText().toString());
+                dimN = Integer.parseInt(eTxtMatrixN.getText().toString());
+                elementToggle(btnStart);
+                elementToggle(btnSetMatrix);
+                elementToggle(eTxtMatrixM);
+                elementToggle(eTxtMatrixN);
+                elementToggle(eTxtPosM);
+                elementToggle(eTxtPosN);
                 PixelGridView pixelGrid = new PixelGridView(this);
                 pixelGrid.setNumRows(dimM);
                 pixelGrid.setNumColumns(dimN);
@@ -137,10 +177,26 @@ public class AutoActivity extends AppCompatActivity {
             }
         });
 
-        start.setEnabled(false);
-        stop.setEnabled(false);
+        btnResetMatrix.setOnClickListener(e -> {
+            try{
+                btnResetMatrix.setVisibility(LinearLayout.GONE);
+                btnSetMatrix.setVisibility(LinearLayout.VISIBLE);
+                elementToggle(btnStart);
+                elementToggle(btnSetMatrix);
+                elementToggle(eTxtMatrixM);
+                elementToggle(eTxtMatrixN);
+                elementToggle(eTxtPosM);
+                elementToggle(eTxtPosN);
+            }
+            catch (NumberFormatException ignored){
+                ignored.printStackTrace();
+            }
+        });
 
-        start.setOnClickListener(v ->
+
+
+
+        btnStart.setOnClickListener(v ->
         {
             try {
                 BluetoothConnection blueconn = new BluetoothConnection("EV3BL");
@@ -148,10 +204,11 @@ public class AutoActivity extends AppCompatActivity {
                 ev3 = new EV3(bluechan);
                 Prelude.trap(() -> ev3.run(this::legoMain));
                 Toast.makeText(this, "Connessione stabilita con successo", Toast.LENGTH_SHORT).show();
-                start.setEnabled(false);
-                stop.setEnabled(true);
-                main.setEnabled(false);
-                manual.setEnabled(false);
+                elementToggle(btnResetMatrix);
+                elementToggle(btnStart);
+                elementToggle(btnStop);
+                elementToggle(btnMain);
+                elementToggle(btnManual);
                 tempoInizio = System.currentTimeMillis();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -159,26 +216,33 @@ public class AutoActivity extends AppCompatActivity {
             }
         });
 
-        stop.setOnClickListener(v ->
+        btnStop.setOnClickListener(v ->
         {
             robot.stopRLEngines();
-            stop.setEnabled(false);
+            elementToggle(btnStop);
             attuale = System.currentTimeMillis() - tempoInizio;
             secondi = (int) (attuale / 1000) % 60;
             minuti = (int) (attuale / 60000) % 60;
             ore = (int) (attuale / 3600000) % 24;
             millisecondi = (int) attuale % 1000;
-            aggiornaTimer(testoCronometro, String.format("%02d:%02d:%02d:%03d", ore, minuti, secondi, millisecondi));
+            aggiornaTimer(txtCronometro, String.format("%02d:%02d:%02d:%03d", ore, minuti, secondi, millisecondi));
             ev3.cancel();
             bluechan.close();
-            start.setEnabled(true);
-            main.setEnabled(true);
-            manual.setEnabled(true);
+            elementToggle(btnStart);
+            elementToggle(btnMain);
+            elementToggle(btnManual);
         });
+    }
+    private void elementToggle(View v){
+        v.setEnabled(!v.isEnabled());
     }
 
     private void legoMain(EV3.Api api) {
         //final String TAG = Prelude.ReTAG("legoMain");
+        robot = new Robot(api);
+        while (!api.ev3.isCancelled()) {
+        }
+
 
     }
 

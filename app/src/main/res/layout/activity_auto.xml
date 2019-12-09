@@ -164,6 +164,15 @@
             android:layout_weight="1"
             android:text="SETDIM"
             tools:ignore="HardcodedText" />
+        <Button
+            android:id="@+id/resetDimMatrix"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/layout_bg"
+            android:layout_weight="1"
+            android:text="RESET"
+            android:visibility="gone"
+            tools:ignore="HardcodedText" />
     </LinearLayout>
 
     <LinearLayout
