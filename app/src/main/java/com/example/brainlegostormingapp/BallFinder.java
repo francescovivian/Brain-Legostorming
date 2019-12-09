@@ -11,8 +11,7 @@ import org.opencv.imgproc.Imgproc;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BallFinder
-{
+public class BallFinder {
     private int sat_lower = 96;
     private int sat_upper = 255;
     private int red_lower = 160;
@@ -24,15 +23,13 @@ public class BallFinder
 
     private Mat frame;
 
-    public BallFinder(Mat frame)
-    {
+    public BallFinder(Mat frame) {
         this.frame = frame.clone();
     }
 
-    public ArrayList<Ball> findBalls()
-    {
+    public ArrayList<Ball> findBalls() {
         Mat hsv = new Mat();
-        List <Mat> split_hsv = new ArrayList<>();
+        List<Mat> split_hsv = new ArrayList<>();
 
         Imgproc.cvtColor(frame, hsv, Imgproc.COLOR_RGB2HSV);
 
@@ -66,16 +63,15 @@ public class BallFinder
 
         Imgproc.cvtColor(frame, grey, Imgproc.COLOR_RGB2GRAY);
         //Imgproc.GaussianBlur(grey,greyBlur, new Size(9,9),2,2);
-        Imgproc.bilateralFilter(grey,greyFiltered, 10,10,10);
-        Imgproc.HoughCircles(greyFiltered,circles, Imgproc.CV_HOUGH_GRADIENT,1,greyFiltered.rows()/4,30,30,5,40);
+        Imgproc.bilateralFilter(grey, greyFiltered, 10, 10, 10);
+        Imgproc.HoughCircles(greyFiltered, circles, Imgproc.CV_HOUGH_GRADIENT, 1, greyFiltered.rows() / 4, 30, 30, 5, 40);
 
         ArrayList<Ball> balls = new ArrayList<>();
         Ball b;
 
-        for(int i = 0; i < circles.cols() ; i++)
-        {
-            Point center = new Point(circles.get(0,i)[0], circles.get(0,i)[1]);
-            Float radius = (float) circles.get(0,i)[2];
+        for (int i = 0; i < circles.cols(); i++) {
+            Point center = new Point(circles.get(0, i)[0], circles.get(0, i)[1]);
+            Float radius = (float) circles.get(0, i)[2];
 
             int area_hue = (int) hue.get((int) center.y, (int) center.x)[0];
             String color;
@@ -85,9 +81,8 @@ public class BallFinder
             else if (area_hue >= yellow_lower && area_hue <= yellow_upper) color = "yellow";
             else color = "unknown";
 
-            if (!color.equals("unknown") && center.x != 0 && center.y != 0 && radius != 0)
-            {
-                b = new Ball(center,radius,color);
+            if (!color.equals("unknown") && center.x != 0 && center.y != 0 && radius != 0) {
+                b = new Ball(center, radius, color);
                 balls.add(b);
             }
 
@@ -123,8 +118,7 @@ public class BallFinder
         return balls;
     }
 
-    public Mat getFrame()
-    {
+    public Mat getFrame() {
         return frame;
     }
 }

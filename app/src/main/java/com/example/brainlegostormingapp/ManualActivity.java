@@ -23,6 +23,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+
 import it.unive.dais.legodroid.lib.EV3;
 import it.unive.dais.legodroid.lib.GenEV3;
 import it.unive.dais.legodroid.lib.comm.BluetoothConnection;
@@ -36,8 +37,7 @@ import it.unive.dais.legodroid.lib.util.Consumer;
 import it.unive.dais.legodroid.lib.util.Prelude;
 import it.unive.dais.legodroid.lib.util.ThrowingConsumer;
 
-public class ManualActivity extends AppCompatActivity
-{
+public class ManualActivity extends AppCompatActivity {
     //private static final String TAG = "ManualActivity";
 
     private Thread cronometro;
@@ -48,8 +48,7 @@ public class ManualActivity extends AppCompatActivity
 
     private Robot robot;
 
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manual);
         getSupportActionBar().hide();
@@ -76,13 +75,13 @@ public class ManualActivity extends AppCompatActivity
 
         main.setOnClickListener(v ->
         {
-            Intent mainIntent = new Intent(getBaseContext(),MainActivity.class);
+            Intent mainIntent = new Intent(getBaseContext(), MainActivity.class);
             startActivity(mainIntent);
         });
 
         auto.setOnClickListener(v ->
         {
-            Intent autoIntent = new Intent(getBaseContext(),AutoActivity.class);
+            Intent autoIntent = new Intent(getBaseContext(), AutoActivity.class);
             startActivity(autoIntent);
         });
 
@@ -108,7 +107,7 @@ public class ManualActivity extends AppCompatActivity
 
         start.setOnClickListener(v ->
         {
-            robot.startRLEngines(50,'f');
+            robot.startRLEngines(50, 'f');
         });
 
         stop.setOnClickListener(v ->
@@ -118,34 +117,33 @@ public class ManualActivity extends AppCompatActivity
 
         retro.setOnClickListener(v ->
         {
-            robot.startRLEngines(50,'b');
+            robot.startRLEngines(50, 'b');
         });
 
         left.setOnClickListener(v ->
         {
-            robot.startEngine('r',40,'f');
-            robot.startEngine('l',40,'b');
+            robot.startEngine('r', 40, 'f');
+            robot.startEngine('l', 40, 'b');
         });
 
         right.setOnClickListener(v ->
         {
-            robot.startEngine('r',40,'b');
-            robot.startEngine('l',40,'f');
+            robot.startEngine('r', 40, 'b');
+            robot.startEngine('l', 40, 'f');
         });
 
-        open.setOnClickListener(v -> robot.startEngine('h',15,'b'));
+        open.setOnClickListener(v -> robot.startEngine('h', 15, 'b'));
 
-        close.setOnClickListener(v -> robot.startEngine('h',25,'f'));
+        close.setOnClickListener(v -> robot.startEngine('h', 25, 'f'));
 
         conn.setOnClickListener(v ->
         {
-            try
-            {
+            try {
                 BluetoothConnection blueconn = new BluetoothConnection("EV3BL");
                 bluechan = blueconn.connect();
                 ev3 = new EV3(bluechan);
                 Prelude.trap(() -> ev3.run(this::legoMain));
-                Toast.makeText(this,"Connessione stabilita con successo",Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Connessione stabilita con successo", Toast.LENGTH_SHORT).show();
                 conn.setEnabled(false);
                 main.setEnabled(false);
                 auto.setEnabled(false);
@@ -157,29 +155,24 @@ public class ManualActivity extends AppCompatActivity
                 open.setEnabled(true);
                 close.setEnabled(true);
                 cancel.setEnabled(true);
-                if (cronometro == null)
-                {
+                if (cronometro == null) {
                     cronometro = new Thread(() ->
                     {
                         long attuale, MINUTO = 60000, ORA = 3600000, tempoInizio = System.currentTimeMillis();
                         int secondi, minuti, ore, millisecondi;
                         conta = true;
 
-                        while(conta)
-                        {
-                            try
-                            {
+                        while (conta) {
+                            try {
                                 Thread.sleep(17);
-                            }
-                            catch (InterruptedException e)
-                            {
+                            } catch (InterruptedException e) {
                                 e.printStackTrace();
                             }
-                            
+
                             attuale = System.currentTimeMillis() - tempoInizio;
-                            secondi = (int) (attuale/1000) % 60;
-                            minuti = (int) (attuale/MINUTO) % 60;
-                            ore = (int) (attuale/ORA) % 24;
+                            secondi = (int) (attuale / 1000) % 60;
+                            minuti = (int) (attuale / MINUTO) % 60;
+                            ore = (int) (attuale / ORA) % 24;
                             millisecondi = (int) attuale % 1000;
 
                             aggiornaTimer(testoCronometro, String.format("%02d:%02d:%02d:%03d", ore, minuti, secondi, millisecondi));
@@ -187,19 +180,16 @@ public class ManualActivity extends AppCompatActivity
                     });
                     cronometro.start();
                 }
-            }
-            catch (IOException e)
-            {
+            } catch (IOException e) {
                 e.printStackTrace();
-                Toast.makeText(this,"Connessione non stabilita",Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Connessione non stabilita", Toast.LENGTH_SHORT).show();
             }
         });
 
         cancel.setOnClickListener(v ->
         {
             cancel.setEnabled(false);
-            if(cronometro != null)
-            {
+            if (cronometro != null) {
                 conta = false;
                 cronometro.interrupt();
                 cronometro = null;
@@ -219,23 +209,18 @@ public class ManualActivity extends AppCompatActivity
         });
     }
 
-    private void legoMain(EV3.Api api)
-    {
+    private void legoMain(EV3.Api api) {
         //final String TAG = Prelude.ReTAG("legoMain");
 
         robot = new Robot(api);
 
-        while (!api.ev3.isCancelled())
-        {
-            try
-            {
+        while (!api.ev3.isCancelled()) {
+            try {
                 Future<LightSensor.Color> Fcol = robot.getColor();
                 LightSensor.Color col = Fcol.get();
 
                 runOnUiThread(() -> findViewById(R.id.colorView).setBackgroundColor(col.toARGB32()));
-            }
-            catch (InterruptedException | ExecutionException e)
-            {
+            } catch (InterruptedException | ExecutionException e) {
                 e.printStackTrace();
             }
         }
@@ -243,8 +228,7 @@ public class ManualActivity extends AppCompatActivity
         runOnUiThread(() -> findViewById(R.id.colorView).setBackgroundColor(LightSensor.Color.WHITE.toARGB32()));
     }
 
-    public void aggiornaTimer(TextView tv, String tempo)
-    {
+    public void aggiornaTimer(TextView tv, String tempo) {
         runOnUiThread(() -> tv.setText(tempo));
     }
 }
