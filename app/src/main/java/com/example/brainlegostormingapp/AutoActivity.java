@@ -276,6 +276,7 @@ public class AutoActivity extends AppCompatActivity {
                     Log.e("ball radius ", String.valueOf(ball.radius));
                     Log.e("ball color ", ball.color);*/
                 }
+
                 for(Line line : lines){
                     Imgproc.line(frame, line.p1, line.p2, new Scalar(255, 0, 0), 3);
                 }
