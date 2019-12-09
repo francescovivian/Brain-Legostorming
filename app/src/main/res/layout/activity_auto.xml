@@ -73,12 +73,13 @@
             tools:ignore="HardcodedText" />
 
         <EditText
-            android:id="@+id/dimM"
+            android:id="@+id/eTxtDimM"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="25sp"
             android:text="0"
-            android:inputType="numberSigned"
+            android:inputType="number"
+            android:digits="0123456789"
             android:importantForAutofill="no" />
 
         <TextView
@@ -90,7 +91,25 @@
             tools:ignore="HardcodedText" />
 
         <EditText
-            android:id="@+id/dimN"
+            android:id="@+id/eTxtDimN"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="25sp"
+            android:text="0"
+            android:inputType="number"
+            android:digits="0123456789"
+            android:importantForAutofill="no" />
+
+        <TextView
+            android:id="@+id/txtStartX"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="SX:"
+            android:textSize="25sp"
+            tools:ignore="HardcodedText" />
+
+        <EditText
+            android:id="@+id/eTxtStartX"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="25sp"
@@ -99,38 +118,28 @@
             android:importantForAutofill="no" />
 
         <TextView
-            android:id="@+id/startM"
+            android:id="@+id/txtStartY"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="SM:"
+            android:text="SY:"
             android:textSize="25sp"
             tools:ignore="HardcodedText" />
 
         <EditText
-            android:id="@+id/pM"
+            android:id="@+id/eTxtStartY"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="25sp"
             android:text="0"
             android:inputType="numberSigned"
             android:importantForAutofill="no" />
-
-        <TextView
-            android:id="@+id/startN"
-            android:layout_width="wrap_content"
+        <Spinner
+            android:id="@+id/direction_spinner"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="SN:"
-            android:textSize="25sp"
-            tools:ignore="HardcodedText" />
+            android:prompt="@string/direction_prompt"
+            android:entries="@array/direction"/>
 
-        <EditText
-            android:id="@+id/pN"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="25sp"
-            android:text="0"
-            android:inputType="numberSigned"
-            android:importantForAutofill="no" />
     </LinearLayout>
 
     <LinearLayout
@@ -139,7 +148,7 @@
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/startButton"
+            android:id="@+id/btnStartButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/layout_bg"
@@ -148,7 +157,7 @@
             tools:ignore="HardcodedText" />
 
         <Button
-            android:id="@+id/stopButton"
+            android:id="@+id/btnStopButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/layout_bg"
@@ -157,15 +166,15 @@
             tools:ignore="HardcodedText" />
 
         <Button
-            android:id="@+id/setDimMatrix"
+            android:id="@+id/btnSetDimMatrix"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/layout_bg"
             android:layout_weight="1"
-            android:text="SETDIM"
+            android:text="SET DIM"
             tools:ignore="HardcodedText" />
         <Button
-            android:id="@+id/resetDimMatrix"
+            android:id="@+id/btnResetDimMatrix"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/layout_bg"

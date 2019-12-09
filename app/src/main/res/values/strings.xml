@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">Brain Legostorming</string>
+
+
+    <string name="direction_prompt">Direzione</string>
+    <string-array name="direction">
+        <item>Nord</item>
+        <item>Est</item>
+        <item>Sud</item>
+        <item>Ovest</item>
+    </string-array>
 </resources>
+

@@ -1,63 +1,37 @@
 package com.example.brainlegostormingapp;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
-import android.view.Surface;
 import android.view.SurfaceView;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.IOException;
-import java.security.acl.Group;
 import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
-import androidx.annotation.ColorInt;
-import androidx.annotation.IdRes;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import org.opencv.android.CameraBridgeViewBase;
-import org.opencv.android.JavaCameraView;
 import org.opencv.android.OpenCVLoader;
-import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.Point;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 
 import it.unive.dais.legodroid.lib.EV3;
-import it.unive.dais.legodroid.lib.GenEV3;
 import it.unive.dais.legodroid.lib.comm.BluetoothConnection;
-import it.unive.dais.legodroid.lib.plugs.GyroSensor;
-import it.unive.dais.legodroid.lib.plugs.LightSensor;
-import it.unive.dais.legodroid.lib.plugs.Plug;
-import it.unive.dais.legodroid.lib.plugs.TachoMotor;
-import it.unive.dais.legodroid.lib.plugs.TouchSensor;
-import it.unive.dais.legodroid.lib.plugs.UltrasonicSensor;
-import it.unive.dais.legodroid.lib.util.Consumer;
 import it.unive.dais.legodroid.lib.util.Prelude;
-import it.unive.dais.legodroid.lib.util.ThrowingConsumer;
 
 public class AutoActivity extends AppCompatActivity {
     private static final String TAG = "AutoActivity";
@@ -70,7 +44,7 @@ public class AutoActivity extends AppCompatActivity {
 
     private Robot robot;
 
-    private CameraBridgeViewBase camera;
+
     private Mat frame;
     private BallFinder ballFinder;
     private ArrayList<Ball> balls;
@@ -80,10 +54,11 @@ public class AutoActivity extends AppCompatActivity {
 
     private int dimM, dimN;
 
-
+    private CameraBridgeViewBase camera;
     private TextView txtCronometro;
-    private Button btnMain,btnManual,btnStart,btnStop,btnSetMatrix,btnResetMatrix;
-    private EditText eTxtMatrixM,eTxtMatrixN,eTxtPosM,eTxtPosN;
+    private Button btnMain, btnManual, btnStart, btnStop, btnSetMatrix, btnResetMatrix;
+    private EditText eTxtMatrixM, eTxtMatrixN, eTxtStartX, eTxtStartY;
+    private Spinner spnOrientation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,18 +84,29 @@ public class AutoActivity extends AppCompatActivity {
                                 | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                                 | View.SYSTEM_UI_FLAG_FULLSCREEN));
 
+        txtCronometro = findViewById(R.id.cronometro);
+        btnMain = findViewById(R.id.mainButton);
+        btnManual = findViewById(R.id.manualButton);
+        btnStart = findViewById(R.id.btnStartButton);
+        btnStop = findViewById(R.id.btnStopButton);
+        btnSetMatrix = findViewById(R.id.btnSetDimMatrix);
+        btnResetMatrix = findViewById(R.id.btnResetDimMatrix);
+        eTxtMatrixM = findViewById(R.id.eTxtDimM);
+        eTxtMatrixN = findViewById(R.id.eTxtDimN);
+        eTxtStartX = findViewById(R.id.eTxtStartX);
+        eTxtStartY = findViewById(R.id.eTxtStartY);
+        spnOrientation = findViewById(R.id.direction_spinner);
+        camera = findViewById(R.id.cameraView);
+        btnStart.setEnabled(false);
+        btnStop.setEnabled(false);
+
         if (!OpenCVLoader.initDebug()) Log.e(TAG, "Unable to load OpenCV");
         else Log.d(TAG, "OpenCV loaded");
 
-        camera = findViewById(R.id.cameraView);
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, 1);
-        }
-        else avviaFotocamera();
-
-        btnMain = findViewById(R.id.mainButton);
-        btnManual = findViewById(R.id.manualButton);
+        } else avviaFotocamera();
 
         btnMain.setOnClickListener(v ->
         {
@@ -133,20 +119,7 @@ public class AutoActivity extends AppCompatActivity {
             Intent manualIntent = new Intent(getBaseContext(), ManualActivity.class);
             startActivity(manualIntent);
         });
-
-        txtCronometro = findViewById(R.id.cronometro);
-        btnStart = findViewById(R.id.startButton);
-        btnStop = findViewById(R.id.stopButton);
-        btnSetMatrix = findViewById(R.id.setDimMatrix);
-        btnResetMatrix = findViewById(R.id.resetDimMatrix);
-        eTxtMatrixM = findViewById(R.id.dimM);
-        eTxtMatrixN = findViewById(R.id.dimN);
-        eTxtPosM = findViewById(R.id.pM);
-        eTxtPosN = findViewById(R.id.pN);
-        btnStart.setEnabled(false);
-        btnStop.setEnabled(false);
         //LinearLayout matrixView = findViewById(R.id.matrixView);
-
 
 
         btnSetMatrix.setOnClickListener(v ->
@@ -156,17 +129,21 @@ public class AutoActivity extends AppCompatActivity {
                 btnSetMatrix.setVisibility(LinearLayout.GONE);
                 dimM = Integer.parseInt(eTxtMatrixM.getText().toString());
                 dimN = Integer.parseInt(eTxtMatrixN.getText().toString());
+                int startX = Integer.parseInt(eTxtStartX.getText().toString()),
+                        startY = Integer.parseInt(eTxtStartX.getText().toString());
+                char orientation = String.valueOf(spnOrientation.getSelectedItem()).charAt(0);
                 elementToggle(btnStart);
                 elementToggle(btnSetMatrix);
                 elementToggle(eTxtMatrixM);
                 elementToggle(eTxtMatrixN);
-                elementToggle(eTxtPosM);
-                elementToggle(eTxtPosN);
+                elementToggle(eTxtStartX);
+                elementToggle(eTxtStartY);
+                elementToggle(spnOrientation);
                 PixelGridView pixelGrid = new PixelGridView(this);
                 pixelGrid.setNumRows(dimM);
                 pixelGrid.setNumColumns(dimN);
 
-                campo = new GameField(dimM,dimN,'N',dimM-1,1);
+                campo = new GameField(dimM, dimN, orientation, startX, startY);
 
                 //Per fare i quadrati rossi
                 //pixelGrid.changeCellChecked(2,3);
@@ -178,22 +155,20 @@ public class AutoActivity extends AppCompatActivity {
         });
 
         btnResetMatrix.setOnClickListener(e -> {
-            try{
+            try {
                 btnResetMatrix.setVisibility(LinearLayout.GONE);
                 btnSetMatrix.setVisibility(LinearLayout.VISIBLE);
                 elementToggle(btnStart);
                 elementToggle(btnSetMatrix);
                 elementToggle(eTxtMatrixM);
                 elementToggle(eTxtMatrixN);
-                elementToggle(eTxtPosM);
-                elementToggle(eTxtPosN);
-            }
-            catch (NumberFormatException ignored){
+                elementToggle(eTxtStartX);
+                elementToggle(eTxtStartY);
+                elementToggle(spnOrientation);
+            } catch (NumberFormatException ignored) {
                 ignored.printStackTrace();
             }
         });
-
-
 
 
         btnStart.setOnClickListener(v ->
@@ -233,7 +208,8 @@ public class AutoActivity extends AppCompatActivity {
             elementToggle(btnManual);
         });
     }
-    private void elementToggle(View v){
+
+    private void elementToggle(View v) {
         v.setEnabled(!v.isEnabled());
     }
 

@@ -6,8 +6,8 @@ public class GameField {
     private Position startPosition;
     private Position lastMinePosition;
 
-    public GameField(int row, int coloumn, char orientation, int startX, int startY) {
-        this.grid = new int[row][coloumn];
+    public GameField(int row, int column, char orientation, int startX, int startY) {
+        this.grid = new int[row][column];
         this.orientation = orientation;
         startPosition=new Position(startX,startY);
         lastMinePosition=null;
