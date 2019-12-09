@@ -108,21 +108,17 @@ public class ManualActivity extends AppCompatActivity
 
         start.setOnClickListener(v ->
         {
-            robot.startEngine('r',50,'f');
-            robot.startEngine('l',50,'f');
+            robot.startRLEngines(50,'f');
         });
 
         stop.setOnClickListener(v ->
         {
-            robot.stopEngine('r');
-            robot.stopEngine('l');
-            robot.stopEngine('h');
+            robot.stopAllEngines();
         });
 
         retro.setOnClickListener(v ->
         {
-            robot.startEngine('r',40,'b');
-            robot.startEngine('l',40,'b');
+            robot.startRLEngines(50,'b');
         });
 
         left.setOnClickListener(v ->
