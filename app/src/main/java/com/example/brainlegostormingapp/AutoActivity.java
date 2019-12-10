@@ -53,6 +53,7 @@ public class AutoActivity extends AppCompatActivity {
     private int dimM, dimN;
 
     private CameraBridgeViewBase camera;
+    //LinearLayout matrixView;
     private TextView txtCronometro;
     private Button btnMain, btnManual, btnStart, btnStop, btnSetMatrix, btnResetMatrix;
     private EditText eTxtMatrixM, eTxtMatrixN, eTxtStartX, eTxtStartY;
@@ -93,10 +94,12 @@ public class AutoActivity extends AppCompatActivity {
         eTxtMatrixN = findViewById(R.id.eTxtDimN);
         eTxtStartX = findViewById(R.id.eTxtStartX);
         eTxtStartY = findViewById(R.id.eTxtStartY);
+        //matrixView = findViewById(R.id.matrixView);
         spnOrientation = findViewById(R.id.direction_spinner);
         camera = findViewById(R.id.cameraView);
-        btnStart.setEnabled(false);
-        btnStop.setEnabled(false);
+
+        elementToggle(btnStart);
+        elementToggle(btnStop);
 
         if (!OpenCVLoader.initDebug()) Log.e(TAG, "Unable to load OpenCV");
         else Log.d(TAG, "OpenCV loaded");
@@ -117,8 +120,6 @@ public class AutoActivity extends AppCompatActivity {
             Intent manualIntent = new Intent(getBaseContext(), ManualActivity.class);
             startActivity(manualIntent);
         });
-        //LinearLayout matrixView = findViewById(R.id.matrixView);
-
 
         btnSetMatrix.setOnClickListener(v ->
         {
@@ -252,10 +253,10 @@ public class AutoActivity extends AppCompatActivity {
                 frame = inputFrame.rgba();
                 ballFinder = new BallFinder(frame);
                 lineFinder = new LineFinder(frame);
-                //balls = ballFinder.findBalls();
+                balls = ballFinder.findBalls();
                 lines = lineFinder.findLines();
 
-                /*for (Ball ball : balls) {
+                for (Ball ball : balls) {
                     Point center = new Point(ball.center.x, ball.center.y);
                     int radius = (int) ball.radius;
                     Scalar color_rgb;
@@ -271,14 +272,14 @@ public class AutoActivity extends AppCompatActivity {
                     Imgproc.line(frame, new Point(310, 240), new Point(330, 240), new Scalar(0, 0, 0), 2);
                     Imgproc.line(frame, new Point(320, 230), new Point(320, 250), new Scalar(0, 0, 0), 2);
 
-                    Log.e("ball center x ", String.valueOf(ball.center.x));
-                    Log.e("ball center y ", String.valueOf(ball.center.y));
-                    Log.e("ball radius ", String.valueOf(ball.radius));
-                    Log.e("ball color ", ball.color);
-                }*/
+                    //Log.e("ball center x ", String.valueOf(ball.center.x));
+                    //Log.e("ball center y ", String.valueOf(ball.center.y));
+                    //Log.e("ball radius ", String.valueOf(ball.radius));
+                    //Log.e("ball color ", ball.color);
+                }
 
                 for(Line line : lines){
-                    Imgproc.line(frame, line.p1, line.p2, new Scalar(255, 0, 0), 3);
+                    Imgproc.line(frame, line.p1, line.p2, new Scalar(255, 0, 0), 2);
                 }
 
                 System.gc();

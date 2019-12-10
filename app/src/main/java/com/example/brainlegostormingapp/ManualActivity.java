@@ -48,6 +48,10 @@ public class ManualActivity extends AppCompatActivity {
 
     private Robot robot;
 
+    TextView testoCronometro;
+
+    Button btnMain,btnAuto,btnStart,btnStop,btnLeft,btnRight,btnRetro,btnOpen,btnClose,btnConn,btnCancel;
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manual);
@@ -70,73 +74,56 @@ public class ManualActivity extends AppCompatActivity {
                                 | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                                 | View.SYSTEM_UI_FLAG_FULLSCREEN));
 
-        Button main = findViewById(R.id.mainButton);
-        Button auto = findViewById(R.id.autoButton);
+        btnMain = findViewById(R.id.mainButton);
+        btnAuto = findViewById(R.id.autoButton);
 
-        main.setOnClickListener(v ->
+        btnMain.setOnClickListener(v ->
         {
             Intent mainIntent = new Intent(getBaseContext(), MainActivity.class);
             startActivity(mainIntent);
         });
 
-        auto.setOnClickListener(v ->
+        btnAuto.setOnClickListener(v ->
         {
             Intent autoIntent = new Intent(getBaseContext(), AutoActivity.class);
             startActivity(autoIntent);
         });
 
-        TextView testoCronometro = findViewById(R.id.cronometro);
-        Button start = findViewById(R.id.startButton);
-        Button stop = findViewById(R.id.stopButton);
-        Button left = findViewById(R.id.leftButton);
-        Button right = findViewById(R.id.rightButton);
-        Button retro = findViewById(R.id.retroButton);
-        Button open = findViewById(R.id.openButton);
-        Button close = findViewById(R.id.closeButton);
-        Button conn = findViewById(R.id.connButton);
-        Button cancel = findViewById(R.id.cancelButton);
+        testoCronometro = findViewById(R.id.cronometro);
+        btnStart = findViewById(R.id.startButton);
+        btnStop = findViewById(R.id.stopButton);
+        btnLeft = findViewById(R.id.leftButton);
+        btnRight = findViewById(R.id.rightButton);
+        btnRetro = findViewById(R.id.retroButton);
+        btnOpen = findViewById(R.id.openButton);
+        btnClose = findViewById(R.id.closeButton);
+        btnConn = findViewById(R.id.connButton);
+        btnCancel = findViewById(R.id.cancelButton);
 
-        start.setEnabled(false);
-        stop.setEnabled(false);
-        retro.setEnabled(false);
-        left.setEnabled(false);
-        right.setEnabled(false);
-        open.setEnabled(false);
-        close.setEnabled(false);
-        cancel.setEnabled(false);
+        elementToggle(btnStart);
+        elementToggle(btnStop);
+        elementToggle(btnRetro);
+        elementToggle(btnLeft);
+        elementToggle(btnRight);
+        elementToggle(btnOpen);
+        elementToggle(btnClose);
+        elementToggle(btnCancel);
 
-        start.setOnClickListener(v ->
-        {
-            robot.startRLEngines(50, 'f');
-        });
+        btnStart.setOnClickListener(v -> robot.startRLEngines(50, 'f'));
 
-        stop.setOnClickListener(v ->
-        {
-            robot.stopAllEngines();
-        });
+        btnStop.setOnClickListener(v -> robot.stopAllEngines());
 
-        retro.setOnClickListener(v ->
-        {
-            robot.startRLEngines(50, 'b');
-        });
+        btnRetro.setOnClickListener(v -> robot.startRLEngines(50, 'b'));
 
-        left.setOnClickListener(v ->
-        {
-            robot.startEngine('r', 40, 'f');
-            robot.startEngine('l', 40, 'b');
-        });
+        btnRight.setOnClickListener(v -> robot.turnRight(40));
 
-        right.setOnClickListener(v ->
-        {
-            robot.startEngine('r', 40, 'b');
-            robot.startEngine('l', 40, 'f');
-        });
+        btnLeft.setOnClickListener(v -> robot.turnLeft(40));
 
-        open.setOnClickListener(v -> robot.startEngine('h', 15, 'b'));
+        btnOpen.setOnClickListener(v -> robot.openHand(15));
 
-        close.setOnClickListener(v -> robot.startEngine('h', 25, 'f'));
+        btnClose.setOnClickListener(v -> robot.closeHand(25));
 
-        conn.setOnClickListener(v ->
+        btnConn.setOnClickListener(v ->
         {
             try {
                 BluetoothConnection blueconn = new BluetoothConnection("EV3BL");
@@ -144,17 +131,19 @@ public class ManualActivity extends AppCompatActivity {
                 ev3 = new EV3(bluechan);
                 Prelude.trap(() -> ev3.run(this::legoMain));
                 Toast.makeText(this, "Connessione stabilita con successo", Toast.LENGTH_SHORT).show();
-                conn.setEnabled(false);
-                main.setEnabled(false);
-                auto.setEnabled(false);
-                start.setEnabled(true);
-                stop.setEnabled(true);
-                retro.setEnabled(true);
-                left.setEnabled(true);
-                right.setEnabled(true);
-                open.setEnabled(true);
-                close.setEnabled(true);
-                cancel.setEnabled(true);
+
+                elementToggle(btnConn);
+                elementToggle(btnMain);
+                elementToggle(btnAuto);
+                elementToggle(btnStart);
+                elementToggle(btnStop);
+                elementToggle(btnRetro);
+                elementToggle(btnLeft);
+                elementToggle(btnRight);
+                elementToggle(btnOpen);
+                elementToggle(btnClose);
+                elementToggle(btnCancel);
+
                 if (cronometro == null) {
                     cronometro = new Thread(() ->
                     {
@@ -186,9 +175,9 @@ public class ManualActivity extends AppCompatActivity {
             }
         });
 
-        cancel.setOnClickListener(v ->
+        btnCancel.setOnClickListener(v ->
         {
-            cancel.setEnabled(false);
+            btnCancel.setEnabled(false);
             if (cronometro != null) {
                 conta = false;
                 cronometro.interrupt();
@@ -196,17 +185,22 @@ public class ManualActivity extends AppCompatActivity {
             }
             ev3.cancel();
             bluechan.close();
-            start.setEnabled(false);
-            stop.setEnabled(false);
-            retro.setEnabled(false);
-            left.setEnabled(false);
-            right.setEnabled(false);
-            open.setEnabled(false);
-            close.setEnabled(false);
-            conn.setEnabled(true);
-            main.setEnabled(true);
-            auto.setEnabled(true);
+
+            elementToggle(btnStart);
+            elementToggle(btnStop);
+            elementToggle(btnRetro);
+            elementToggle(btnLeft);
+            elementToggle(btnRight);
+            elementToggle(btnOpen);
+            elementToggle(btnClose);
+            elementToggle(btnConn);
+            elementToggle(btnMain);
+            elementToggle(btnAuto);
         });
+    }
+
+    private void elementToggle(View v) {
+        v.setEnabled(!v.isEnabled());
     }
 
     private void legoMain(EV3.Api api) {

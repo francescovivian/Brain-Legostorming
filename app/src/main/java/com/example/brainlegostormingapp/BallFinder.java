@@ -21,7 +21,7 @@ public class BallFinder {
     private int yellow_lower = 16;
     private int yellow_upper = 25;
 
-    private Mat frame;
+    private Mat frame,fr;
 
     public BallFinder(Mat frame) {
         this.frame = frame.clone();
@@ -119,6 +119,6 @@ public class BallFinder {
     }
 
     public Mat getFrame() {
-        return frame;
+        return fr;
     }
 }

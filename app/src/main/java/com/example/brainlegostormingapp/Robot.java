@@ -72,6 +72,16 @@ public class Robot {
         lm.startEngine(speed, direction);
     }
 
+    public void turnRight(int speed) {
+        rm.startEngine(speed, 'b');
+        lm.startEngine(speed, 'f');
+    }
+
+    public void turnLeft(int speed) {
+        rm.startEngine(speed, 'f');
+        lm.startEngine(speed, 'b');
+    }
+
     public void stopEngine(char motor) {
         if (motor == 'r') rm.stopEngine();
         else if (motor == 'l') lm.stopEngine();
