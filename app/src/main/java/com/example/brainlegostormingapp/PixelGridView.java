@@ -110,20 +110,20 @@ public class PixelGridView extends View
         for (Integer i = 1; i < numColumns; i++)
         {
             nc = i-1;
-            canvas.drawText(nc.toString(),(i+0.4f) * cellWidth,(0.7f) * cellHeight, textPaint);
+            canvas.drawText(nc.toString(),(i+0.4f) * cellWidth,(numRows - 1 + 0.7f) * cellHeight, textPaint);
         }
 
-        Integer nr;
-        for (Integer j = 1; j < numRows; j++)
+        Integer nr = 0;
+        for (Integer j = numRows-2; j >= 0; j--)
         {
-            nr = j-1;
             canvas.drawText(nr.toString(),(0.4f) * cellWidth,(j+0.7f) * cellHeight, textPaint);
+            nr++;
         }
     }
 
-    public void changeCellChecked(int row, int column)
+    public void changeCellChecked(int column, int row)
     {
-        cellChecked[column+1][row+1] = !cellChecked[column+1][row+1];
+        cellChecked[column + 1][numRows - row - 2] = !cellChecked[column + 1][numRows - row - 2];
         invalidate();
     }
 }

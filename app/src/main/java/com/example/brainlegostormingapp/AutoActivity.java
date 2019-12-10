@@ -17,6 +17,8 @@ import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -31,6 +33,7 @@ import org.opencv.imgproc.Imgproc;
 
 import it.unive.dais.legodroid.lib.EV3;
 import it.unive.dais.legodroid.lib.comm.BluetoothConnection;
+import it.unive.dais.legodroid.lib.plugs.LightSensor;
 import it.unive.dais.legodroid.lib.util.Prelude;
 
 public class AutoActivity extends AppCompatActivity {
@@ -50,14 +53,17 @@ public class AutoActivity extends AppCompatActivity {
     private GameField gameField;
 
 
-    private int dimM, dimN;
+    private int dimX, dimY;
+    int startX, startY;
+    char orientation;
 
     private CameraBridgeViewBase camera;
     //LinearLayout matrixView;
     private TextView txtCronometro;
     private Button btnMain, btnManual, btnStart, btnStop, btnSetMatrix, btnResetMatrix;
-    private EditText eTxtMatrixM, eTxtMatrixN, eTxtStartX, eTxtStartY;
+    private EditText eTxtMatrixX, eTxtMatrixY, eTxtStartX, eTxtStartY;
     private Spinner spnOrientation;
+    PixelGridView pixelGrid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,8 +96,8 @@ public class AutoActivity extends AppCompatActivity {
         btnStop = findViewById(R.id.btnStopButton);
         btnSetMatrix = findViewById(R.id.btnSetDimMatrix);
         btnResetMatrix = findViewById(R.id.btnResetDimMatrix);
-        eTxtMatrixM = findViewById(R.id.eTxtDimM);
-        eTxtMatrixN = findViewById(R.id.eTxtDimN);
+        eTxtMatrixX = findViewById(R.id.eTxtDimX);
+        eTxtMatrixY = findViewById(R.id.eTxtDimY);
         eTxtStartX = findViewById(R.id.eTxtStartX);
         eTxtStartY = findViewById(R.id.eTxtStartY);
         //matrixView = findViewById(R.id.matrixView);
@@ -126,23 +132,23 @@ public class AutoActivity extends AppCompatActivity {
             try {
                 btnResetMatrix.setVisibility(LinearLayout.VISIBLE);
                 btnSetMatrix.setVisibility(LinearLayout.GONE);
-                dimM = Integer.parseInt(eTxtMatrixM.getText().toString());
-                dimN = Integer.parseInt(eTxtMatrixN.getText().toString());
-                int startX = Integer.parseInt(eTxtStartX.getText().toString()),
-                        startY = Integer.parseInt(eTxtStartX.getText().toString());
-                char orientation = String.valueOf(spnOrientation.getSelectedItem()).charAt(0);
+                dimX = Integer.parseInt(eTxtMatrixX.getText().toString());
+                dimY = Integer.parseInt(eTxtMatrixY.getText().toString());
+                startX = Integer.parseInt(eTxtStartX.getText().toString());
+                startY = Integer.parseInt(eTxtStartX.getText().toString());
+                orientation = String.valueOf(spnOrientation.getSelectedItem()).charAt(0);
                 elementToggle(btnStart);
                 elementToggle(btnSetMatrix);
-                elementToggle(eTxtMatrixM);
-                elementToggle(eTxtMatrixN);
+                elementToggle(eTxtMatrixX);
+                elementToggle(eTxtMatrixY);
                 elementToggle(eTxtStartX);
                 elementToggle(eTxtStartY);
                 elementToggle(spnOrientation);
-                PixelGridView pixelGrid = new PixelGridView(this);
-                pixelGrid.setNumRows(dimM);
-                pixelGrid.setNumColumns(dimN);
+                pixelGrid = new PixelGridView(this);
+                pixelGrid.setNumRows(dimY);
+                pixelGrid.setNumColumns(dimX);
 
-                gameField = new GameField(dimM, dimN, orientation, startX, startY);
+                gameField = new GameField(dimY, dimX, orientation, startX, startY);
 
                 //Per fare i quadrati rossi
                 //pixelGrid.changeCellChecked(2,3);
@@ -155,12 +161,18 @@ public class AutoActivity extends AppCompatActivity {
 
         btnResetMatrix.setOnClickListener(e -> {
             try {
+                //matrixView.removeAllViews();
+                eTxtMatrixX.setText("0");
+                eTxtMatrixY.setText("0");
+                eTxtStartX.setText("0");
+                eTxtStartY.setText("0");
+                spnOrientation.setSelection(0);
                 btnResetMatrix.setVisibility(LinearLayout.GONE);
                 btnSetMatrix.setVisibility(LinearLayout.VISIBLE);
                 elementToggle(btnStart);
                 elementToggle(btnSetMatrix);
-                elementToggle(eTxtMatrixM);
-                elementToggle(eTxtMatrixN);
+                elementToggle(eTxtMatrixX);
+                elementToggle(eTxtMatrixY);
                 elementToggle(eTxtStartX);
                 elementToggle(eTxtStartY);
                 elementToggle(spnOrientation);
@@ -214,11 +226,41 @@ public class AutoActivity extends AppCompatActivity {
 
     private void legoMain(EV3.Api api) {
         //final String TAG = Prelude.ReTAG("legoMain");
+
         robot = new Robot(api);
-        while (!api.ev3.isCancelled()) {
+
+        //Future<Float> fDistance;
+        //Float distance;
+        Future<LightSensor.Color> fCol;
+        LightSensor.Color col;
+
+        boolean isStarted = false;
+
+        while (!api.ev3.isCancelled())
+        {
+            try
+            {
+                if(!isStarted)
+                {
+                    robot.startRLEngines(20,'f');
+                    isStarted = true;
+                }
+
+                Thread.sleep(100);
+
+                fCol = robot.getColor();
+                col = fCol.get();
+
+                if (col == LightSensor.Color.BLACK)
+                {
+                    robot.stopRLEngines();
+                    Thread.sleep(1000);
+                    isStarted = false;
+                }
+            } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
         }
-
-
+        }
     }
 
     public void aggiornaTimer(TextView tv, String tempo) {
