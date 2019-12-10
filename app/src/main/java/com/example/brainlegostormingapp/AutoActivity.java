@@ -252,10 +252,10 @@ public class AutoActivity extends AppCompatActivity {
                 frame = inputFrame.rgba();
                 ballFinder = new BallFinder(frame);
                 lineFinder = new LineFinder(frame);
-                balls = ballFinder.findBalls();
+                //balls = ballFinder.findBalls();
                 lines = lineFinder.findLines();
 
-                for (Ball ball : balls) {
+                /*for (Ball ball : balls) {
                     Point center = new Point(ball.center.x, ball.center.y);
                     int radius = (int) ball.radius;
                     Scalar color_rgb;
@@ -271,11 +271,11 @@ public class AutoActivity extends AppCompatActivity {
                     Imgproc.line(frame, new Point(310, 240), new Point(330, 240), new Scalar(0, 0, 0), 2);
                     Imgproc.line(frame, new Point(320, 230), new Point(320, 250), new Scalar(0, 0, 0), 2);
 
-                    /*Log.e("ball center x ", String.valueOf(ball.center.x));
+                    Log.e("ball center x ", String.valueOf(ball.center.x));
                     Log.e("ball center y ", String.valueOf(ball.center.y));
                     Log.e("ball radius ", String.valueOf(ball.radius));
-                    Log.e("ball color ", ball.color);*/
-                }
+                    Log.e("ball color ", ball.color);
+                }*/
 
                 for(Line line : lines){
                     Imgproc.line(frame, line.p1, line.p2, new Scalar(255, 0, 0), 3);
