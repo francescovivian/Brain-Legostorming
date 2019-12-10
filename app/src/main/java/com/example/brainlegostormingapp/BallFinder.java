@@ -35,27 +35,7 @@ public class BallFinder {
 
         Core.split(hsv, split_hsv);
 
-        Mat mask_sat = new Mat();
-        Imgproc.threshold(split_hsv.get(1), mask_sat, sat_lower, sat_upper, Imgproc.THRESH_BINARY);
-
-        Mat kernel = new Mat(new Size(3, 3), CvType.CV_8UC1, new Scalar(255));
-        Imgproc.morphologyEx(mask_sat, mask_sat, Imgproc.MORPH_OPEN, kernel);
-
         Mat hue = split_hsv.get(0);
-        Mat mask_red = new Mat();
-        Mat mask_blue = new Mat();
-        Mat mask_yellow = new Mat();
-
-        Core.inRange(hsv, new Scalar(red_lower, 0, 0), new Scalar(red_upper, 255, 255), mask_red);
-        Core.inRange(hsv, new Scalar(blue_lower, 0, 0), new Scalar(blue_upper, 255, 255), mask_blue);
-        Core.inRange(hsv, new Scalar(yellow_lower, 0, 0), new Scalar(yellow_upper, 255, 255), mask_yellow);
-
-        Mat mask_hue = new Mat();
-        Mat mask = new Mat();
-
-        Core.bitwise_or(mask_red, mask_blue, mask_hue);
-        Core.bitwise_or(mask_hue, mask_yellow, mask_hue);
-        Core.bitwise_and(mask_sat, mask_hue, mask);
 
         Mat grey = new Mat();
         Mat greyFiltered = new Mat();
@@ -73,7 +53,11 @@ public class BallFinder {
             Point center = new Point(circles.get(0, i)[0], circles.get(0, i)[1]);
             Float radius = (float) circles.get(0, i)[2];
 
-            int area_hue = (int) hue.get((int) center.y, (int) center.x)[0];
+            int area_hue_1 = (int) hue.get((int) (center.y + radius/2), (int) (center.x + radius/2))[0];
+            int area_hue_2 = (int) hue.get((int) (center.y - radius/2), (int) (center.x - radius/2))[0];
+            int area_hue_3 = (int) hue.get((int) (center.y + radius/2), (int) (center.x - radius/2))[0];
+            int area_hue_4 = (int) hue.get((int) (center.y - radius/2), (int) (center.x + radius/2))[0];
+            int area_hue = (area_hue_1 + area_hue_2 + area_hue_3 + area_hue_4) / 4;
             String color;
 
             if (area_hue >= red_lower && area_hue <= red_upper) color = "red";
@@ -85,15 +69,6 @@ public class BallFinder {
                 b = new Ball(center, radius, color);
                 balls.add(b);
             }
-
-            /*Scalar color_rgb;
-
-            if (color == "red") color_rgb = new Scalar(255, 0, 0);
-            else if (color == "blue") color_rgb = new Scalar(0, 0, 255);
-            else if (color == "yellow") color_rgb = new Scalar(255, 255, 0);
-            else color_rgb = new Scalar(0, 0, 0);
-
-            Imgproc.circle(frame, center,radius.intValue(),color_rgb,8);*/
         }
 
         frame.release();
@@ -102,13 +77,6 @@ public class BallFinder {
         split_hsv.get(1).release();
         split_hsv.get(2).release();
         hue.release();
-        kernel.release();
-        mask_sat.release();
-        mask_red.release();
-        mask_yellow.release();
-        mask_blue.release();
-        mask_hue.release();
-        mask.release();
         grey.release();
         greyFiltered.release();
         circles.release();

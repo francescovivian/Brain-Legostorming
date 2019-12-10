@@ -280,6 +280,11 @@ public class AutoActivity extends AppCompatActivity {
 
                 for(Line line : lines){
                     Imgproc.line(frame, line.p1, line.p2, new Scalar(255, 0, 0), 2);
+
+                    //Log.e("line p1 x ", String.valueOf(line.p1.x));
+                    //Log.e("line p1 y ", String.valueOf(line.p1.y));
+                    //Log.e("line p2 x ", String.valueOf(line.p2.x));
+                    //Log.e("line p2 y ", String.valueOf(line.p2.y));
                 }
 
                 System.gc();
