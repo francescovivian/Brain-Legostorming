@@ -47,8 +47,7 @@ public class AutoActivity extends AppCompatActivity {
     private EV3 ev3;
     private Robot robot;
     private Mat frame;
-    private BallFinder ballFinder;
-    private LineFinder lineFinder;
+    private ObjectFinder objectFinder;
     private ArrayList<Ball> balls;
     private ArrayList<Line> lines;
     private Ball ball;
@@ -268,10 +267,11 @@ public class AutoActivity extends AppCompatActivity {
                 System.gc();
 
                 frame = inputFrame.rgba();
-                ballFinder = new BallFinder(frame);
-                lineFinder = new LineFinder(frame);
-                balls = ballFinder.findBalls();
-                lines = lineFinder.findLines();
+                objectFinder = new ObjectFinder(frame);
+                balls = objectFinder.findBalls();
+
+                objectFinder.cleanMemory();
+
 
                 for (Ball ball : balls) {
                     Point center = new Point(ball.center.x, ball.center.y);
@@ -303,8 +303,6 @@ public class AutoActivity extends AppCompatActivity {
                     //Log.e("line p2 x ", String.valueOf(line.p2.x));
                     //Log.e("line p2 y ", String.valueOf(line.p2.y));
                 }
-
-                System.gc();
 
                 return frame;
             }
