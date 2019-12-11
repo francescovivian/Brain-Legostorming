@@ -41,11 +41,12 @@ public class ObjectFinder{
             Point center = new Point(circles.get(0, i)[0], circles.get(0, i)[1]);
             Float radius = (float) circles.get(0, i)[2];
 
-            int area_hue_1 = (int) hue.get((int) (center.y + radius/2), (int) (center.x + radius/2))[0];
-            int area_hue_2 = (int) hue.get((int) (center.y - radius/2), (int) (center.x - radius/2))[0];
-            int area_hue_3 = (int) hue.get((int) (center.y + radius/2), (int) (center.x - radius/2))[0];
-            int area_hue_4 = (int) hue.get((int) (center.y - radius/2), (int) (center.x + radius/2))[0];
-            int area_hue = (area_hue_1 + area_hue_2 + area_hue_3 + area_hue_4) / 4;
+            int area_hue_1 = (int) hue.get((int) (center.y), (int) (center.x))[0];
+            int area_hue_2 = (int) hue.get((int) (center.y + radius/2), (int) (center.x))[0];
+            int area_hue_3 = (int) hue.get((int) (center.y - radius/2), (int) (center.x))[0];
+            int area_hue_4 = (int) hue.get((int) (center.y), (int) (center.x + radius/2))[0];
+            int area_hue_5 = (int) hue.get((int) (center.y), (int) (center.x - radius/2))[0];
+            int area_hue = (area_hue_1 + area_hue_2 + area_hue_3 + area_hue_4 + area_hue_5) / 5;
             String color;
 
             if (area_hue >= red_lower && area_hue <= red_upper) color = "red";
