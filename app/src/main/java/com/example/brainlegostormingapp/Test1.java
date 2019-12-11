@@ -16,19 +16,45 @@ public class Test1 extends Test {
         scanRight(); //inizia la scansione andando verso destra
     }
 
-    public void alignToOrigin(){
+    public void alignToOrigin(){ //
         robot.autoMove90Left();
+        //processa cella fino all'origine
     }
 
+    public void processNextCell(){ //processa la cella seguente
+        if(ballNextCell()){
+            storeBall();
+        }
+        forwardOnce();
+    }
+
+
     public boolean amIStraight(){
+        //funzione che mi dice se sono dritto
+        //metodo che ottiene tutte le linee
+        //roba che elabora quelle linee e fa qualcosa
         return false;
     }
 
-    public void straightMe(){
-
+    public void storeBall(){
+        //codice per portare la pallina nella zona sicura
+        backToLastMinePos();
     }
 
-    public boolean ballVisible(){
+    public void backToLastMinePos(){
+        //torna alla posizione in cui ha trovato l'ultima mina
+    }
+
+    public void straightMe(){
+        //funzione che mi raddrizza
+    }
+
+    public void forwardOnce(){
+        //funzione che mi fa avanzare di una cella
+    }
+
+    public boolean ballNextCell(){
+        //mi dice se nella prossima cella c'è una pallina
         return false;
     }
 
