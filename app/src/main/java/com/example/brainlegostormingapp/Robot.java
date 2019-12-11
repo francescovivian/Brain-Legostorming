@@ -41,8 +41,38 @@ public class Robot {
         autoMove90('l');
     }
 
+    public void autoMove180Right() {
+        autoMove180('r');
+    }
+
+    public void autoMove180Left() {
+        autoMove180('l');
+    }
+
     public void autoMove90(char direction) {
         int step1 = 0, step2 = 975, step3 = 0;
+        try {
+            if (direction == 'r') {
+                lm.setPolarity(TachoMotor.Polarity.FORWARD);
+                lm.setTimeSpeed(SPEED, step1, step2, step3, true);
+                rm.setPolarity(TachoMotor.Polarity.BACKWARDS);
+                rm.setTimeSpeed(SPEED, step1, step2, step3, true);
+            }
+            else if (direction == 'l') {
+                rm.setPolarity(TachoMotor.Polarity.FORWARD);
+                rm.setTimeSpeed(SPEED, step1, step2, step3, true);
+                lm.setPolarity(TachoMotor.Polarity.BACKWARDS);
+                lm.setTimeSpeed(SPEED, step1, step2, step3, true);
+            }
+            rm.waitUntilReady();
+            lm.waitUntilReady();
+        } catch (IOException | InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void autoMove180(char direction) {
+        int step1 = 0, step2 = 1950, step3 = 0;
         try {
             if (direction == 'r') {
                 lm.setPolarity(TachoMotor.Polarity.FORWARD);

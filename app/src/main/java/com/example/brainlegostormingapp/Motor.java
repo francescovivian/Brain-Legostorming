@@ -30,7 +30,7 @@ public class Motor extends TachoMotor {
 
     public void stopEngine() {
         try {
-            this.stop();
+            this.brake();
         } catch (IOException e) {
             e.printStackTrace();
         }
