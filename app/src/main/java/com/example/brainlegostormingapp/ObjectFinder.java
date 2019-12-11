@@ -9,22 +9,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ObjectFinder{
-    private int sat_lower = 96;
-    private int sat_upper = 255;
-    private int red_lower = 160;
-    private int red_upper = 180;
-    private int blue_lower = 105;
-    private int blue_upper = 120;
-    private int yellow_lower = 16;
-    private int yellow_upper = 25;
-    private int black_lower = 0;
-    private int black_upper = 30;
-    private ArrayList<Ball> balls;
-    private ArrayList<Line> lines;
+    //private int sat_lower = 96;
+    //private int sat_upper = 255;
 
-
-    Mat frame, grey, greyFiltered, hsv, hue, circles, edges, matLines;
-    List<Mat> split_hsv;
+    private Mat frame, grey, greyFiltered, hsv, hue, circles, edges, matLines;
+    private List<Mat> split_hsv;
 
 
     public ObjectFinder(Mat frame)
@@ -42,9 +31,11 @@ public class ObjectFinder{
 
     public ArrayList<Ball> findBalls()
     {
+        int red_lower = 160, red_upper = 180, blue_lower = 105, blue_upper = 120, yellow_lower = 16, yellow_upper = 25;
+
         Ball ball;
         circles = new Mat();
-        balls = new ArrayList<>();
+        ArrayList<Ball> balls = new ArrayList<>();
         Imgproc.HoughCircles(greyFiltered, circles, Imgproc.CV_HOUGH_GRADIENT, 1, greyFiltered.rows() / 4, 30, 30, 5, 40);
         for (int i = 0; i < circles.cols(); i++) {
             Point center = new Point(circles.get(0, i)[0], circles.get(0, i)[1]);
@@ -72,10 +63,12 @@ public class ObjectFinder{
 
     public ArrayList<Line> findLines()
     {
+        int black_lower = 0, black_upper = 30;
+
         Line line;
         edges = new Mat();
         matLines = new Mat();
-        lines = new ArrayList<>();
+        ArrayList<Line> lines = new ArrayList<>();
         Imgproc.Canny(greyFiltered, edges, 50, 90);
         Imgproc.HoughLinesP(edges, matLines, 1, Math.PI / 180, 10, 100, 5);
         for (int i = 0; i < matLines.rows(); i++) {
