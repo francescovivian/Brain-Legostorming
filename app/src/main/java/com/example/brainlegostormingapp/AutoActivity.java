@@ -59,6 +59,7 @@ public class AutoActivity extends AppCompatActivity {
     private int dimX, dimY;
     int startX, startY;
     char orientation;
+    private int mine; //mine presenti nel campo
 
     private CameraBridgeViewBase camera;
     //LinearLayout matrixView;
@@ -230,10 +231,11 @@ public class AutoActivity extends AppCompatActivity {
     private void legoMain(EV3.Api api) {
         //final String TAG = Prelude.ReTAG("legoMain");
 
+        mine=7;
         robot = new Robot(api);
-        test1 = new Test1(robot, gameField);
+        test1 = new Test1(robot, gameField,mine);
 
-        test1().start();
+        test1.start();
     }
 
     public void aggiornaTimer(TextView tv, String tempo) {

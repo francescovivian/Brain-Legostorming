@@ -5,12 +5,14 @@ public class GameField {
     private char orientation;
     private Position startPosition;
     private Position lastMinePosition;
+    private Position robotPosition;
 
     public GameField(int row, int column, char orientation, int startX, int startY) {
         this.grid = new int[row][column];
         this.orientation = orientation;
         startPosition = new Position(startX, startY);
         lastMinePosition = null;
+        robotPosition = new Position(startX,startY);
     }
 
     public int[][] getGrid() {
@@ -29,6 +31,10 @@ public class GameField {
         return lastMinePosition;
     }
 
+    public Position getRobotPosition(){
+        return robotPosition;
+    }
+
     public void setStartPosition(int x, int y) {
         startPosition.setX(x);
         startPosition.setY(y);
@@ -37,6 +43,11 @@ public class GameField {
     public void setLastMinePosition(int x, int y) {
         lastMinePosition.setX(x);
         lastMinePosition.setY(y);
+    }
+
+    public void setRobotPosition(int x, int y){
+        robotPosition.setX(x);
+        robotPosition.setY(y);
     }
 
     public void setOrientation(char orientation) {

@@ -2,8 +2,8 @@ package com.example.brainlegostormingapp;
 
 public class Test implements TestInterface{
 
-    private Robot robot;
-    private GameField field;
+    public Robot robot;
+    public GameField field;
 
     public Test(Robot robot, GameField field){
         this.robot=robot;
