@@ -36,6 +36,7 @@ public class ObjectFinder{
         Core.split(hsv, split_hsv);
         hue = split_hsv.get(0);
         Imgproc.cvtColor(frame, grey, Imgproc.COLOR_RGB2GRAY);
+        //Imgproc.GaussianBlur(grey,greyBlur, new Size(9,9),2,2);
         Imgproc.bilateralFilter(grey, greyFiltered, 10, 10, 10);
     }
 
@@ -44,6 +45,7 @@ public class ObjectFinder{
         Ball ball;
         circles = new Mat();
         balls = new ArrayList<>();
+        Imgproc.HoughCircles(greyFiltered, circles, Imgproc.CV_HOUGH_GRADIENT, 1, greyFiltered.rows() / 4, 30, 30, 5, 40);
         for (int i = 0; i < circles.cols(); i++) {
             Point center = new Point(circles.get(0, i)[0], circles.get(0, i)[1]);
             Float radius = (float) circles.get(0, i)[2];

@@ -269,6 +269,7 @@ public class AutoActivity extends AppCompatActivity {
                 frame = inputFrame.rgba();
                 objectFinder = new ObjectFinder(frame);
                 balls = objectFinder.findBalls();
+                lines = objectFinder.findLines();
 
                 objectFinder.cleanMemory();
 
