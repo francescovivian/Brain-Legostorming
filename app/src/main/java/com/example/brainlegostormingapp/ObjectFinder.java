@@ -19,7 +19,12 @@ public class ObjectFinder{
     public ObjectFinder(Mat frame)
     {
         this.frame = frame.clone();
+        grey = new Mat();
         hsv = new Mat();
+        greyFiltered = new Mat();
+        circles = new Mat();
+        edges = new Mat();
+        matLines = new Mat();
         split_hsv = new ArrayList<>();
         Imgproc.cvtColor(frame, hsv, Imgproc.COLOR_RGB2HSV);
         Core.split(hsv, split_hsv);
@@ -29,12 +34,38 @@ public class ObjectFinder{
         Imgproc.bilateralFilter(grey, greyFiltered, 10, 10, 10);
     }
 
-    public ArrayList<Ball> findBalls()
+    private boolean charArrContainsValue(char arr[],char c){
+        int i = 0;
+        boolean found = false;
+        while(!found && i < arr.length){
+            found = arr[i++] == c;
+        }
+        return found;
+    }
+
+
+    public ObjectFind findObject() {
+        ObjectFind objectFind = new ObjectFind();
+        objectFind.setLines(findLines()).setBalls(findBalls());
+        cleanMemory();
+        return objectFind;
+    }
+    public ObjectFind findObject(char items[]){
+        ObjectFind objectFind = new ObjectFind();
+        if(charArrContainsValue(items,'b'))
+            objectFind.setBalls(findBalls());
+        if(charArrContainsValue(items,'l'))
+            objectFind.setLines(findLines());
+        cleanMemory();
+        return objectFind;
+
+    }
+
+    private ArrayList<Ball> findBalls()
     {
         int red_lower = 160, red_upper = 180, blue_lower = 105, blue_upper = 120, yellow_lower = 16, yellow_upper = 25;
 
         Ball ball;
-        circles = new Mat();
         ArrayList<Ball> balls = new ArrayList<>();
         Imgproc.HoughCircles(greyFiltered, circles, Imgproc.CV_HOUGH_GRADIENT, 1, greyFiltered.rows() / 4, 30, 30, 5, 40);
         for (int i = 0; i < circles.cols(); i++) {
@@ -62,13 +93,11 @@ public class ObjectFinder{
         return balls;
     }
 
-    public ArrayList<Line> findLines()
+    private ArrayList<Line> findLines()
     {
         int black_lower = 0, black_upper = 30;
 
         Line line;
-        edges = new Mat();
-        matLines = new Mat();
         ArrayList<Line> lines = new ArrayList<>();
         Imgproc.Canny(greyFiltered, edges, 50, 90);
         Imgproc.HoughLinesP(edges, matLines, 1, Math.PI / 180, 10, 100, 5);
@@ -88,10 +117,8 @@ public class ObjectFinder{
             //double dx = Math.abs(p1.x - p2.x);
             double dy = Math.abs(p1.y - p2.y);
 
-            if (color.equals("black") && p1.x != p2.x && dy <= 100) {
-                line = new Line(p1, p2);
-                lines.add(line);
-            }
+            if (color.equals("black") && p1.x != p2.x && dy <= 100)
+                lines.add(new Line(p1, p2));
         }
 
         return lines;

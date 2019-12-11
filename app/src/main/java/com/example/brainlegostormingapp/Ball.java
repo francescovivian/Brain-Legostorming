@@ -12,4 +12,6 @@ public class Ball {
         this.radius = radius;
         this.color = color;
     }
+
+
 }
