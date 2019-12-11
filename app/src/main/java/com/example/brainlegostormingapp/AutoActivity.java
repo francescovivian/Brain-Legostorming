@@ -36,6 +36,8 @@ import it.unive.dais.legodroid.lib.comm.BluetoothConnection;
 import it.unive.dais.legodroid.lib.plugs.LightSensor;
 import it.unive.dais.legodroid.lib.util.Prelude;
 
+import static com.example.brainlegostormingapp.Constant.*;
+
 public class AutoActivity extends AppCompatActivity {
     private static final String TAG = "AutoActivity";
     private long tempoInizio, attuale;
@@ -236,13 +238,10 @@ public class AutoActivity extends AppCompatActivity {
 
         boolean isStarted = false;
 
-        while (!api.ev3.isCancelled())
-        {
-            try
-            {
-                if(!isStarted)
-                {
-                    robot.startRLEngines(20,'f');
+        while (!api.ev3.isCancelled()) {
+            try {
+                if (!isStarted) {
+                    robot.startRLEngines(SPEED, 'f');
                     isStarted = true;
                 }
 
@@ -251,15 +250,18 @@ public class AutoActivity extends AppCompatActivity {
                 fCol = robot.getColor();
                 col = fCol.get();
 
-                if (col == LightSensor.Color.BLACK)
-                {
+                if (col == LightSensor.Color.GREEN) {
                     robot.stopRLEngines();
+                    Thread.sleep(1000);
+                    robot.autoMove90Right();
+                    Thread.sleep(1000);
+                    robot.autoMove90Right();
                     Thread.sleep(1000);
                     isStarted = false;
                 }
             } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
-        }
+                e.printStackTrace();
+            }
         }
     }
 
@@ -320,7 +322,7 @@ public class AutoActivity extends AppCompatActivity {
                     //Log.e("ball color ", ball.color);
                 }
 
-                for(Line line : lines){
+                for (Line line : lines) {
                     Imgproc.line(frame, line.p1, line.p2, new Scalar(255, 0, 0), 2);
 
                     //Log.e("line p1 x ", String.valueOf(line.p1.x));

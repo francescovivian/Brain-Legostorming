@@ -41,14 +41,14 @@ public class LineFinder {
         Imgproc.bilateralFilter(grey, greyFiltered, 10, 10, 10);
 
         Imgproc.Canny(greyFiltered, edges, 50, 90);
-        Imgproc.HoughLinesP(edges, matLines, 1, Math.PI / 180, 10, 100, 20);
+        Imgproc.HoughLinesP(edges, matLines, 1, Math.PI / 180, 10, 100, 5);
 
         ArrayList<Line> lines = new ArrayList<>();
         Line line;
 
         for (int i = 0; i < matLines.rows(); i++) {
-            Point p1 = new Point(matLines.get(i, 0)[0], matLines.get(i, 0)[1]);
-            Point p2 = new Point(matLines.get(i, 0)[2], matLines.get(i, 0)[3]);
+            Point p1 = new Point(matLines.get(i, 0)[0], matLines.get(i, 0)[1]),
+                  p2 = new Point(matLines.get(i, 0)[2], matLines.get(i, 0)[3]);
 
             int area_hue_1 = (int) hue.get((int) p1.y, (int) p1.x)[0];
             int area_hue_2 = (int) hue.get((int) p2.y, (int) p2.x)[0];
@@ -59,7 +59,10 @@ public class LineFinder {
             if (area_hue >= black_lower && area_hue <= black_upper) color = "black";
             else color = "unknown";
 
-            if (color.equals("black")) {
+            //double dx = Math.abs(p1.x - p2.x);
+            double dy = Math.abs(p1.y - p2.y);
+
+            if (color.equals("black") && p1.x != p2.x && dy <= 100) {
                 line = new Line(p1, p2);
                 lines.add(line);
             }

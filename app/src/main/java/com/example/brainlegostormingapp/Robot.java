@@ -8,6 +8,7 @@ import it.unive.dais.legodroid.lib.EV3;
 import it.unive.dais.legodroid.lib.plugs.LightSensor;
 import it.unive.dais.legodroid.lib.plugs.TachoMotor;
 import it.unive.dais.legodroid.lib.plugs.UltrasonicSensor;
+import static  com.example.brainlegostormingapp.Constant.*;
 
 public class Robot {
     private Motor rm, lm, hand;
@@ -41,18 +42,19 @@ public class Robot {
     }
 
     public void autoMove90(char direction) {
+        int step1 = 0, step2 = 975, step3 = 0;
         try {
             if (direction == 'r') {
                 lm.setPolarity(TachoMotor.Polarity.FORWARD);
-                lm.setTimeSpeed(20, 0, 3000, 0, true);
+                lm.setTimeSpeed(SPEED, step1, step2, step3, true);
                 rm.setPolarity(TachoMotor.Polarity.BACKWARDS);
-                rm.setTimeSpeed(20, 0, 3000, 0, true);
+                rm.setTimeSpeed(SPEED, step1, step2, step3, true);
             }
-            if (direction == 'l') {
+            else if (direction == 'l') {
                 rm.setPolarity(TachoMotor.Polarity.FORWARD);
-                rm.setTimeSpeed(20, 0, 3000, 0, true);
+                rm.setTimeSpeed(SPEED, step1, step2, step3, true);
                 lm.setPolarity(TachoMotor.Polarity.BACKWARDS);
-                lm.setTimeSpeed(20, 0, 3000, 0, true);
+                lm.setTimeSpeed(SPEED, step1, step2, step3, true);
             }
             rm.waitUntilReady();
             lm.waitUntilReady();

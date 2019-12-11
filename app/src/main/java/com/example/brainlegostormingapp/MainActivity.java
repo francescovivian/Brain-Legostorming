@@ -78,5 +78,6 @@ public class MainActivity extends AppCompatActivity
             Intent autoIntent = new Intent(getBaseContext(),AutoActivity.class);
             startActivity(autoIntent);
         });
+        auto.performClick();
     }
 }
