@@ -53,6 +53,7 @@ public class AutoActivity extends AppCompatActivity {
     private ArrayList<Line> lines;
     private Ball ball;
     private GameField gameField;
+    private Test1 test1;
 
 
     private int dimX, dimY;
@@ -230,39 +231,9 @@ public class AutoActivity extends AppCompatActivity {
         //final String TAG = Prelude.ReTAG("legoMain");
 
         robot = new Robot(api);
+        test1 = new Test1(robot, gameField);
 
-        //Future<Float> fDistance;
-        //Float distance;
-        Future<LightSensor.Color> fCol;
-        LightSensor.Color col;
-
-        boolean isStarted = false;
-
-        while (!api.ev3.isCancelled()) {
-            try {
-                if (!isStarted) {
-                    robot.startRLEngines(SPEED, 'f');
-                    isStarted = true;
-                }
-
-                Thread.sleep(100);
-
-                fCol = robot.getColor();
-                col = fCol.get();
-
-                if (col == LightSensor.Color.GREEN) {
-                    robot.stopRLEngines();
-                    Thread.sleep(1000);
-                    robot.autoMove90Right();
-                    Thread.sleep(1000);
-                    robot.autoMove90Right();
-                    Thread.sleep(1000);
-                    isStarted = false;
-                }
-            } catch (InterruptedException | ExecutionException e) {
-                e.printStackTrace();
-            }
-        }
+        test1().start();
     }
 
     public void aggiornaTimer(TextView tv, String tempo) {
