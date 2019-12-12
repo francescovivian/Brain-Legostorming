@@ -1,5 +1,8 @@
 package com.example.brainlegostormingapp;
 
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+
 public class Test1 extends Test {
 
     private int totMine;
@@ -45,13 +48,31 @@ public class Test1 extends Test {
     }
 
     public void alignToOrigin(){   //processa cella fino all'origine
-        robot.autoMove90Left();
-        sleep(5000);
-        for(int i=field.getStartPosition().getX();i>0;i--){
-            robot.forwardOnce();
+        Future<Float> fDistance;
+        Float distance;
+
+        try {
+            robot.openHand(15);
+            robot.autoMove90Left();
             sleep(5000);
+            for (int i = field.getStartPosition().getX(); i > 0; i--) {
+                robot.forwardOnce();
+                fDistance = robot.getDistance();
+                if (fDistance.get() < 35)
+                {
+                    sleep(1500);
+                    robot.closeHand(25);
+                }
+                sleep(3500);
+            }
+            robot.autoMove180Right();
+            sleep(2500);
+            robot.openHand(15);
         }
-        robot.autoMove180Right();
+        catch(ExecutionException | InterruptedException e)
+        {
+            e.printStackTrace();
+        }
     }
 
     public void processNextCell(){ //processa la cella seguente
