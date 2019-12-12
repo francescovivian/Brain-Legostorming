@@ -46,6 +46,7 @@ public class Motor extends TachoMotor {
                 this.setPolarity(TachoMotor.Polarity.FORWARD);
                 this.setTimeSpeed(speed, 0, 3000, 0, true);
             }
+            this.waitCompletion();
         } catch (IOException e) {
             e.printStackTrace();
         }

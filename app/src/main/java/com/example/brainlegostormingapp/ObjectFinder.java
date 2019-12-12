@@ -27,7 +27,6 @@ public class ObjectFinder{
         grey = new Mat();
         hsv = new Mat();
         greyFiltered = new Mat();
-        circles = new Mat();
         split_hsv = new ArrayList<>();
         Imgproc.cvtColor(frame, hsv, Imgproc.COLOR_RGB2HSV);
         Core.split(hsv, split_hsv);
@@ -57,20 +56,20 @@ public class ObjectFinder{
     private ArrayList<Ball> findBalls()
     {
         int red_lower = 160, red_upper = 180, blue_lower = 105, blue_upper = 120, yellow_lower = 16, yellow_upper = 25;
-        Ball ball;
+        int area_hue_1, area_hue_2, area_hue_3, area_hue_4, area_hue_5, area_hue;
+        circles = new Mat();
         ArrayList<Ball> balls = new ArrayList<>();
         Imgproc.HoughCircles(greyFiltered, circles, Imgproc.CV_HOUGH_GRADIENT, 1, greyFiltered.rows() / 4, 30, 30, 5, 40);
         for (int i = 0; i < circles.cols(); i++) {
             Point center = new Point(circles.get(0, i)[0], circles.get(0, i)[1]);
             Float radius = (float) circles.get(0, i)[2];
 
-            /*int area_hue_1 = (int) hue.get((int) (center.y), (int) (center.x))[0];
-            int area_hue_2 = (int) hue.get((int) (center.y + radius/2), (int) (center.x))[0];
-            int area_hue_3 = (int) hue.get((int) (center.y - radius/2), (int) (center.x))[0];
-            int area_hue_4 = (int) hue.get((int) (center.y), (int) (center.x + radius/2))[0];
-            int area_hue_5 = (int) hue.get((int) (center.y), (int) (center.x - radius/2))[0];
-            int area_hue = (area_hue_1 + area_hue_2 + area_hue_3 + area_hue_4 + area_hue_5) / 5;*/
-            int area_hue = (int) hue.get((int) (center.y), (int) (center.x))[0];
+            area_hue_1 = (int) hue.get((int) (center.y), (int) (center.x))[0];
+            area_hue_2 = (int) hue.get((int) (center.y + radius/2), (int) (center.x))[0];
+            area_hue_3 = (int) hue.get((int) (center.y - radius/2), (int) (center.x))[0];
+            area_hue_4 = (int) hue.get((int) (center.y), (int) (center.x + radius/2))[0];
+            area_hue_5 = (int) hue.get((int) (center.y), (int) (center.x - radius/2))[0];
+            area_hue = (area_hue_1 + area_hue_2 + area_hue_3 + area_hue_4 + area_hue_5) / 5;
             String color;
 
             if (area_hue >= red_lower && area_hue <= red_upper) color = "red";
@@ -87,6 +86,7 @@ public class ObjectFinder{
     private ArrayList<Line> findLines()
     {
         int black_lower = 0, black_upper = 30;
+        int area_hue_1, area_hue_2, area_hue_3, area_hue;
         edges = new Mat();
         matLines = new Mat();
         ArrayList<Line> lines = new ArrayList<>();
@@ -96,10 +96,10 @@ public class ObjectFinder{
             Point p1 = new Point(matLines.get(i, 0)[0], matLines.get(i, 0)[1]),
                     p2 = new Point(matLines.get(i, 0)[2], matLines.get(i, 0)[3]);
 
-            int area_hue_1 = (int) hue.get((int) p1.y, (int) p1.x)[0];
-            int area_hue_2 = (int) hue.get((int) p2.y, (int) p2.x)[0];
-            int area_hue_3 = (int) hue.get((int) (p1.y + p2.y)/2, (int) (p1.x + p2.x)/2)[0];
-            int area_hue = (area_hue_1 + area_hue_2 + area_hue_3) / 3;
+            area_hue_1 = (int) hue.get((int) p1.y, (int) p1.x)[0];
+            area_hue_2 = (int) hue.get((int) p2.y, (int) p2.x)[0];
+            area_hue_3 = (int) hue.get((int) (p1.y + p2.y)/2, (int) (p1.x + p2.x)/2)[0];
+            area_hue = (area_hue_1 + area_hue_2 + area_hue_3) / 3;
             String color;
 
             if (area_hue >= black_lower && area_hue <= black_upper) color = "black";

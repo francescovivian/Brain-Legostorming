@@ -79,6 +79,8 @@ public class Robot {
                 lm.setPolarity(TachoMotor.Polarity.BACKWARDS);
                 lm.setTimeSpeed(SPEED, step1, step2, step3, true);
             }
+            rm.waitCompletion();
+            lm.waitCompletion();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -98,6 +100,8 @@ public class Robot {
                 lm.setPolarity(TachoMotor.Polarity.BACKWARDS);
                 lm.setTimeSpeed(SPEED, step1, step2, step3, true);
             }
+            rm.waitCompletion();
+            lm.waitCompletion();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -126,6 +130,8 @@ public class Robot {
             lm.setTimeSpeed(SPEED, step1, step2, step3, true);
             rm.setPolarity(TachoMotor.Polarity.FORWARD);
             rm.setTimeSpeed(SPEED, step1, step2, step3, true);
+            rm.waitCompletion();
+            lm.waitCompletion();
         } catch (IOException e) {
             e.printStackTrace();
         }
