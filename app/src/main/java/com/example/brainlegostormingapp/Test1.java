@@ -3,6 +3,7 @@ package com.example.brainlegostormingapp;
 public class Test1 extends Test {
 
     private int totMine;
+    private int securedMine;
 
     public Test1(Robot robot, GameField field, int mine){
         super(robot, field);
@@ -11,9 +12,28 @@ public class Test1 extends Test {
 
     @Override
     public void movement(){
-        alignToOrigin();  //raggiungo l'origine
+        initialize();
         robot.autoMove180Left();  //il robot si gira di 180°
         scanRight(); //inizia la scansione andando verso destra
+        while(securedMine < totMine){
+            //fa i vari movimenti
+        }
+    }
+
+    public void initialize(){
+        securedMine = 0;
+        alignToOrigin();  //raggiungo l'origine
+    }
+
+    //si raddrizza sulla singola cella
+    public void fixOrientation(){
+        double skew;
+        double maxAcceptedSkew = 30;
+        skew = amIStraight();
+        while(skew > maxAcceptedSkew) {
+            straightenMe(skew);
+            skew = amIStraight();
+        }
     }
 
     public void alignToOrigin(){ //
@@ -28,12 +48,16 @@ public class Test1 extends Test {
         robot.forwardOnce();
     }
 
+    //funzione che mi dice se sono dritto
+    public double amIStraight(){
+        double skew = 0;
+        //metodo che ottiene tutte le lines
 
-    public boolean amIStraight(){
-        //funzione che mi dice se sono dritto
-        //metodo che ottiene tutte le linee
-        //roba che elabora quelle linee e fa qualcosa
-        return false;
+        //elabora le linee per qualche frame
+        //controlla che tutte le linee siano angolate correttamente
+        //controlla che tutte le linee finiscano con l'angolazione corretta per il lato dello schermo
+        //potrebbe ritornare la direzione in cui dovrebbe muoversi per raddrizzarsi
+        return skew;
     }
 
     public void storeBall(){
@@ -45,8 +69,9 @@ public class Test1 extends Test {
         //torna alla posizione in cui ha trovato l'ultima mina
     }
 
-    public void straightMe(){
-        //funzione che mi raddrizza
+    public void straightenMe(double spostamento){
+        //usa valore di amIstraight per raddrizzarsi molto lentamente per un istante
+        //poi continua a luppare amIStraight finche non sono sufficentemente dritto
     }
 
     public boolean ballNextCell(){
