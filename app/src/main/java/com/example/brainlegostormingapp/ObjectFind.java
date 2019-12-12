@@ -17,10 +17,10 @@ public class ObjectFind {
     }
 
     public ArrayList<Ball> getBalls() {
-        return balls != null ? balls : new ArrayList<Ball>();
+        return balls != null ? balls : new ArrayList<>();
     }
 
     public ArrayList<Line> getLines() {
-        return lines != null ? lines : new ArrayList<Line>();
+        return lines != null ? lines : new ArrayList<>();
     }
 }
