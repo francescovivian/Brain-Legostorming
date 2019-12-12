@@ -1,41 +1,27 @@
-package com.example.brainlegostormingapp;
+package com.example.brainlegostormingapp.Activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
-import androidx.annotation.IdRes;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.brainlegostormingapp.R;
+import com.example.brainlegostormingapp.Robot;
+import com.example.brainlegostormingapp.Utility.Utility;
+
 import it.unive.dais.legodroid.lib.EV3;
-import it.unive.dais.legodroid.lib.GenEV3;
 import it.unive.dais.legodroid.lib.comm.BluetoothConnection;
-import it.unive.dais.legodroid.lib.plugs.GyroSensor;
 import it.unive.dais.legodroid.lib.plugs.LightSensor;
-import it.unive.dais.legodroid.lib.plugs.Plug;
-import it.unive.dais.legodroid.lib.plugs.TachoMotor;
-import it.unive.dais.legodroid.lib.plugs.TouchSensor;
-import it.unive.dais.legodroid.lib.plugs.UltrasonicSensor;
-import it.unive.dais.legodroid.lib.util.Consumer;
 import it.unive.dais.legodroid.lib.util.Prelude;
-import it.unive.dais.legodroid.lib.util.ThrowingConsumer;
 
 public class ManualActivity extends AppCompatActivity {
     //private static final String TAG = "ManualActivity";
@@ -50,7 +36,7 @@ public class ManualActivity extends AppCompatActivity {
 
     TextView testoCronometro;
 
-    Button btnMain,btnAuto,btnStart,btnStop,btnLeft,btnRight,btnRetro,btnOpen,btnClose,btnConn,btnCancel;
+    Button btnMain, btnAuto, btnStart, btnStop, btnLeft, btnRight, btnRetro, btnOpen, btnClose, btnConn, btnCancel;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -100,20 +86,15 @@ public class ManualActivity extends AppCompatActivity {
         btnConn = findViewById(R.id.connButton);
         btnCancel = findViewById(R.id.cancelButton);
 
-        elementToggle(btnStart);
-        elementToggle(btnStop);
-        elementToggle(btnRetro);
-        elementToggle(btnLeft);
-        elementToggle(btnRight);
-        elementToggle(btnOpen);
-        elementToggle(btnClose);
-        elementToggle(btnCancel);
+        Utility.elementToggle(btnStart, btnStop, btnRetro,
+                btnLeft, btnRight, btnOpen,
+                btnClose, btnCancel);
 
         btnStart.setOnClickListener(v -> robot.forwardOnce());
 
         btnStop.setOnClickListener(v -> robot.stopAllEngines());
 
-        btnRetro.setOnClickListener(v -> robot.startRLEngines(50, 'b'));
+        btnRetro.setOnClickListener(v -> robot.startRLEngines('b'));
 
         btnRight.setOnClickListener(v -> robot.autoMove90Right());
 
@@ -131,18 +112,10 @@ public class ManualActivity extends AppCompatActivity {
                 ev3 = new EV3(bluechan);
                 Prelude.trap(() -> ev3.run(this::legoMain));
                 Toast.makeText(this, "Connessione stabilita con successo", Toast.LENGTH_SHORT).show();
-
-                elementToggle(btnConn);
-                elementToggle(btnMain);
-                elementToggle(btnAuto);
-                elementToggle(btnStart);
-                elementToggle(btnStop);
-                elementToggle(btnRetro);
-                elementToggle(btnLeft);
-                elementToggle(btnRight);
-                elementToggle(btnOpen);
-                elementToggle(btnClose);
-                elementToggle(btnCancel);
+                Utility.elementToggle(btnConn, btnMain, btnAuto,
+                        btnStart, btnStop, btnRetro,
+                        btnLeft, btnRight, btnOpen,
+                        btnClose, btnCancel);
 
                 if (cronometro == null) {
                     cronometro = new Thread(() ->
@@ -185,22 +158,11 @@ public class ManualActivity extends AppCompatActivity {
             }
             ev3.cancel();
             bluechan.close();
-
-            elementToggle(btnStart);
-            elementToggle(btnStop);
-            elementToggle(btnRetro);
-            elementToggle(btnLeft);
-            elementToggle(btnRight);
-            elementToggle(btnOpen);
-            elementToggle(btnClose);
-            elementToggle(btnConn);
-            elementToggle(btnMain);
-            elementToggle(btnAuto);
+            Utility.elementToggle(
+                    btnStart, btnStop, btnRetro,
+                    btnLeft, btnRight, btnOpen,
+                    btnClose, btnConn, btnMain, btnAuto);
         });
-    }
-
-    private void elementToggle(View v) {
-        v.setEnabled(!v.isEnabled());
     }
 
     private void legoMain(EV3.Api api) {

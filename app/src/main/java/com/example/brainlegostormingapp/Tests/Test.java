@@ -1,5 +1,9 @@
-package com.example.brainlegostormingapp;
-public class Test implements TestInterface{
+package com.example.brainlegostormingapp.Tests;
+
+import com.example.brainlegostormingapp.GameField;
+import com.example.brainlegostormingapp.Robot;
+
+public class Test implements TestInterface {
 
     public Robot robot;
     public GameField field;

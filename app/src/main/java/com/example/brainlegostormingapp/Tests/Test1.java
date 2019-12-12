@@ -1,4 +1,9 @@
-package com.example.brainlegostormingapp;
+package com.example.brainlegostormingapp.Tests;
+
+import com.example.brainlegostormingapp.GameField;
+import com.example.brainlegostormingapp.Robot;
+import com.example.brainlegostormingapp.Tests.Test;
+import com.example.brainlegostormingapp.Utility.Utility;
 
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -39,14 +44,6 @@ public class Test1 extends Test {
         }
     }
 
-    public void sleep(int msec){
-        try{
-            Thread.sleep(msec);
-        }catch(InterruptedException e ){
-            e.printStackTrace();
-        }
-    }
-
     public void alignToOrigin(){   //processa cella fino all'origine
         Future<Float> fDistance;
         Float distance;
@@ -54,19 +51,19 @@ public class Test1 extends Test {
         try {
             robot.openHand(15);
             robot.autoMove90Left();
-            sleep(5000);
+            Utility.sleep(5000);
             for (int i = field.getStartPosition().getX(); i > 0; i--) {
                 robot.forwardOnce();
                 fDistance = robot.getDistance();
                 if (fDistance.get() < 35)
                 {
-                    sleep(1500);
+                    Utility.sleep(1500);
                     robot.closeHand(25);
                 }
-                sleep(3500);
+                Utility.sleep(3500);
             }
             robot.autoMove180Right();
-            sleep(2500);
+            Utility.sleep(2500);
             robot.openHand(15);
         }
         catch(ExecutionException | InterruptedException e)
@@ -76,19 +73,18 @@ public class Test1 extends Test {
     }
 
     public void processNextCell(){ //processa la cella seguente
-        if(ballNextCell()){
+        if(ballNextCell())
             storeBall();
-        }
         robot.forwardOnce();
     }
 
+    //metodo per portare la pallina nella zona sicura
     public void storeBall(){
-        //codice per portare la pallina nella zona sicura
         backToLastMinePos();
     }
 
+    //torna alla posizione in cui ha trovato l'ultima mina
     public void backToLastMinePos(){
-        //torna alla posizione in cui ha trovato l'ultima mina
     }
 
     public void straightenMe(double spostamento){
@@ -96,8 +92,8 @@ public class Test1 extends Test {
         //poi continua a luppare amIStraight finche non sono sufficentemente dritto
     }
 
+    //boolean se nella prossima cella c'è una pallina
     public boolean ballNextCell(){
-        //mi dice se nella prossima cella c'è una pallina
         return false;
     }
 

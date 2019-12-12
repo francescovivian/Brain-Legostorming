@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="#D1E0D3"
     android:orientation="vertical"
-    tools:context="com.example.brainlegostormingapp.MainActivity">
+    tools:context="com.example.brainlegostormingapp.Activity.MainActivity">
 
     <!--<TextView
         android:id="@+id/buttonDescription"

@@ -6,7 +6,7 @@
     android:background="#D1E0D3"
     xmlns:opencv="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    tools:context="com.example.brainlegostormingapp.AutoActivity">
+    tools:context="com.example.brainlegostormingapp.Activity.AutoActivity">
 
     <!--<TextView
         android:id="@+id/buttonDescription"

@@ -1,15 +1,16 @@
-package com.example.brainlegostormingapp;
+package com.example.brainlegostormingapp.Tests;
 
 import android.content.Context;
 
 import androidx.annotation.NonNull;
 
+import com.example.brainlegostormingapp.GameField;
+import com.example.brainlegostormingapp.Robot;
+import com.example.brainlegostormingapp.Tests.Test;
 import com.google.android.gms.nearby.Nearby;
-import com.google.android.gms.nearby.connection.AdvertisingOptions;
 import com.google.android.gms.nearby.connection.ConnectionInfo;
 import com.google.android.gms.nearby.connection.ConnectionLifecycleCallback;
 import com.google.android.gms.nearby.connection.ConnectionResolution;
-import com.google.android.gms.nearby.connection.ConnectionsClient;
 import com.google.android.gms.nearby.connection.ConnectionsStatusCodes;
 import com.google.android.gms.nearby.connection.DiscoveredEndpointInfo;
 import com.google.android.gms.nearby.connection.DiscoveryOptions;
@@ -18,7 +19,7 @@ import com.google.android.gms.nearby.connection.Payload;
 import com.google.android.gms.nearby.connection.PayloadCallback;
 import com.google.android.gms.nearby.connection.PayloadTransferUpdate;
 import com.google.android.gms.nearby.connection.Strategy;
-import static com.example.brainlegostormingapp.Constant.*;
+import static com.example.brainlegostormingapp.Utility.Constant.*;
 
 public class Test2 extends Test {
 

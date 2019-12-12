@@ -14,7 +14,8 @@ import it.unive.dais.legodroid.lib.EV3;
 import it.unive.dais.legodroid.lib.plugs.LightSensor;
 import it.unive.dais.legodroid.lib.plugs.TachoMotor;
 import it.unive.dais.legodroid.lib.plugs.UltrasonicSensor;
-import static  com.example.brainlegostormingapp.Constant.*;
+
+import static com.example.brainlegostormingapp.Utility.Constant.*;
 
 public class Robot {
     private Motor rm, lm, hand;
@@ -72,8 +73,7 @@ public class Robot {
                 lm.setTimeSpeed(SPEED, step1, step2, step3, true);
                 rm.setPolarity(TachoMotor.Polarity.BACKWARDS);
                 rm.setTimeSpeed(SPEED, step1, step2, step3, true);
-            }
-            else if (direction == 'l') {
+            } else if (direction == 'l') {
                 rm.setPolarity(TachoMotor.Polarity.FORWARD);
                 rm.setTimeSpeed(SPEED, step1, step2, step3, true);
                 lm.setPolarity(TachoMotor.Polarity.BACKWARDS);
@@ -92,8 +92,7 @@ public class Robot {
                 lm.setTimeSpeed(SPEED, step1, step2, step3, true);
                 rm.setPolarity(TachoMotor.Polarity.BACKWARDS);
                 rm.setTimeSpeed(SPEED, step1, step2, step3, true);
-            }
-            else if (direction == 'l') {
+            } else if (direction == 'l') {
                 rm.setPolarity(TachoMotor.Polarity.FORWARD);
                 rm.setTimeSpeed(SPEED, step1, step2, step3, true);
                 lm.setPolarity(TachoMotor.Polarity.BACKWARDS);
@@ -104,10 +103,15 @@ public class Robot {
         }
     }
 
-    public void startEngine(char motor, int speed, char direction) {
-        if (motor == 'r') rm.startEngine(speed, direction);
-        if (motor == 'l') lm.startEngine(speed, direction);
-        if (motor == 'h') hand.startEngine(speed, direction);
+    public void startEngine(char motor, char direction) {
+        if (motor == 'r') rm.startEngine(SPEED, direction);
+        if (motor == 'l') lm.startEngine(SPEED, direction);
+        if (motor == 'h') hand.startEngine(SPEED, direction);
+    }
+
+    public void startRLEngines(char direction) {
+        rm.startEngine(SPEED, direction);
+        lm.startEngine(SPEED, direction);
     }
 
     public void startRLEngines(int speed, char direction) {
@@ -115,7 +119,7 @@ public class Robot {
         lm.startEngine(speed, direction);
     }
 
-    public void forwardOnce(){
+    public void forwardOnce() {
         int step1 = 0, step2 = 3100, step3 = 0;
         try {
             lm.setPolarity(TachoMotor.Polarity.FORWARD);
@@ -191,12 +195,12 @@ public class Robot {
     }
 
     //funzione che mi dice se sono dritto
-    public double amIStraight(){
+    public double amIStraight() {
         double skew = 0;
         //metodo che ottiene tutte le lines
 
         frame = camera.getFrame();
-        ObjectFind objectFind = new ObjectFinder(frame).findObject("l","b");
+        ObjectFind objectFind = new ObjectFinder(frame).findObject("l", "b");
         balls = objectFind.getBalls();
         lines = objectFind.getLines();
 

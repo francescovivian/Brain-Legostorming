@@ -1,4 +1,4 @@
-package com.example.brainlegostormingapp;
+package com.example.brainlegostormingapp.Activity;
 
 import android.Manifest;
 import android.content.Intent;
@@ -22,9 +22,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.example.brainlegostormingapp.GameField;
+import com.example.brainlegostormingapp.ObjectFinder;
 import com.example.brainlegostormingapp.ObjectOfInterest.Ball;
 import com.example.brainlegostormingapp.ObjectOfInterest.Line;
 import com.example.brainlegostormingapp.ObjectOfInterest.ObjectFind;
+import com.example.brainlegostormingapp.PixelGridView;
+import com.example.brainlegostormingapp.R;
+import com.example.brainlegostormingapp.Robot;
+import com.example.brainlegostormingapp.Tests.Test1;
 import com.example.brainlegostormingapp.Utility.Utility;
 
 import org.opencv.android.CameraBridgeViewBase;
@@ -63,7 +69,7 @@ public class AutoActivity extends AppCompatActivity {
     private CameraBridgeViewBase camera;
     //LinearLayout matrixView;
     private TextView txtCronometro;
-    private Button btnMain, btnManual, btnStart, btnStop, btnSetMatrix, btnResetMatrix,btnTest1,btnTest2;
+    private Button btnMain, btnManual, btnStart, btnStop, btnSetMatrix, btnResetMatrix, btnTest1, btnTest2;
     private EditText eTxtMatrixX, eTxtMatrixY, eTxtStartX, eTxtStartY;
     private Spinner spnOrientation;
     PixelGridView pixelGrid;
@@ -74,7 +80,7 @@ public class AutoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_auto);
         getSupportActionBar().hide();
 
-        choosen = getIntent().getIntExtra("choosen",0);
+        choosen = getIntent().getIntExtra("choosen", 0);
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         View decorView = getWindow().getDecorView();
@@ -113,7 +119,7 @@ public class AutoActivity extends AppCompatActivity {
         camera = findViewById(R.id.cameraView);
         //endregion
 
-        Utility.elementToggle(btnStart,btnStop);
+        Utility.elementToggle(btnStart, btnStop);
 
         if (!OpenCVLoader.initDebug()) Log.e(TAG, "Unable to load OpenCV");
         else Log.d(TAG, "OpenCV loaded");
@@ -131,12 +137,10 @@ public class AutoActivity extends AppCompatActivity {
             }
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
-            }
-            else {//da modificare perché devono esserci tutti e 2 i permessi
+            } else {//da modificare perché devono esserci tutti e 2 i permessi
                 //start Test2
             }
         });
-
 
 
         btnMain.setOnClickListener(v -> {
@@ -158,7 +162,7 @@ public class AutoActivity extends AppCompatActivity {
                 startX = Integer.parseInt(eTxtStartX.getText().toString());
                 startY = Integer.parseInt(eTxtStartX.getText().toString());
                 orientation = String.valueOf(spnOrientation.getSelectedItem()).charAt(0);
-                Utility.elementToggle(btnStart,btnSetMatrix,eTxtMatrixX,eTxtMatrixY,eTxtStartX,eTxtStartY,spnOrientation);
+                Utility.elementToggle(btnStart, btnSetMatrix, eTxtMatrixX, eTxtMatrixY, eTxtStartX, eTxtStartY, spnOrientation);
                 pixelGrid = new PixelGridView(this);
                 pixelGrid.setNumColumns(dimX);
                 pixelGrid.setNumRows(dimY);
@@ -184,7 +188,7 @@ public class AutoActivity extends AppCompatActivity {
                 spnOrientation.setSelection(0);
                 btnResetMatrix.setVisibility(LinearLayout.GONE);
                 btnSetMatrix.setVisibility(LinearLayout.VISIBLE);
-                Utility.elementToggle(btnStart,btnSetMatrix,eTxtMatrixX,eTxtMatrixY,eTxtStartX,eTxtStartY,spnOrientation);
+                Utility.elementToggle(btnStart, btnSetMatrix, eTxtMatrixX, eTxtMatrixY, eTxtStartX, eTxtStartY, spnOrientation);
             } catch (NumberFormatException ignored) {
                 ignored.printStackTrace();
             }
@@ -199,7 +203,7 @@ public class AutoActivity extends AppCompatActivity {
                 ev3 = new EV3(bluechan);
                 Prelude.trap(() -> ev3.run(this::legoMain));
                 Toast.makeText(this, "Connessione stabilita con successo", Toast.LENGTH_SHORT).show();
-                Utility.elementToggle(btnResetMatrix,btnStart,btnStop,btnMain,btnManual);
+                Utility.elementToggle(btnResetMatrix, btnStart, btnStop, btnMain, btnManual);
                 tempoInizio = System.currentTimeMillis();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -218,19 +222,18 @@ public class AutoActivity extends AppCompatActivity {
             aggiornaTimer(txtCronometro, String.format("%02d:%02d:%02d:%03d", ore, minuti, secondi, millisecondi));
             ev3.cancel();
             bluechan.close();
-            Utility.elementToggle(btnStart,btnMain,btnManual);
+            Utility.elementToggle(btnStart, btnMain, btnManual);
         });
     }
 
     private void legoMain(EV3.Api api) {
         //final String TAG = Prelude.ReTAG("legoMain");
 
-        mine=7;
+        mine = 7;
         robot = new Robot(api);
 
-        if (choosen == 1)
-        {
-            test1 = new Test1(robot, gameField,mine);
+        if (choosen == 1) {
+            test1 = new Test1(robot, gameField, mine);
             test1.start();
         }
         /*if (choosen == 2)
@@ -269,7 +272,7 @@ public class AutoActivity extends AppCompatActivity {
                 Utility.sleep(100);
 
                 frame = inputFrame.rgba();
-                ObjectFind objectFind = new ObjectFinder(frame).findObject("l","b");
+                ObjectFind objectFind = new ObjectFinder(frame).findObject("l", "b");
                 balls = objectFind.getBalls();
                 lines = objectFind.getLines();
 
