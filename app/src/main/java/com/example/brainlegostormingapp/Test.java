@@ -1,5 +1,4 @@
 package com.example.brainlegostormingapp;
-
 public class Test implements TestInterface{
 
     public Robot robot;
