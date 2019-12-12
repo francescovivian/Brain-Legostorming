@@ -1,5 +1,9 @@
 package com.example.brainlegostormingapp;
 
+import com.example.brainlegostormingapp.ObjectOfInterest.Ball;
+import com.example.brainlegostormingapp.ObjectOfInterest.Line;
+import com.example.brainlegostormingapp.ObjectOfInterest.ObjectFind;
+
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.Point;

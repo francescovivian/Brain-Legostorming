@@ -1,4 +1,4 @@
-package com.example.brainlegostormingapp;
+package com.example.brainlegostormingapp.ObjectOfInterest;
 
 import org.opencv.core.Point;
 

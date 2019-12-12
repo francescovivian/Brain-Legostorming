@@ -17,13 +17,15 @@ import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+
+import com.example.brainlegostormingapp.ObjectOfInterest.Ball;
+import com.example.brainlegostormingapp.ObjectOfInterest.Line;
+import com.example.brainlegostormingapp.ObjectOfInterest.ObjectFind;
+import com.example.brainlegostormingapp.Utility.Utility;
 
 import org.opencv.android.CameraBridgeViewBase;
 import org.opencv.android.OpenCVLoader;
@@ -34,10 +36,7 @@ import org.opencv.imgproc.Imgproc;
 
 import it.unive.dais.legodroid.lib.EV3;
 import it.unive.dais.legodroid.lib.comm.BluetoothConnection;
-import it.unive.dais.legodroid.lib.plugs.LightSensor;
 import it.unive.dais.legodroid.lib.util.Prelude;
-
-import static com.example.brainlegostormingapp.Constant.*;
 
 public class AutoActivity extends AppCompatActivity {
     private static final String TAG = "AutoActivity";
@@ -91,6 +90,7 @@ public class AutoActivity extends AppCompatActivity {
                                 | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                                 | View.SYSTEM_UI_FLAG_FULLSCREEN));
 
+        //region FINDVIEW
         txtCronometro = findViewById(R.id.cronometro);
         btnMain = findViewById(R.id.mainButton);
         btnManual = findViewById(R.id.manualButton);
@@ -107,9 +107,9 @@ public class AutoActivity extends AppCompatActivity {
         btnTest1 = findViewById(R.id.btnTest1);
         btnTest2 = findViewById(R.id.btnTest2);
         camera = findViewById(R.id.cameraView);
+        //endregion
 
-        elementToggle(btnStart);
-        elementToggle(btnStop);
+        Utility.elementToggle(btnStart,btnStop);
 
         if (!OpenCVLoader.initDebug()) Log.e(TAG, "Unable to load OpenCV");
         else Log.d(TAG, "OpenCV loaded");
@@ -135,20 +135,17 @@ public class AutoActivity extends AppCompatActivity {
 
 
 
-        btnMain.setOnClickListener(v ->
-        {
+        btnMain.setOnClickListener(v -> {
             Intent mainIntent = new Intent(getBaseContext(), MainActivity.class);
             startActivity(mainIntent);
         });
 
-        btnManual.setOnClickListener(v ->
-        {
+        btnManual.setOnClickListener(v -> {
             Intent manualIntent = new Intent(getBaseContext(), ManualActivity.class);
             startActivity(manualIntent);
         });
 
-        btnSetMatrix.setOnClickListener(v ->
-        {
+        btnSetMatrix.setOnClickListener(v -> {
             try {
                 btnResetMatrix.setVisibility(LinearLayout.VISIBLE);
                 btnSetMatrix.setVisibility(LinearLayout.GONE);
@@ -157,13 +154,7 @@ public class AutoActivity extends AppCompatActivity {
                 startX = Integer.parseInt(eTxtStartX.getText().toString());
                 startY = Integer.parseInt(eTxtStartX.getText().toString());
                 orientation = String.valueOf(spnOrientation.getSelectedItem()).charAt(0);
-                elementToggle(btnStart);
-                elementToggle(btnSetMatrix);
-                elementToggle(eTxtMatrixX);
-                elementToggle(eTxtMatrixY);
-                elementToggle(eTxtStartX);
-                elementToggle(eTxtStartY);
-                elementToggle(spnOrientation);
+                Utility.elementToggle(btnStart,btnSetMatrix,eTxtMatrixX,eTxtMatrixY,eTxtStartX,eTxtStartY,spnOrientation);
                 pixelGrid = new PixelGridView(this);
                 pixelGrid.setNumColumns(dimX);
                 pixelGrid.setNumRows(dimY);
@@ -189,13 +180,7 @@ public class AutoActivity extends AppCompatActivity {
                 spnOrientation.setSelection(0);
                 btnResetMatrix.setVisibility(LinearLayout.GONE);
                 btnSetMatrix.setVisibility(LinearLayout.VISIBLE);
-                elementToggle(btnStart);
-                elementToggle(btnSetMatrix);
-                elementToggle(eTxtMatrixX);
-                elementToggle(eTxtMatrixY);
-                elementToggle(eTxtStartX);
-                elementToggle(eTxtStartY);
-                elementToggle(spnOrientation);
+                Utility.elementToggle(btnStart,btnSetMatrix,eTxtMatrixX,eTxtMatrixY,eTxtStartX,eTxtStartY,spnOrientation);
             } catch (NumberFormatException ignored) {
                 ignored.printStackTrace();
             }
@@ -210,11 +195,7 @@ public class AutoActivity extends AppCompatActivity {
                 ev3 = new EV3(bluechan);
                 Prelude.trap(() -> ev3.run(this::legoMain));
                 Toast.makeText(this, "Connessione stabilita con successo", Toast.LENGTH_SHORT).show();
-                elementToggle(btnResetMatrix);
-                elementToggle(btnStart);
-                elementToggle(btnStop);
-                elementToggle(btnMain);
-                elementToggle(btnManual);
+                Utility.elementToggle(btnResetMatrix,btnStart,btnStop,btnMain,btnManual);
                 tempoInizio = System.currentTimeMillis();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -222,10 +203,9 @@ public class AutoActivity extends AppCompatActivity {
             }
         });
 
-        btnStop.setOnClickListener(v ->
-        {
+        btnStop.setOnClickListener(v -> {
             robot.stopRLEngines();
-            elementToggle(btnStop);
+            Utility.elementToggle(btnStop);
             attuale = System.currentTimeMillis() - tempoInizio;
             secondi = (int) (attuale / 1000) % 60;
             minuti = (int) (attuale / 60000) % 60;
@@ -234,14 +214,8 @@ public class AutoActivity extends AppCompatActivity {
             aggiornaTimer(txtCronometro, String.format("%02d:%02d:%02d:%03d", ore, minuti, secondi, millisecondi));
             ev3.cancel();
             bluechan.close();
-            elementToggle(btnStart);
-            elementToggle(btnMain);
-            elementToggle(btnManual);
+            Utility.elementToggle(btnStart,btnMain,btnManual);
         });
-    }
-
-    private void elementToggle(View v) {
-        v.setEnabled(!v.isEnabled());
     }
 
     private void legoMain(EV3.Api api) {
@@ -275,11 +249,7 @@ public class AutoActivity extends AppCompatActivity {
 
             @Override
             public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
-                try {
-                    Thread.sleep(100);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+                Utility.sleep(100);
 
                 frame = inputFrame.rgba();
                 ObjectFind objectFind = new ObjectFinder(frame).findObject("l","b");
