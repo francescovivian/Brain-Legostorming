@@ -258,51 +258,48 @@ public class AutoActivity extends AppCompatActivity {
 
             @Override
             public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
-                ObjectFinder objectFinder;
                 try {
                     Thread.sleep(100);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
 
-                System.gc();
-
                 frame = inputFrame.rgba();
                 ObjectFind objectFind = new ObjectFinder(frame).findObject("lb".toCharArray());
                 balls = objectFind.getBalls();
                 lines = objectFind.getLines();
 
-                if(ball!= null)
-                    for (Ball ball : balls) {
-                        Point center = new Point(ball.center.x, ball.center.y);
-                        int radius = (int) ball.radius;
-                        Scalar color_rgb;
 
-                        if (ball.color.equals("red")) color_rgb = new Scalar(255, 0, 0);
-                        else if (ball.color.equals("blue")) color_rgb = new Scalar(0, 0, 255);
-                        else if (ball.color.equals("yellow")) color_rgb = new Scalar(255, 255, 0);
-                        else color_rgb = new Scalar(0, 0, 0);
+                for (Ball ball : balls) {
+                    Point center = new Point(ball.center.x, ball.center.y);
+                    int radius = (int) ball.radius;
+                    Scalar color_rgb;
 
-                        Imgproc.circle(frame, center, radius, color_rgb, 2);
+                    if (ball.color.equals("red")) color_rgb = new Scalar(255, 0, 0);
+                    else if (ball.color.equals("blue")) color_rgb = new Scalar(0, 0, 255);
+                    else if (ball.color.equals("yellow")) color_rgb = new Scalar(255, 255, 0);
+                    else color_rgb = new Scalar(0, 0, 0);
 
-                        Imgproc.circle(frame, new Point(320, 240), 10, new Scalar(0, 0, 0), 2);
-                        Imgproc.line(frame, new Point(310, 240), new Point(330, 240), new Scalar(0, 0, 0), 2);
-                        Imgproc.line(frame, new Point(320, 230), new Point(320, 250), new Scalar(0, 0, 0), 2);
+                    Imgproc.circle(frame, center, radius, color_rgb, 2);
 
-                        //Log.e("ball center x ", String.valueOf(ball.center.x));
-                        //Log.e("ball center y ", String.valueOf(ball.center.y));
-                        //Log.e("ball radius ", String.valueOf(ball.radius));
-                        //Log.e("ball color ", ball.color);
-                    }
-                if(lines != null)
-                    for (Line line : lines) {
-                        Imgproc.line(frame, line.p1, line.p2, new Scalar(255, 0, 0), 2);
+                    Imgproc.circle(frame, new Point(320, 240), 10, new Scalar(0, 0, 0), 2);
+                    Imgproc.line(frame, new Point(310, 240), new Point(330, 240), new Scalar(0, 0, 0), 2);
+                    Imgproc.line(frame, new Point(320, 230), new Point(320, 250), new Scalar(0, 0, 0), 2);
 
-                        //Log.e("line p1 x ", String.valueOf(line.p1.x));
-                        //Log.e("line p1 y ", String.valueOf(line.p1.y));
-                        //Log.e("line p2 x ", String.valueOf(line.p2.x));
-                        //Log.e("line p2 y ", String.valueOf(line.p2.y));
-                    }
+                    //Log.e("ball center x ", String.valueOf(ball.center.x));
+                    //Log.e("ball center y ", String.valueOf(ball.center.y));
+                    //Log.e("ball radius ", String.valueOf(ball.radius));
+                    //Log.e("ball color ", ball.color);
+                }
+
+                for (Line line : lines) {
+                    Imgproc.line(frame, line.p1, line.p2, new Scalar(255, 0, 0), 2);
+
+                    //Log.e("line p1 x ", String.valueOf(line.p1.x));
+                    //Log.e("line p1 y ", String.valueOf(line.p1.y));
+                    //Log.e("line p2 x ", String.valueOf(line.p2.x));
+                    //Log.e("line p2 y ", String.valueOf(line.p2.y));
+                }
 
                 return frame;
             }

@@ -23,8 +23,6 @@ public class ObjectFinder{
         hsv = new Mat();
         greyFiltered = new Mat();
         circles = new Mat();
-        edges = new Mat();
-        matLines = new Mat();
         split_hsv = new ArrayList<>();
         Imgproc.cvtColor(frame, hsv, Imgproc.COLOR_RGB2HSV);
         Core.split(hsv, split_hsv);
@@ -37,9 +35,8 @@ public class ObjectFinder{
     private boolean charArrContainsValue(char arr[],char c){
         int i = 0;
         boolean found = false;
-        while(!found && i < arr.length){
+        while(!found && i < arr.length)
             found = arr[i++] == c;
-        }
         return found;
     }
 
@@ -58,13 +55,11 @@ public class ObjectFinder{
             objectFind.setLines(findLines());
         cleanMemory();
         return objectFind;
-
     }
 
     private ArrayList<Ball> findBalls()
     {
         int red_lower = 160, red_upper = 180, blue_lower = 105, blue_upper = 120, yellow_lower = 16, yellow_upper = 25;
-
         Ball ball;
         ArrayList<Ball> balls = new ArrayList<>();
         Imgproc.HoughCircles(greyFiltered, circles, Imgproc.CV_HOUGH_GRADIENT, 1, greyFiltered.rows() / 4, 30, 30, 5, 40);
@@ -85,10 +80,8 @@ public class ObjectFinder{
             else if (area_hue >= yellow_lower && area_hue <= yellow_upper) color = "yellow";
             else color = "unknown";
 
-            if (!color.equals("unknown") && center.x != 0 && center.y != 0 && radius != 0) {
-                ball = new Ball(center, radius, color);
-                balls.add(ball);
-            }
+            if (!color.equals("unknown") && center.x != 0 && center.y != 0 && radius != 0)
+                balls.add(new Ball(center, radius, color));
         }
         return balls;
     }
@@ -96,8 +89,8 @@ public class ObjectFinder{
     private ArrayList<Line> findLines()
     {
         int black_lower = 0, black_upper = 30;
-
-        Line line;
+        edges = new Mat();
+        matLines = new Mat();
         ArrayList<Line> lines = new ArrayList<>();
         Imgproc.Canny(greyFiltered, edges, 50, 90);
         Imgproc.HoughLinesP(edges, matLines, 1, Math.PI / 180, 10, 100, 5);
@@ -120,7 +113,6 @@ public class ObjectFinder{
             if (color.equals("black") && p1.x != p2.x && dy <= 100)
                 lines.add(new Line(p1, p2));
         }
-
         return lines;
     }
 
@@ -134,9 +126,13 @@ public class ObjectFinder{
         hue.release();
         grey.release();
         greyFiltered.release();
-        circles.release();
-        edges.release();
-        matLines.release();
+        if(circles != null)
+            circles.release();
+        if(edges != null && matLines != null){
+            edges.release();
+            matLines.release();
+        }
+
         System.gc();
     }
 
