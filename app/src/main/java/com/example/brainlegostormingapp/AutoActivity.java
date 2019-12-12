@@ -62,7 +62,7 @@ public class AutoActivity extends AppCompatActivity {
     private CameraBridgeViewBase camera;
     //LinearLayout matrixView;
     private TextView txtCronometro;
-    private Button btnMain, btnManual, btnStart, btnStop, btnSetMatrix, btnResetMatrix;
+    private Button btnMain, btnManual, btnStart, btnStop, btnSetMatrix, btnResetMatrix,btnTest1,btnTest2;
     private EditText eTxtMatrixX, eTxtMatrixY, eTxtStartX, eTxtStartY;
     private Spinner spnOrientation;
     PixelGridView pixelGrid;
@@ -104,6 +104,8 @@ public class AutoActivity extends AppCompatActivity {
         eTxtStartY = findViewById(R.id.eTxtStartY);
         //matrixView = findViewById(R.id.matrixView);
         spnOrientation = findViewById(R.id.direction_spinner);
+        btnTest1 = findViewById(R.id.btnTest1);
+        btnTest2 = findViewById(R.id.btnTest2);
         camera = findViewById(R.id.cameraView);
 
         elementToggle(btnStart);
@@ -112,10 +114,26 @@ public class AutoActivity extends AppCompatActivity {
         if (!OpenCVLoader.initDebug()) Log.e(TAG, "Unable to load OpenCV");
         else Log.d(TAG, "OpenCV loaded");
 
-
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, 1);
         } else avviaFotocamera();
+
+        btnTest1.setOnClickListener(v -> {
+            //start Test1
+        });
+        btnTest2.setOnClickListener(v -> {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+            }
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
+            }
+            else {//da modificare perché devono esserci tutti e 2 i permessi
+                //start Test2
+            }
+        });
+
+
 
         btnMain.setOnClickListener(v ->
         {

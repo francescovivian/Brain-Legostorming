@@ -64,20 +64,20 @@ public class MainActivity extends AppCompatActivity
                                 | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                                 | View.SYSTEM_UI_FLAG_FULLSCREEN));
 
-        Button manual = findViewById(R.id.manualButton);
-        Button auto = findViewById(R.id.autoButton);
+        Button btnManual = findViewById(R.id.manualButton);
+        Button btnAuto = findViewById(R.id.autoButton);
 
-        manual.setOnClickListener(v ->
+        btnManual.setOnClickListener(v ->
         {
             Intent manualIntent = new Intent(getBaseContext(),ManualActivity.class);
             startActivity(manualIntent);
         });
 
-        auto.setOnClickListener(v ->
+        btnAuto.setOnClickListener(v ->
         {
             Intent autoIntent = new Intent(getBaseContext(),AutoActivity.class);
             startActivity(autoIntent);
         });
-        auto.performClick();
+        btnAuto.performClick();
     }
 }
