@@ -47,10 +47,11 @@ public class Test1 extends Test {
     public void alignToOrigin(){   //processa cella fino all'origine
         robot.autoMove90Left();
         sleep(5000);
-        for(int i=field.getStartPosition().getX();i>=0;i--){
+        for(int i=field.getStartPosition().getX();i>0;i--){
             robot.forwardOnce();
             sleep(5000);
         }
+        robot.autoMove180Right();
     }
 
     public void processNextCell(){ //processa la cella seguente

@@ -7,7 +7,7 @@ public class GameField {
     private Position lastMinePosition;
     private Position robotPosition;
 
-    public GameField(int row, int column, char orientation, int startX, int startY) {
+    public GameField(int column, int row, char orientation, int startX, int startY) {
         this.grid = new int[row][column];
         this.orientation = orientation;
         startPosition = new Position(startX, startY);

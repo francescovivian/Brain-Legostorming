@@ -147,10 +147,10 @@ public class AutoActivity extends AppCompatActivity {
                 elementToggle(eTxtStartY);
                 elementToggle(spnOrientation);
                 pixelGrid = new PixelGridView(this);
-                pixelGrid.setNumRows(dimY);
                 pixelGrid.setNumColumns(dimX);
+                pixelGrid.setNumRows(dimY);
 
-                gameField = new GameField(dimY, dimX, orientation, startX, startY);
+                gameField = new GameField(dimX, dimY, orientation, startX, startY);
 
                 //Per fare i quadrati rossi
                 //pixelGrid.changeCellChecked(2,3);
