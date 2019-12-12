@@ -13,11 +13,11 @@ public class Test1 extends Test {
     @Override
     public void movement(){
         initialize();
-        robot.autoMove180Left();  //il robot si gira di 180°
-        scanRight(); //inizia la scansione andando verso destra
-        while(securedMine < totMine){
+        //robot.autoMove180Left();  //il robot si gira di 180°
+        //scanRight(); //inizia la scansione andando verso destra
+        //while(securedMine < totMine){
             //fa i vari movimenti
-        }
+        //}
     }
 
     public void initialize(){
@@ -36,9 +36,21 @@ public class Test1 extends Test {
         }
     }
 
-    public void alignToOrigin(){ //
+    public void sleep(int msec){
+        try{
+            Thread.sleep(msec);
+        }catch(InterruptedException e ){
+            e.printStackTrace();
+        }
+    }
+
+    public void alignToOrigin(){   //processa cella fino all'origine
         robot.autoMove90Left();
-        //processa cella fino all'origine
+        sleep(5000);
+        for(int i=field.getStartPosition().getX();i>=0;i--){
+            robot.forwardOnce();
+            sleep(5000);
+        }
     }
 
     public void processNextCell(){ //processa la cella seguente
