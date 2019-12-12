@@ -1,6 +1,9 @@
 package com.example.brainlegostormingapp;
 
+import org.opencv.core.Mat;
+
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
@@ -16,7 +19,16 @@ public class Robot {
     private final UltrasonicSensor us;
     private final LightSensor ls;
 
+    private ArrayList<Ball> balls;
+    private ArrayList<Line> lines;
+
+    Camera camera;
+    Mat frame;
+
     public Robot(EV3.Api api) {
+        camera = new Camera();
+        frame = new Mat();
+
         rm = new Motor(api, EV3.OutputPort.D);
         lm = new Motor(api, EV3.OutputPort.A);
         hand = new Motor(api, EV3.OutputPort.C);
@@ -179,5 +191,22 @@ public class Robot {
             e.printStackTrace();
         }
         return null; //Questo non era previsto, potrebbe causare problemi
+    }
+
+    //funzione che mi dice se sono dritto
+    public double amIStraight(){
+        double skew = 0;
+        //metodo che ottiene tutte le lines
+
+        frame = camera.getFrame();
+        ObjectFind objectFind = new ObjectFinder(frame).findObject("l","b");
+        balls = objectFind.getBalls();
+        lines = objectFind.getLines();
+
+        //elabora le linee per qualche frame
+        //controlla che tutte le linee siano angolate correttamente
+        //controlla che tutte le linee finiscano con l'angolazione corretta per il lato dello schermo
+        //potrebbe ritornare la direzione in cui dovrebbe muoversi per raddrizzarsi
+        return skew;
     }
 }

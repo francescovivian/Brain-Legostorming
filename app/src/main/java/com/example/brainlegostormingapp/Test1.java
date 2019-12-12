@@ -29,10 +29,10 @@ public class Test1 extends Test {
     public void fixOrientation(){
         double skew;
         double maxAcceptedSkew = 30;
-        skew = amIStraight();
+        skew = robot.amIStraight();
         while(skew > maxAcceptedSkew) {
             straightenMe(skew);
-            skew = amIStraight();
+            skew = robot.amIStraight();
         }
     }
 
@@ -46,18 +46,6 @@ public class Test1 extends Test {
             storeBall();
         }
         robot.forwardOnce();
-    }
-
-    //funzione che mi dice se sono dritto
-    public double amIStraight(){
-        double skew = 0;
-        //metodo che ottiene tutte le lines
-
-        //elabora le linee per qualche frame
-        //controlla che tutte le linee siano angolate correttamente
-        //controlla che tutte le linee finiscano con l'angolazione corretta per il lato dello schermo
-        //potrebbe ritornare la direzione in cui dovrebbe muoversi per raddrizzarsi
-        return skew;
     }
 
     public void storeBall(){

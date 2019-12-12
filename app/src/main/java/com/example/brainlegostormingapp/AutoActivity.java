@@ -50,7 +50,6 @@ public class AutoActivity extends AppCompatActivity {
     private Mat frame;
     private ArrayList<Ball> balls;
     private ArrayList<Line> lines;
-    private Ball ball;
     private GameField gameField;
     private Test1 test1;
 
