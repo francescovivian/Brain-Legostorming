@@ -265,7 +265,7 @@ public class AutoActivity extends AppCompatActivity {
                 }
 
                 frame = inputFrame.rgba();
-                ObjectFind objectFind = new ObjectFinder(frame).findObject("lb".toCharArray());
+                ObjectFind objectFind = new ObjectFinder(frame).findObject("l","b");
                 balls = objectFind.getBalls();
                 lines = objectFind.getLines();
 

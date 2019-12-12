@@ -50,7 +50,7 @@ public class Robot {
     }
 
     public void autoMove90(char direction) {
-        int step1 = 0, step2 = 975, step3 = 0;
+        int step1 = 0, step2 = 1000, step3 = 0;
         try {
             if (direction == 'r') {
                 lm.setPolarity(TachoMotor.Polarity.FORWARD);
@@ -72,7 +72,7 @@ public class Robot {
     }
 
     public void autoMove180(char direction) {
-        int step1 = 0, step2 = 1950, step3 = 0;
+        int step1 = 0, step2 = 2000, step3 = 0;
         try {
             if (direction == 'r') {
                 lm.setPolarity(TachoMotor.Polarity.FORWARD);
@@ -105,7 +105,7 @@ public class Robot {
     }
 
     public void forwardOnce(){
-        int step1 = 0, step2 = 3000, step3 = 0;
+        int step1 = 0, step2 = 3100, step3 = 0;
         try {
             lm.setPolarity(TachoMotor.Polarity.FORWARD);
             lm.setTimeSpeed(SPEED, step1, step2, step3, true);

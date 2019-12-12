@@ -6,6 +6,7 @@ import org.opencv.core.Point;
 import org.opencv.imgproc.Imgproc;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class ObjectFinder{
@@ -32,26 +33,18 @@ public class ObjectFinder{
         Imgproc.bilateralFilter(grey, greyFiltered, 10, 10, 10);
     }
 
-    private boolean charArrContainsValue(char arr[],char c){
-        int i = 0;
-        boolean found = false;
-        while(!found && i < arr.length)
-            found = arr[i++] == c;
-        return found;
-    }
-
-
     public ObjectFind findObject() {
         ObjectFind objectFind = new ObjectFind();
         objectFind.setLines(findLines()).setBalls(findBalls());
         cleanMemory();
         return objectFind;
     }
-    public ObjectFind findObject(char items[]){
+    public ObjectFind findObject(String... items){
         ObjectFind objectFind = new ObjectFind();
-        if(charArrContainsValue(items,'b'))
+        List<String> list = Arrays.asList(items);
+        if(list.contains("b"))
             objectFind.setBalls(findBalls());
-        if(charArrContainsValue(items,'l'))
+        if(list.contains("l"))
             objectFind.setLines(findLines());
         cleanMemory();
         return objectFind;
