@@ -25,7 +25,7 @@ public class Test1 extends Test {
         if(ballNextCell()){
             storeBall();
         }
-        forwardOnce();
+        robot.forwardOnce();
     }
 
 
@@ -47,10 +47,6 @@ public class Test1 extends Test {
 
     public void straightMe(){
         //funzione che mi raddrizza
-    }
-
-    public void forwardOnce(){
-        //funzione che mi fa avanzare di una cella
     }
 
     public boolean ballNextCell(){

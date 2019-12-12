@@ -104,6 +104,20 @@ public class Robot {
         lm.startEngine(speed, direction);
     }
 
+    public void forwardOnce(){
+        int step1 = 0, step2 = 3000, step3 = 0;
+        try {
+            lm.setPolarity(TachoMotor.Polarity.FORWARD);
+            lm.setTimeSpeed(SPEED, step1, step2, step3, true);
+            rm.setPolarity(TachoMotor.Polarity.FORWARD);
+            rm.setTimeSpeed(SPEED, step1, step2, step3, true);
+            rm.waitUntilReady();
+            lm.waitUntilReady();
+        } catch (IOException | InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void turnRight(int speed) {
         rm.startEngine(speed, 'b');
         lm.startEngine(speed, 'f');

@@ -109,15 +109,15 @@ public class ManualActivity extends AppCompatActivity {
         elementToggle(btnClose);
         elementToggle(btnCancel);
 
-        btnStart.setOnClickListener(v -> robot.startRLEngines(50, 'f'));
+        btnStart.setOnClickListener(v -> robot.forwardOnce());
 
         btnStop.setOnClickListener(v -> robot.stopAllEngines());
 
         btnRetro.setOnClickListener(v -> robot.startRLEngines(50, 'b'));
 
-        btnRight.setOnClickListener(v -> robot.turnRight(40));
+        btnRight.setOnClickListener(v -> robot.autoMove90Right());
 
-        btnLeft.setOnClickListener(v -> robot.turnLeft(40));
+        btnLeft.setOnClickListener(v -> robot.autoMove90Left());
 
         btnOpen.setOnClickListener(v -> robot.openHand(15));
 
