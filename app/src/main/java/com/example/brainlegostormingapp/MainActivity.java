@@ -40,6 +40,8 @@ public class MainActivity extends AppCompatActivity
 {
     private static final String TAG = "MainActivity";
 
+    Button btnManual, btnTest1, btnTest2, btnTest3;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -64,8 +66,10 @@ public class MainActivity extends AppCompatActivity
                                 | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                                 | View.SYSTEM_UI_FLAG_FULLSCREEN));
 
-        Button btnManual = findViewById(R.id.manualButton);
-        Button btnAuto = findViewById(R.id.autoButton);
+        btnManual = findViewById(R.id.btnManual);
+        btnTest1 = findViewById(R.id.btnTest1);
+        btnTest2 = findViewById(R.id.btnTest2);
+        btnTest3 = findViewById(R.id.btnTest3);
 
         btnManual.setOnClickListener(v ->
         {
@@ -73,11 +77,25 @@ public class MainActivity extends AppCompatActivity
             startActivity(manualIntent);
         });
 
-        btnAuto.setOnClickListener(v ->
+        btnTest1.setOnClickListener(v ->
         {
             Intent autoIntent = new Intent(getBaseContext(),AutoActivity.class);
+            autoIntent.putExtra("choosen",1);
             startActivity(autoIntent);
         });
-        btnAuto.performClick();
+
+        btnTest2.setOnClickListener(v ->
+        {
+            Intent autoIntent = new Intent(getBaseContext(),AutoActivity.class);
+            autoIntent.putExtra("choosen",2);
+            startActivity(autoIntent);
+        });
+
+        btnTest3.setOnClickListener(v ->
+        {
+            Intent autoIntent = new Intent(getBaseContext(),AutoActivity.class);
+            autoIntent.putExtra("choosen",3);
+            startActivity(autoIntent);
+        });
     }
 }

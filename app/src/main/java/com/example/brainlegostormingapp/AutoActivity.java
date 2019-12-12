@@ -43,6 +43,8 @@ public class AutoActivity extends AppCompatActivity {
     private long tempoInizio, attuale;
     private int secondi, minuti, ore, millisecondi;
 
+    int choosen;
+
     private BluetoothConnection.BluetoothChannel bluechan;
     private EV3 ev3;
     private Robot robot;
@@ -71,6 +73,8 @@ public class AutoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_auto);
         getSupportActionBar().hide();
+
+        choosen = getIntent().getIntExtra("choosen",0);
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         View decorView = getWindow().getDecorView();
@@ -223,9 +227,22 @@ public class AutoActivity extends AppCompatActivity {
 
         mine=7;
         robot = new Robot(api);
-        test1 = new Test1(robot, gameField,mine);
 
-        test1.start();
+        if (choosen == 1)
+        {
+            test1 = new Test1(robot, gameField,mine);
+            test1.start();
+        }
+        /*if (choosen == 2)
+        {
+            test2 = new Test1(robot, gameField,mine);
+            test2.start();
+        }
+        if (choosen == 3)
+        {
+            test3 = new Test1(robot, gameField,mine);
+            test3.start();
+        }*/
     }
 
     public void aggiornaTimer(TextView tv, String tempo) {

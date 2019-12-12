@@ -21,7 +21,7 @@
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/manualButton"
+            android:id="@+id/btnManual"
             android:background="@drawable/layout_bg_scuro"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -30,12 +30,30 @@
             tools:ignore="HardcodedText" />
 
         <Button
-            android:id="@+id/autoButton"
+            android:id="@+id/btnTest1"
             android:background="@drawable/layout_bg_chiaro"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="AUTO"
+            android:text="TEST 1"
+            tools:ignore="HardcodedText" />
+
+        <Button
+            android:id="@+id/btnTest2"
+            android:background="@drawable/layout_bg_chiaro"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="TEST 2"
+            tools:ignore="HardcodedText" />
+
+        <Button
+            android:id="@+id/btnTest3"
+            android:background="@drawable/layout_bg_chiaro"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="TEST 3"
             tools:ignore="HardcodedText" />
     </LinearLayout>
 </LinearLayout>
