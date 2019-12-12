@@ -203,6 +203,8 @@ public class Robot {
         balls = objectFind.getBalls();
         lines = objectFind.getLines();
 
+        frame.release();
+
         //elabora le linee per qualche frame
         //controlla che tutte le linee siano angolate correttamente
         //controlla che tutte le linee finiscano con l'angolazione corretta per il lato dello schermo
