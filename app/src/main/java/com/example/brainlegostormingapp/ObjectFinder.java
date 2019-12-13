@@ -64,7 +64,7 @@ public class ObjectFinder{
             Point center = new Point(circles.get(0, i)[0], circles.get(0, i)[1]);
             Float radius = (float) circles.get(0, i)[2];
 
-            if ((center.y + radius/2) < 480 && (center.y - radius/2) > 0 && (center.x + radius/2) < 640 && (center.x - radius/2) > 0) {
+            if ((center.x + radius/2) < frame.width() && (center.x - radius/2) >= 0 && (center.y + radius/2) < frame.height() && (center.y - radius/2) >= 0) {
                 area_hue_1 = (int) hue.get((int) (center.y), (int) (center.x))[0];
                 area_hue_2 = (int) hue.get((int) (center.y + radius / 2), (int) (center.x))[0];
                 area_hue_3 = (int) hue.get((int) (center.y - radius / 2), (int) (center.x))[0];

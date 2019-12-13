@@ -138,5 +138,7 @@
     <orderEntry type="library" name="Gradle: com.quickbirdstudios:opencv:4.1.0@aar" level="project" />
     <orderEntry type="module" module-name="lib" />
     <orderEntry type="module" module-name="lib" />
+    <orderEntry type="module" module-name="lib" />
+    <orderEntry type="module" module-name="lib" />
   </component>
 </module>
