@@ -94,7 +94,10 @@ public class ManualActivity extends AppCompatActivity {
 
         btnStop.setOnClickListener(v -> robot.stopAllEngines());
 
-        btnRetro.setOnClickListener(v -> robot.startRLEngines('b'));
+        btnRetro.setOnClickListener(v -> {
+            robot.startRLEngines('b');
+            Utility.playMp3Audio(getBaseContext(),"femoNaInversion.mp3");
+        });
 
         btnRight.setOnClickListener(v -> robot.autoMove90Right());
 

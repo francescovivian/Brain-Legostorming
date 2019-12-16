@@ -13,7 +13,7 @@ public class Test1 extends Test {
     private int totMine;
     private int securedMine;
 
-    public Test1(Robot robot, GameField field, int mine){
+     public Test1(Robot robot, GameField field, int mine){
         super(robot, field);
         this.totMine=mine;
     }

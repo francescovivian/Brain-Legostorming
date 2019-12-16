@@ -9,7 +9,6 @@ import org.opencv.core.Mat;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 import it.unive.dais.legodroid.lib.EV3;
@@ -32,7 +31,7 @@ public class Robot {
     Mat frame;
 
     public Robot(EV3.Api api) {
-        //camera = new Camera();
+        camera = new Camera();
         frame = new Mat();
 
         rm = new Motor(api, EV3.OutputPort.D);
@@ -132,7 +131,6 @@ public class Robot {
             lm.setTimeSpeed(SPEED, step1, step2, step3, true);
             rm.setPolarity(TachoMotor.Polarity.FORWARD);
             rm.setTimeSpeed(SPEED, step1, step2, step3, true);
-            identifyBall();
             rm.waitCompletion();
             lm.waitCompletion();
         } catch (IOException e) {
@@ -220,19 +218,5 @@ public class Robot {
         //controlla che tutte le linee finiscano con l'angolazione corretta per il lato dello schermo
         //potrebbe ritornare la direzione in cui dovrebbe muoversi per raddrizzarsi
         return skew;
-    }
-
-    public void identifyBall()
-    {
-        try {
-            if (this.getDistance().get() < 35) {
-                Utility.sleep(2000);
-                this.closeHand(25);
-            }
-        }
-        catch (InterruptedException | ExecutionException e)
-        {
-            e.printStackTrace();
-        }
     }
 }
