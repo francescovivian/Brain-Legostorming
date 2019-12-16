@@ -9,6 +9,7 @@ import org.opencv.core.Mat;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 import it.unive.dais.legodroid.lib.EV3;
@@ -21,6 +22,8 @@ import static com.example.brainlegostormingapp.Utility.Constant.*;
 public class Robot {
     private Motor rm, lm, hand;
 
+    private boolean minePickedUp;
+
     private final UltrasonicSensor us;
     private final LightSensor ls;
 
@@ -31,8 +34,10 @@ public class Robot {
     Mat frame;
 
     public Robot(EV3.Api api) {
-        camera = new Camera();
+        //camera = new Camera();
         frame = new Mat();
+
+        minePickedUp=false;
 
         rm = new Motor(api, EV3.OutputPort.D);
         lm = new Motor(api, EV3.OutputPort.A);
@@ -48,6 +53,14 @@ public class Robot {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public boolean getMinePickedUp(){
+        return this.minePickedUp;
+    }
+
+    public void setMinePickedUp(boolean mineStatus){
+        this.minePickedUp=mineStatus;
     }
 
     public void autoMove90Right() {
@@ -130,6 +143,21 @@ public class Robot {
             lm.setPolarity(TachoMotor.Polarity.FORWARD);
             lm.setTimeSpeed(SPEED, step1, step2, step3, true);
             rm.setPolarity(TachoMotor.Polarity.FORWARD);
+            rm.setTimeSpeed(SPEED, step1, step2, step3, true);
+            identifyBall();
+            rm.waitCompletion();
+            lm.waitCompletion();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void backwardOnce() {
+        int step1 = 0, step2 = 3100, step3 = 0;
+        try {
+            lm.setPolarity(TachoMotor.Polarity.BACKWARDS);
+            lm.setTimeSpeed(SPEED, step1, step2, step3, true);
+            rm.setPolarity(TachoMotor.Polarity.BACKWARDS);
             rm.setTimeSpeed(SPEED, step1, step2, step3, true);
             rm.waitCompletion();
             lm.waitCompletion();
@@ -219,4 +247,20 @@ public class Robot {
         //potrebbe ritornare la direzione in cui dovrebbe muoversi per raddrizzarsi
         return skew;
     }
+
+    public void identifyBall()
+    {
+        if(!(this.minePickedUp)) {
+            try {
+                if (this.getDistance().get() < 35) {
+                    Utility.sleep(2000);
+                    this.closeHand(25);
+                    this.setMinePickedUp(true);
+                }
+            } catch (InterruptedException | ExecutionException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
 }

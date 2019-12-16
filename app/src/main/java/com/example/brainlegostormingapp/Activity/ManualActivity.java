@@ -94,7 +94,7 @@ public class ManualActivity extends AppCompatActivity {
 
         btnStop.setOnClickListener(v -> robot.stopAllEngines());
 
-        btnRetro.setOnClickListener(v -> robot.startRLEngines('b'));
+        btnRetro.setOnClickListener(v -> robot.backwardOnce());
 
         btnRight.setOnClickListener(v -> robot.autoMove90Right());
 

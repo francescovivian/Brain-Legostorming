@@ -73,7 +73,12 @@ public class Test1 extends Test {
     }
 
     public void secureMine(){
-
+        robot.forwardOnce();            //esce di una casella
+        robot.openHand(15);       //apre la mano
+        this.securedMine++;
+        robot.setMinePickedUp(false);
+        robot.backwardOnce();           //torna indietro di una cella
+        robot.autoMove180Right();       //si gira di 180°
     }
 
 
@@ -89,17 +94,25 @@ public class Test1 extends Test {
 
     public void scan(){
         for(int i=0;i<field.getRow();i++){
+            if(securedMine==totMine)
+                break;
             if(i%2==0)
                 scanRight();
             else
                 scanLeft();
         }
+        backToStart();
     }
     public void scanLeft(){
         for(int i=0;i<field.getColumn()-1;i++){ //scorro tutta la riga andando verso sinistra
             robot.forwardOnce();
             field.setRobotPosition(field.getRobotPosition().getX()-1,field.getRobotPosition().getY());
             Utility.sleep(5000);
+            if(robot.getMinePickedUp()==true){ //ho raccolto una mina nell'ultimo avanzamento
+                field.setLastMinePosition(field.getRobotPosition().getX(),field.getRobotPosition().getY());
+                storeBall();
+                robot.autoMove90Left();
+            }
         }
         if(field.getRobotPosition().getY()<field.getRow()-1) { // se ho una riga sopra
             robot.autoMove90Right(); //arrivato infondo alla riga giro a destra per salire
@@ -107,6 +120,10 @@ public class Test1 extends Test {
             robot.forwardOnce(); //salgo nella riga sopra
             field.setRobotPosition(field.getRobotPosition().getX(), field.getRobotPosition().getY() + 1);
             Utility.sleep(5000);
+            if(robot.getMinePickedUp()==true){ //ho raccolto una mina nell'ultimo avanzamento
+                field.setLastMinePosition(field.getRobotPosition().getX(),field.getRobotPosition().getY());
+                storeBall();
+            }
             robot.autoMove90Right(); //mi giro pronto per scorrere la nuova riga
             Utility.sleep(5000);
         }
@@ -117,6 +134,11 @@ public class Test1 extends Test {
             robot.forwardOnce();
             field.setRobotPosition(field.getRobotPosition().getX() + 1, field.getRobotPosition().getY());
             Utility.sleep(5000);
+            if(robot.getMinePickedUp()==true){ //ho raccolto una mina nell'ultimo avanzamento
+                field.setLastMinePosition(field.getRobotPosition().getX(),field.getRobotPosition().getY());
+                storeBall();
+                robot.autoMove90Right();
+            }
         }
         if (field.getRobotPosition().getY() < field.getRow() - 1) { // se ho una riga sopra
             robot.autoMove90Left(); //arrivato infondo alla riga giro a sinistra per salire
@@ -124,6 +146,10 @@ public class Test1 extends Test {
             robot.forwardOnce(); //salgo nella riga sopra
             field.setRobotPosition(field.getRobotPosition().getX(), field.getRobotPosition().getY() + 1);
             Utility.sleep(5000);
+            if(robot.getMinePickedUp()==true){ //ho raccolto una mina nell'ultimo avanzamento
+                field.setLastMinePosition(field.getRobotPosition().getX(),field.getRobotPosition().getY());
+                storeBall();
+            }
             robot.autoMove90Left(); //mi giro pronto per scorrere la nuova riga
             Utility.sleep(5000);
         }
