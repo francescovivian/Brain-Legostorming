@@ -230,6 +230,8 @@ public class AutoActivity extends AppCompatActivity {
             test3 = new Test1(robot, gameField,mine);
             test3.start();
         }*/
+
+        Utility.playMp3Audio(getApplicationContext(),"motore.mp3");
     }
 
     public void aggiornaTimer(TextView tv, String tempo) {
