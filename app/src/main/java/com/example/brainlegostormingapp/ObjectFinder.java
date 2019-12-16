@@ -108,10 +108,10 @@ public class ObjectFinder{
             if (area_hue >= black_lower && area_hue <= black_upper) color = "black";
             else color = "unknown";
 
-            //double dx = Math.abs(p1.x - p2.x);
+            double dx = Math.abs(p1.x - p2.x);
             double dy = Math.abs(p1.y - p2.y);
 
-            if (color.equals("black") && p1.x != p2.x && dy <= 100)
+            if (color.equals("black") && dx <= 10 && dy <= 100)
                 lines.add(new Line(p1, p2));
         }
         return lines;

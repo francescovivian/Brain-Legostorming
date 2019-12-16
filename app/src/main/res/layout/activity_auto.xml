@@ -65,15 +65,15 @@
             tools:ignore="HardcodedText" />
 
         <TextView
-            android:id="@+id/textX"
+            android:id="@+id/textR"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="X:"
+            android:text="R:"
             android:textSize="25sp"
             tools:ignore="HardcodedText" />
 
         <EditText
-            android:id="@+id/eTxtDimX"
+            android:id="@+id/eTxtDimR"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="25sp"
@@ -83,15 +83,15 @@
             android:importantForAutofill="no" />
 
         <TextView
-            android:id="@+id/textY"
+            android:id="@+id/textC"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Y:"
+            android:text="C:"
             android:textSize="25sp"
             tools:ignore="HardcodedText" />
 
         <EditText
-            android:id="@+id/eTxtDimY"
+            android:id="@+id/eTxtDimC"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="25sp"

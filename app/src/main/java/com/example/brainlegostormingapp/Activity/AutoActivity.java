@@ -61,7 +61,7 @@ public class AutoActivity extends AppCompatActivity {
     private Test1 test1;
 
 
-    private int dimX, dimY;
+    private int dimR, dimC;
     int startX, startY;
     char orientation;
     private int mine; //mine presenti nel campo
@@ -70,7 +70,7 @@ public class AutoActivity extends AppCompatActivity {
     //LinearLayout matrixView;
     private TextView txtCronometro;
     private Button btnMain, btnManual, btnStart, btnStop, btnSetMatrix, btnResetMatrix, btnTest1, btnTest2;
-    private EditText eTxtMatrixX, eTxtMatrixY, eTxtStartX, eTxtStartY;
+    private EditText eTxtMatrixR, eTxtMatrixC, eTxtStartX, eTxtStartY;
     private Spinner spnOrientation;
     PixelGridView pixelGrid;
 
@@ -108,8 +108,8 @@ public class AutoActivity extends AppCompatActivity {
         btnStop = findViewById(R.id.btnStopButton);
         btnSetMatrix = findViewById(R.id.btnSetDimMatrix);
         btnResetMatrix = findViewById(R.id.btnResetDimMatrix);
-        eTxtMatrixX = findViewById(R.id.eTxtDimX);
-        eTxtMatrixY = findViewById(R.id.eTxtDimY);
+        eTxtMatrixR = findViewById(R.id.eTxtDimR);
+        eTxtMatrixC = findViewById(R.id.eTxtDimC);
         eTxtStartX = findViewById(R.id.eTxtStartX);
         eTxtStartY = findViewById(R.id.eTxtStartY);
         //matrixView = findViewById(R.id.matrixView);
@@ -157,17 +157,17 @@ public class AutoActivity extends AppCompatActivity {
             try {
                 btnResetMatrix.setVisibility(LinearLayout.VISIBLE);
                 btnSetMatrix.setVisibility(LinearLayout.GONE);
-                dimX = Integer.parseInt(eTxtMatrixX.getText().toString());
-                dimY = Integer.parseInt(eTxtMatrixY.getText().toString());
+                dimR = Integer.parseInt(eTxtMatrixR.getText().toString());
+                dimC = Integer.parseInt(eTxtMatrixC.getText().toString());
                 startX = Integer.parseInt(eTxtStartX.getText().toString());
-                startY = Integer.parseInt(eTxtStartX.getText().toString());
+                startY = Integer.parseInt(eTxtStartY.getText().toString());
                 orientation = String.valueOf(spnOrientation.getSelectedItem()).charAt(0);
-                Utility.elementToggle(btnStart, btnSetMatrix, eTxtMatrixX, eTxtMatrixY, eTxtStartX, eTxtStartY, spnOrientation);
+                Utility.elementToggle(btnStart, btnSetMatrix, eTxtMatrixR, eTxtMatrixC, eTxtStartX, eTxtStartY, spnOrientation);
                 pixelGrid = new PixelGridView(this);
-                pixelGrid.setNumColumns(dimX);
-                pixelGrid.setNumRows(dimY);
+                pixelGrid.setNumRows(dimR);
+                pixelGrid.setNumColumns(dimC);
 
-                gameField = new GameField(dimX, dimY, orientation, startX, startY);
+                gameField = new GameField(dimR, dimC, orientation, startX, startY);
 
                 //Per fare i quadrati rossi
                 //pixelGrid.changeCellChecked(2,3);
@@ -181,14 +181,14 @@ public class AutoActivity extends AppCompatActivity {
         btnResetMatrix.setOnClickListener(e -> {
             try {
                 //matrixView.removeAllViews();
-                eTxtMatrixX.setText("0");
-                eTxtMatrixY.setText("0");
+                eTxtMatrixR.setText("0");
+                eTxtMatrixC.setText("0");
                 eTxtStartX.setText("0");
                 eTxtStartY.setText("0");
                 spnOrientation.setSelection(0);
                 btnResetMatrix.setVisibility(LinearLayout.GONE);
                 btnSetMatrix.setVisibility(LinearLayout.VISIBLE);
-                Utility.elementToggle(btnStart, btnSetMatrix, eTxtMatrixX, eTxtMatrixY, eTxtStartX, eTxtStartY, spnOrientation);
+                Utility.elementToggle(btnStart, btnSetMatrix, eTxtMatrixR, eTxtMatrixC, eTxtStartX, eTxtStartY, spnOrientation);
             } catch (NumberFormatException ignored) {
                 ignored.printStackTrace();
             }
@@ -276,6 +276,9 @@ public class AutoActivity extends AppCompatActivity {
                 balls = objectFind.getBalls();
                 lines = objectFind.getLines();
 
+                Imgproc.circle(frame, new Point(320, 240), 10, new Scalar(0, 0, 0), 2);
+                Imgproc.line(frame, new Point(310, 240), new Point(330, 240), new Scalar(0, 0, 0), 2);
+                Imgproc.line(frame, new Point(320, 230), new Point(320, 250), new Scalar(0, 0, 0), 2);
 
                 for (Ball ball : balls) {
                     Point center = new Point(ball.center.x, ball.center.y);
@@ -288,10 +291,6 @@ public class AutoActivity extends AppCompatActivity {
                     else color_rgb = new Scalar(0, 0, 0);
 
                     Imgproc.circle(frame, center, radius, color_rgb, 2);
-
-                    Imgproc.circle(frame, new Point(320, 240), 10, new Scalar(0, 0, 0), 2);
-                    Imgproc.line(frame, new Point(310, 240), new Point(330, 240), new Scalar(0, 0, 0), 2);
-                    Imgproc.line(frame, new Point(320, 230), new Point(320, 250), new Scalar(0, 0, 0), 2);
 
                     //Log.e("ball center x ", String.valueOf(ball.center.x));
                     //Log.e("ball center y ", String.valueOf(ball.center.y));

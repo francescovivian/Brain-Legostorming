@@ -46,32 +46,17 @@ public class Test1 extends Test {
     }
 
     public void alignToOrigin(){   //processa cella fino all'origine
-        Future<Float> fDistance;
-        Float distance;
-
-        try {
-            robot.openHand(15);
-            robot.autoMove90Left();
+        //robot.openHand(15);
+        robot.autoMove90Left();
+        Utility.sleep(5000);
+        for (int i = field.getStartPosition().getX(); i > 0; i--) {
+            robot.forwardOnce();
+            field.setRobotPosition(field.getRobotPosition().getX()-1,field.getRobotPosition().getY());
             Utility.sleep(5000);
-            for (int i = field.getStartPosition().getX(); i > 0; i--) {
-                robot.forwardOnce();
-                field.setRobotPosition(field.getRobotPosition().getX()-1,field.getRobotPosition().getY());
-                fDistance = robot.getDistance();
-                if (fDistance.get() < 35)
-                {
-                    Utility.sleep(1500);
-                    robot.closeHand(25);
-                }
-                Utility.sleep(3500);
-            }
-            robot.autoMove180Right();
-            Utility.sleep(2500);
-            robot.openHand(15);
         }
-        catch(ExecutionException | InterruptedException e)
-        {
-            e.printStackTrace();
-        }
+        robot.autoMove180Right();
+        Utility.sleep(5000);
+        //robot.openHand(15);
     }
 
     public void processNextCell(){ //processa la cella seguente
@@ -118,7 +103,7 @@ public class Test1 extends Test {
             Utility.sleep(5000);
             robot.forwardOnce(); //salgo nella riga sopra
             field.setRobotPosition(field.getRobotPosition().getX(), field.getRobotPosition().getY() + 1);
-            Utility.sleep(500);
+            Utility.sleep(5000);
             robot.autoMove90Right(); //mi giro pronto per scorrere la nuova riga
             Utility.sleep(5000);
         }
@@ -135,10 +120,9 @@ public class Test1 extends Test {
             Utility.sleep(5000);
             robot.forwardOnce(); //salgo nella riga sopra
             field.setRobotPosition(field.getRobotPosition().getX(), field.getRobotPosition().getY() + 1);
-            Utility.sleep(500);
+            Utility.sleep(5000);
             robot.autoMove90Left(); //mi giro pronto per scorrere la nuova riga
             Utility.sleep(5000);
         }
     }
-
 }
