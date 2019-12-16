@@ -127,6 +127,10 @@ public class Test1 extends Test {
             robot.autoMove90Right(); //mi giro pronto per scorrere la nuova riga
             Utility.sleep(5000);
         }
+        else
+        {
+            robot.autoMove90Left();
+        }
     }
 
     public void scanRight() {
@@ -153,10 +157,14 @@ public class Test1 extends Test {
             robot.autoMove90Left(); //mi giro pronto per scorrere la nuova riga
             Utility.sleep(5000);
         }
+        else
+        {
+            robot.autoMove90Right();
+        }
     }
 
     public void backToStart(){  // si presuppone che il robot sia già girato verso il "basso"
-        for(int i=field.getRobotPosition().getY();i>=0;i--){ //scendo fino alla base della griglia
+        for(int i=field.getRobotPosition().getY();i>0;i--){ //scendo fino alla base della griglia
             robot.forwardOnce();
             Utility.sleep(5000);
             field.setRobotPosition(field.getRobotPosition().getX(),field.getRobotPosition().getY()-1);
@@ -170,7 +178,7 @@ public class Test1 extends Test {
             }
             robot.autoMove90Left();
         }
-        else{ //sono a sinistra rispetto allo start
+        else if(field.getRobotPosition().getX()<field.getStartPosition().getX()){ //sono a sinistra rispetto allo start
             robot.autoMove90Left();
             while(field.getRobotPosition().getX()<field.getStartPosition().getX()){
                 robot.forwardOnce();
