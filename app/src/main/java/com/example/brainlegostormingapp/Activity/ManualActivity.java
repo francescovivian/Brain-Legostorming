@@ -2,6 +2,7 @@ package com.example.brainlegostormingapp.Activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -18,13 +19,15 @@ import com.example.brainlegostormingapp.R;
 import com.example.brainlegostormingapp.Robot;
 import com.example.brainlegostormingapp.Utility.Utility;
 
+import org.opencv.android.OpenCVLoader;
+
 import it.unive.dais.legodroid.lib.EV3;
 import it.unive.dais.legodroid.lib.comm.BluetoothConnection;
 import it.unive.dais.legodroid.lib.plugs.LightSensor;
 import it.unive.dais.legodroid.lib.util.Prelude;
 
 public class ManualActivity extends AppCompatActivity {
-    //private static final String TAG = "ManualActivity";
+    private static final String TAG = "ManualActivity";
 
     private Thread cronometro;
     boolean conta;
@@ -89,6 +92,9 @@ public class ManualActivity extends AppCompatActivity {
         Utility.elementToggle(btnStart, btnStop, btnRetro,
                 btnLeft, btnRight, btnOpen,
                 btnClose, btnCancel);
+
+        if (!OpenCVLoader.initDebug()) Log.e(TAG, "Unable to load OpenCV");
+        else Log.d(TAG, "OpenCV loaded");
 
         btnStart.setOnClickListener(v -> robot.forwardOnce());
 
