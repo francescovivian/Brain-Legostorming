@@ -231,7 +231,7 @@ public class AutoActivity extends AppCompatActivity {
             test3.start();
         }*/
 
-        Utility.playMp3Audio(getApplicationContext(),"motore.mp3");
+        Utility.playMp3Audio(getApplicationContext(),"strade.mp3");
     }
 
     public void aggiornaTimer(TextView tv, String tempo) {

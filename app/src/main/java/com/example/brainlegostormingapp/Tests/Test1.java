@@ -82,10 +82,12 @@ public class Test1 extends Test {
 
     public void secureMine(){
         robot.forwardOnce();            //esce di una casella
+        Utility.sleep(5000);
         robot.openHand(15);       //apre la mano
         this.securedMine++;
         robot.setMinePickedUp(false);
         robot.backwardOnce();           //torna indietro di una cella
+        Utility.sleep(5000);
         robot.autoMove180Right();       //si gira di 180°
     }
 
@@ -217,23 +219,27 @@ public class Test1 extends Test {
     public void backToLastMinePos(){ //il robot arriva rivolto verso "l'alto"
         if(field.getRobotPosition().getX()>field.getLastMinePosition().getX()){ // sono a destra rispetto alla posizione dell'ultima mina
             robot.autoMove90Left();
-            while(field.getRobotPosition().getX()>field.getStartPosition().getX()){
+            Utility.sleep(5000);
+            while(field.getRobotPosition().getX()>field.getLastMinePosition().getX()){
                 robot.forwardOnce();
                 Utility.sleep(5000);
                 field.setRobotPosition(field.getRobotPosition().getX()-1,field.getRobotPosition().getY());
             }
             robot.autoMove90Right();
+            Utility.sleep(5000);
         }
-        else{ //sono a sinistra rispetto alla posizione dell'ultima mina
+        else if(field.getRobotPosition().getX()<field.getLastMinePosition().getX()){ //sono a sinistra rispetto alla posizione dell'ultima mina
             robot.autoMove90Right();
-            while(field.getRobotPosition().getX()<field.getStartPosition().getX()){
+            Utility.sleep(5000);
+            while(field.getRobotPosition().getX()<field.getLastMinePosition().getX()){
                 robot.forwardOnce();
                 Utility.sleep(5000);
                 field.setRobotPosition(field.getRobotPosition().getX()+1,field.getRobotPosition().getY());
             }
             robot.autoMove90Left();
+            Utility.sleep(5000);
         }
-        for(int i=0;i<=field.getLastMinePosition().getY();i++){ //salgo fino alla posizione dell'ultima mina
+        for(int i=0;i<field.getLastMinePosition().getY();i++){ //salgo fino alla posizione dell'ultima mina
             robot.forwardOnce();
             Utility.sleep(5000);
             field.setRobotPosition(field.getRobotPosition().getX(),field.getRobotPosition().getY()+1);
