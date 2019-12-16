@@ -266,6 +266,15 @@ public class AutoActivity extends AppCompatActivity {
                 Imgproc.line(frame, new Point(310, 240), new Point(330, 240), new Scalar(0, 0, 0), 2);
                 Imgproc.line(frame, new Point(320, 230), new Point(320, 250), new Scalar(0, 0, 0), 2);
 
+                Imgproc.line(frame, new Point(580, 0), new Point(580, 480), new Scalar(0, 255, 0), 2);
+                Imgproc.line(frame, new Point(620, 0), new Point(620, 480), new Scalar(0, 255, 0), 2);
+
+                Imgproc.line(frame, new Point(0, 60), new Point(640, 60), new Scalar(0, 255, 0), 2);
+                Imgproc.line(frame, new Point(0, 80), new Point(640, 80), new Scalar(0, 255, 0), 2);
+
+                Imgproc.line(frame, new Point(0, 400), new Point(640, 400), new Scalar(0, 255, 0), 2);
+                Imgproc.line(frame, new Point(0, 420), new Point(640, 420), new Scalar(0, 255, 0), 2);
+
                 for (Ball ball : balls) {
                     Point center = new Point(ball.center.x, ball.center.y);
                     int radius = (int) ball.radius;

@@ -111,7 +111,7 @@ public class ObjectFinder{
             double dx = Math.abs(p1.x - p2.x);
             double dy = Math.abs(p1.y - p2.y);
 
-            if (color.equals("black") && dy <= 100)
+            if (color.equals("black") && (dx <= 5 || dy <= 100))
                 lines.add(new Line(p1, p2));
         }
         return lines;
