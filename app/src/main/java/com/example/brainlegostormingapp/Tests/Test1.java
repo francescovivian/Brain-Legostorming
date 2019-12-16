@@ -67,12 +67,15 @@ public class Test1 extends Test {
 
     //metodo per portare la pallina nella zona sicura
     public void storeBall(){
+        backToStart();
+        secureMine();
         backToLastMinePos();
     }
 
-    //torna alla posizione in cui ha trovato l'ultima mina
-    public void backToLastMinePos(){
+    public void secureMine(){
+
     }
+
 
     public void straightenMe(double spostamento){
         //usa valore di amIstraight per raddrizzarsi molto lentamente per un istante
@@ -123,6 +126,59 @@ public class Test1 extends Test {
             Utility.sleep(5000);
             robot.autoMove90Left(); //mi giro pronto per scorrere la nuova riga
             Utility.sleep(5000);
+        }
+    }
+
+    public void backToStart(){  // si presuppone che il robot sia già girato verso il "basso"
+        for(int i=field.getRobotPosition().getY();i>=0;i--){ //scendo fino alla base della griglia
+            robot.forwardOnce();
+            Utility.sleep(5000);
+            field.setRobotPosition(field.getRobotPosition().getX(),field.getRobotPosition().getY()-1);
+        }
+        if(field.getRobotPosition().getX()>field.getStartPosition().getX()){ // sono a destra rispetto allo start
+            robot.autoMove90Right();
+            while(field.getRobotPosition().getX()>field.getStartPosition().getX()){
+                robot.forwardOnce();
+                Utility.sleep(5000);
+                field.setRobotPosition(field.getRobotPosition().getX()-1,field.getRobotPosition().getY());
+            }
+            robot.autoMove90Left();
+        }
+        else{ //sono a sinistra rispetto allo start
+            robot.autoMove90Left();
+            while(field.getRobotPosition().getX()<field.getStartPosition().getX()){
+                robot.forwardOnce();
+                Utility.sleep(5000);
+                field.setRobotPosition(field.getRobotPosition().getX()+1,field.getRobotPosition().getY());
+            }
+            robot.autoMove90Right();
+        }
+    }
+
+    //si aspetta che il robot sia rivolto verso l'alto
+    public void backToLastMinePos(){ //il robot arriva rivolto verso "l'alto"
+        if(field.getRobotPosition().getX()>field.getLastMinePosition().getX()){ // sono a destra rispetto alla posizione dell'ultima mina
+            robot.autoMove90Left();
+            while(field.getRobotPosition().getX()>field.getStartPosition().getX()){
+                robot.forwardOnce();
+                Utility.sleep(5000);
+                field.setRobotPosition(field.getRobotPosition().getX()-1,field.getRobotPosition().getY());
+            }
+            robot.autoMove90Right();
+        }
+        else{ //sono a sinistra rispetto alla posizione dell'ultima mina
+            robot.autoMove90Right();
+            while(field.getRobotPosition().getX()<field.getStartPosition().getX()){
+                robot.forwardOnce();
+                Utility.sleep(5000);
+                field.setRobotPosition(field.getRobotPosition().getX()+1,field.getRobotPosition().getY());
+            }
+            robot.autoMove90Left();
+        }
+        for(int i=0;i<=field.getLastMinePosition().getY();i++){ //salgo fino alla posizione dell'ultima mina
+            robot.forwardOnce();
+            Utility.sleep(5000);
+            field.setRobotPosition(field.getRobotPosition().getX(),field.getRobotPosition().getY()+1);
         }
     }
 }
