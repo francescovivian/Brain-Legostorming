@@ -15,7 +15,7 @@ public class GameField {
         this.grid = new int[row][column];
         this.orientation = orientation;
         startPosition = new Position(startX, startY);
-        lastMinePosition = null;
+        lastMinePosition = new Position(0,0);
         robotPosition = new Position(startX,startY);
     }
 

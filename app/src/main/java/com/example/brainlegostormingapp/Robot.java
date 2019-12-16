@@ -250,16 +250,14 @@ public class Robot {
 
     public void identifyBall()
     {
-        if(!(this.minePickedUp)) {
-            try {
-                if (this.getDistance().get() < 35) {
-                    Utility.sleep(2000);
-                    this.closeHand(25);
-                    this.setMinePickedUp(true);
-                }
-            } catch (InterruptedException | ExecutionException e) {
-                e.printStackTrace();
+        try {
+            if (!(this.minePickedUp) && this.getDistance().get() < 35) {
+                Utility.sleep(2000);
+                this.closeHand(25);
+                this.setMinePickedUp(true);
             }
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
         }
     }
 
