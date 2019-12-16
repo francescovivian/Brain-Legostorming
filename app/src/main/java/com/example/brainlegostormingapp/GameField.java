@@ -1,6 +1,8 @@
 package com.example.brainlegostormingapp;
 
 public class GameField {
+    private int row;
+    private int column;
     private int[][] grid;
     private char orientation;
     private Position startPosition;
@@ -8,6 +10,8 @@ public class GameField {
     private Position robotPosition;
 
     public GameField(int column, int row, char orientation, int startX, int startY) {
+        this.column=column;
+        this.row=row;
         this.grid = new int[row][column];
         this.orientation = orientation;
         startPosition = new Position(startX, startY);
@@ -15,6 +19,21 @@ public class GameField {
         robotPosition = new Position(startX,startY);
     }
 
+    public int getRow(){
+        return this.row;
+    }
+
+    public int getColumn(){
+        return this.column;
+    }
+
+    public void setRow(int row){
+        this.row=row;
+    }
+
+    public void setColumn(int column){
+        this.column=column;
+    }
     public int[][] getGrid() {
         return grid;
     }
