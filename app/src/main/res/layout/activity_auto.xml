@@ -185,29 +185,6 @@
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/btnTest1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/layout_bg"
-            android:layout_weight="1"
-            android:text="Test 1"
-            tools:ignore="HardcodedText" />
-        <Button
-            android:id="@+id/btnTest2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/layout_bg"
-            android:layout_weight="1"
-            android:text="Test 2"
-            tools:ignore="HardcodedText" />
-
-    </LinearLayout>
-    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical">

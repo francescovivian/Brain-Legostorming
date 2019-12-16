@@ -69,7 +69,7 @@ public class AutoActivity extends AppCompatActivity {
     private CameraBridgeViewBase camera;
     //LinearLayout matrixView;
     private TextView txtCronometro;
-    private Button btnMain, btnManual, btnStart, btnStop, btnSetMatrix, btnResetMatrix, btnTest1, btnTest2;
+    private Button btnMain, btnManual, btnStart, btnStop, btnSetMatrix, btnResetMatrix;
     private EditText eTxtMatrixR, eTxtMatrixC, eTxtStartX, eTxtStartY;
     private Spinner spnOrientation;
     PixelGridView pixelGrid;
@@ -114,8 +114,6 @@ public class AutoActivity extends AppCompatActivity {
         eTxtStartY = findViewById(R.id.eTxtStartY);
         //matrixView = findViewById(R.id.matrixView);
         spnOrientation = findViewById(R.id.direction_spinner);
-        btnTest1 = findViewById(R.id.btnTest1);
-        btnTest2 = findViewById(R.id.btnTest2);
         camera = findViewById(R.id.cameraView);
         //endregion
 
@@ -127,21 +125,6 @@ public class AutoActivity extends AppCompatActivity {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, 1);
         } else avviaFotocamera();
-
-        btnTest1.setOnClickListener(v -> {
-            //start Test1
-        });
-        btnTest2.setOnClickListener(v -> {
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-            }
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
-            } else {//da modificare perché devono esserci tutti e 2 i permessi
-                //start Test2
-            }
-        });
-
 
         btnMain.setOnClickListener(v -> {
             Intent mainIntent = new Intent(getBaseContext(), MainActivity.class);
@@ -201,6 +184,7 @@ public class AutoActivity extends AppCompatActivity {
                 BluetoothConnection blueconn = new BluetoothConnection("EV3BL");
                 bluechan = blueconn.connect();
                 ev3 = new EV3(bluechan);
+                Utility.playMp3Audio(getApplicationContext(),"motore.mp3");
                 Prelude.trap(() -> ev3.run(this::legoMain));
                 Toast.makeText(this, "Connessione stabilita con successo", Toast.LENGTH_SHORT).show();
                 Utility.elementToggle(btnResetMatrix, btnStart, btnStop, btnMain, btnManual);
