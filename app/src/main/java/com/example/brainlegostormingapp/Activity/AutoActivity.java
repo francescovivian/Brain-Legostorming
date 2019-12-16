@@ -184,7 +184,7 @@ public class AutoActivity extends AppCompatActivity {
                 BluetoothConnection blueconn = new BluetoothConnection("EV3BL");
                 bluechan = blueconn.connect();
                 ev3 = new EV3(bluechan);
-                Utility.playMp3Audio(getApplicationContext(),"motore.mp3");
+                Utility.playMp3Audio(getApplicationContext(),"rally.mp3");
                 Prelude.trap(() -> ev3.run(this::legoMain));
                 Toast.makeText(this, "Connessione stabilita con successo", Toast.LENGTH_SHORT).show();
                 Utility.elementToggle(btnResetMatrix, btnStart, btnStop, btnMain, btnManual);
@@ -231,7 +231,7 @@ public class AutoActivity extends AppCompatActivity {
             test3.start();
         }*/
 
-        Utility.playMp3Audio(getApplicationContext(),"strade.mp3");
+        Utility.playMp3Audio(getApplicationContext(),"mammamia.mp3");
     }
 
     public void aggiornaTimer(TextView tv, String tempo) {
