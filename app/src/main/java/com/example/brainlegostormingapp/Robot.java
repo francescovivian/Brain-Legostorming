@@ -5,6 +5,7 @@ import com.example.brainlegostormingapp.ObjectOfInterest.Line;
 import com.example.brainlegostormingapp.ObjectOfInterest.ObjectFind;
 import com.example.brainlegostormingapp.Utility.Utility;
 
+import org.opencv.android.OpenCVLoader;
 import org.opencv.core.Mat;
 
 import java.io.IOException;
@@ -33,8 +34,10 @@ public class Robot {
     Camera camera;
     Mat frame;
 
+    double skew, maxAcceptedSkew;
+
     public Robot(EV3.Api api) {
-        //camera = new Camera();
+        camera = new Camera();
         frame = new Mat();
 
         minePickedUp=false;
@@ -45,6 +48,9 @@ public class Robot {
 
         us = api.getUltrasonicSensor(EV3.InputPort._1);
         ls = api.getLightSensor(EV3.InputPort._4);
+
+        skew = 0;
+        maxAcceptedSkew = 30;
 
         try {
             rm.setType(TachoMotor.Type.LARGE);
@@ -140,6 +146,7 @@ public class Robot {
     public void forwardOnce() {
         int step1 = 0, step2 = 3100, step3 = 0;
         try {
+            this.fixOrientation();
             lm.setPolarity(TachoMotor.Polarity.FORWARD);
             lm.setTimeSpeed(SPEED, step1, step2, step3, true);
             rm.setPolarity(TachoMotor.Polarity.FORWARD);
@@ -239,12 +246,37 @@ public class Robot {
         balls = objectFind.getBalls();
         lines = objectFind.getLines();
 
-        frame.release();
+        double dx,dy, weight;
+        int ballsConsidered = 0;
+
+        for (Line line : lines) {
+            //Sono nella metà destra
+            if (line.p2.y < 240 && line.p1.y >= 240)
+            {
+                dx = Math.abs(line.p1.x - line.p2.x);
+                dy = Math.abs(line.p1.y - line.p2.y);
+                weight = dx+dy;
+                skew += ((frame.height() - line.p2.y) * weight);
+                ballsConsidered++;
+            }
+
+            //Sono nella metà sinistra
+            if (line.p1.y > 240 && line.p2.y <= 240)
+            {
+                dx = Math.abs(line.p1.x - line.p2.x);
+                dy = Math.abs(line.p1.y - line.p2.y);
+                weight = dx+dy;
+                skew += ((frame.height() - line.p2.y) * weight);
+                ballsConsidered++;
+            }
+        }
 
         //elabora le linee per qualche frame
         //controlla che tutte le linee siano angolate correttamente
         //controlla che tutte le linee finiscano con l'angolazione corretta per il lato dello schermo
         //potrebbe ritornare la direzione in cui dovrebbe muoversi per raddrizzarsi
+        frame.release();
+        skew /= ballsConsidered;
         return skew;
     }
 
@@ -261,4 +293,41 @@ public class Robot {
         }
     }
 
+    public void slightestMove(double skew)
+    {
+        int step1 = 0, step2 = (int) skew, step3 = 0;
+        try {//Destra
+            if (skew > 0) {
+                lm.setPolarity(TachoMotor.Polarity.FORWARD);
+                lm.setTimeSpeed(2, step1, step2, step3, true);
+                rm.setPolarity(TachoMotor.Polarity.BACKWARDS);
+                rm.setTimeSpeed(2, step1, step2, step3, true);
+            }//Sinistra
+            else if (skew < 0) {
+                rm.setPolarity(TachoMotor.Polarity.FORWARD);
+                rm.setTimeSpeed(2, step1, step2, step3, true);
+                lm.setPolarity(TachoMotor.Polarity.BACKWARDS);
+                lm.setTimeSpeed(2, step1, step2, step3, true);
+            }
+            rm.waitCompletion();
+            lm.waitCompletion();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void straightenMe(double skew){
+        //usa valore di amIstraight per raddrizzarsi molto lentamente per un istante
+        //poi continua a luppare amIStraight finche non sono sufficentemente dritto
+        if (skew != 0) this.slightestMove(skew);
+    }
+
+    //si raddrizza sulla singola cella
+    public void fixOrientation(){
+        skew = this.amIStraight();
+        while(skew > maxAcceptedSkew) {
+            straightenMe(skew);
+            skew = this.amIStraight();
+        }
+    }
 }

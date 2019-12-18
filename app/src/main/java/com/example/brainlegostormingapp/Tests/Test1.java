@@ -32,17 +32,6 @@ public class Test1 extends Test {
         alignToOrigin();  //raggiungo l'origine
     }
 
-    //si raddrizza sulla singola cella
-    public void fixOrientation(){
-        double skew;
-        double maxAcceptedSkew = 30;
-        skew = robot.amIStraight();
-        while(skew > maxAcceptedSkew) {
-            straightenMe(skew);
-            skew = robot.amIStraight();
-        }
-    }
-
     public void alignToOrigin(){   //processa celle dalla posizione di partenza fino all'origine
         robot.openHand(15);
         Utility.sleep(5000);
@@ -90,12 +79,6 @@ public class Test1 extends Test {
         robot.backwardOnce();           //torna indietro di una cella
         Utility.sleep(5000);
         robot.autoMove180Right();       //si gira di 180°
-    }
-
-
-    public void straightenMe(double spostamento){
-        //usa valore di amIstraight per raddrizzarsi molto lentamente per un istante
-        //poi continua a luppare amIStraight finche non sono sufficentemente dritto
     }
 
     //boolean se nella prossima cella c'è una pallina

@@ -22,6 +22,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.example.brainlegostormingapp.Camera;
 import com.example.brainlegostormingapp.GameField;
 import com.example.brainlegostormingapp.ObjectFinder;
 import com.example.brainlegostormingapp.ObjectOfInterest.Ball;
@@ -239,75 +240,88 @@ public class AutoActivity extends AppCompatActivity {
     }
 
     public void avviaFotocamera() {
+        Camera myCamera = new Camera();
         camera.setVisibility(SurfaceView.VISIBLE);
         camera.setMaxFrameSize(640, 480);
         camera.disableFpsMeter();
-        camera.setCvCameraViewListener(new CameraBridgeViewBase.CvCameraViewListener2() {
-            @Override
-            public void onCameraViewStarted(int width, int height) {
-                Log.d(TAG, "Camera Started");
-            }
-
-            @Override
-            public void onCameraViewStopped() {
-                Log.d(TAG, "Camera Stopped");
-            }
-
-            @Override
-            public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
-                Utility.sleep(100);
-
-                frame = inputFrame.rgba();
-                ObjectFind objectFind = new ObjectFinder(frame).findObject("l", "b");
-                balls = objectFind.getBalls();
-                lines = objectFind.getLines();
-
-                Imgproc.circle(frame, new Point(320, 240), 10, new Scalar(0, 0, 0), 2);
-                Imgproc.line(frame, new Point(310, 240), new Point(330, 240), new Scalar(0, 0, 0), 2);
-                Imgproc.line(frame, new Point(320, 230), new Point(320, 250), new Scalar(0, 0, 0), 2);
-
-                Imgproc.line(frame, new Point(580, 0), new Point(580, 480), new Scalar(0, 255, 0), 2);
-                Imgproc.line(frame, new Point(620, 0), new Point(620, 480), new Scalar(0, 255, 0), 2);
-
-                Imgproc.line(frame, new Point(0, 60), new Point(640, 60), new Scalar(0, 255, 0), 2);
-                Imgproc.line(frame, new Point(0, 80), new Point(640, 80), new Scalar(0, 255, 0), 2);
-
-                Imgproc.line(frame, new Point(0, 400), new Point(640, 400), new Scalar(0, 255, 0), 2);
-                Imgproc.line(frame, new Point(0, 420), new Point(640, 420), new Scalar(0, 255, 0), 2);
-
-                for (Ball ball : balls) {
-                    Point center = new Point(ball.center.x, ball.center.y);
-                    int radius = (int) ball.radius;
-                    Scalar color_rgb;
-
-                    if (ball.color.equals("red")) color_rgb = new Scalar(255, 0, 0);
-                    else if (ball.color.equals("blue")) color_rgb = new Scalar(0, 0, 255);
-                    else if (ball.color.equals("yellow")) color_rgb = new Scalar(255, 255, 0);
-                    else color_rgb = new Scalar(0, 0, 0);
-
-                    Imgproc.circle(frame, center, radius, color_rgb, 2);
-
-                    //Log.e("ball center x ", String.valueOf(ball.center.x));
-                    //Log.e("ball center y ", String.valueOf(ball.center.y));
-                    //Log.e("ball radius ", String.valueOf(ball.radius));
-                    //Log.e("ball color ", ball.color);
-                }
-
-                for (Line line : lines) {
-                    Imgproc.line(frame, line.p1, line.p2, new Scalar(255, 0, 0), 2);
-
-                    //Log.e("line p1 x ", String.valueOf(line.p1.x));
-                    //Log.e("line p1 y ", String.valueOf(line.p1.y));
-                    //Log.e("line p2 x ", String.valueOf(line.p2.x));
-                    //Log.e("line p2 y ", String.valueOf(line.p2.y));
-                }
-
-                return frame;
-            }
-        });
-
+        camera.setCvCameraViewListener(myCamera);
+        /*frame = myCamera.getFrame();
+        ObjectFind objectFind = new ObjectFinder(frame).findObject("l", "b");
+        balls = objectFind.getBalls();
+        lines = objectFind.getLines();*/
         camera.enableView();
     }
+    /*
+    camera.setVisibility(SurfaceView.VISIBLE);
+    camera.setMaxFrameSize(640, 480);
+    camera.disableFpsMeter();
+    camera.setCvCameraViewListener(new CameraBridgeViewBase.CvCameraViewListener2() {
+        @Override
+        public void onCameraViewStarted(int width, int height) {
+            Log.d(TAG, "Camera Started");
+        }
+
+        @Override
+        public void onCameraViewStopped() {
+            Log.d(TAG, "Camera Stopped");
+        }
+
+        @Override
+        public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
+            Utility.sleep(100);
+
+            frame = inputFrame.rgba();
+            ObjectFind objectFind = new ObjectFinder(frame).findObject("l", "b");
+            balls = objectFind.getBalls();
+            lines = objectFind.getLines();
+
+            Imgproc.circle(frame, new Point(320, 240), 10, new Scalar(0, 0, 0), 2);
+            Imgproc.line(frame, new Point(310, 240), new Point(330, 240), new Scalar(0, 0, 0), 2);
+            Imgproc.line(frame, new Point(320, 230), new Point(320, 250), new Scalar(0, 0, 0), 2);
+
+            //Imgproc.line(frame, new Point(580, 0), new Point(580, 480), new Scalar(0, 255, 0), 2);
+            //Imgproc.line(frame, new Point(620, 0), new Point(620, 480), new Scalar(0, 255, 0), 2);
+
+            //Imgproc.line(frame, new Point(0, 180), new Point(640, 180), new Scalar(0, 255, 0), 2);
+            //Imgproc.line(frame, new Point(0, 200), new Point(640, 200), new Scalar(0, 255, 0), 2);
+
+            //Imgproc.line(frame, new Point(0, 280), new Point(640, 280), new Scalar(0, 255, 0), 2);
+            //Imgproc.line(frame, new Point(0, 300), new Point(640, 300), new Scalar(0, 255, 0), 2);
+
+            for (Ball ball : balls) {
+                Point center = new Point(ball.center.x, ball.center.y);
+                int radius = (int) ball.radius;
+                Scalar color_rgb;
+
+                if (ball.color.equals("red")) color_rgb = new Scalar(255, 0, 0);
+                else if (ball.color.equals("blue")) color_rgb = new Scalar(0, 0, 255);
+                else if (ball.color.equals("yellow")) color_rgb = new Scalar(255, 255, 0);
+                else color_rgb = new Scalar(0, 0, 0);
+
+                Imgproc.circle(frame, center, radius, color_rgb, 2);
+
+                //Log.e("ball center x ", String.valueOf(ball.center.x));
+                //Log.e("ball center y ", String.valueOf(ball.center.y));
+                //Log.e("ball radius ", String.valueOf(ball.radius));
+                //Log.e("ball color ", ball.color);
+            }
+
+            for (Line line : lines) {
+                Imgproc.circle(frame, line.p1, 10, new Scalar(255, 200, 0), 2);
+                Imgproc.circle(frame, line.p2, 10, new Scalar(0, 100, 255), 2);
+                Imgproc.line(frame, line.p1, line.p2, new Scalar(255, 0, 0), 2);
+
+                //Log.e("line p1 x ", String.valueOf(line.p1.x));
+                //Log.e("line p1 y ", String.valueOf(line.p1.y));
+                //Log.e("line p2 x ", String.valueOf(line.p2.x));
+                //Log.e("line p2 y ", String.valueOf(line.p2.y));
+            }
+
+            return frame;
+        }
+    });
+
+    camera.enableView();*/
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResult) {

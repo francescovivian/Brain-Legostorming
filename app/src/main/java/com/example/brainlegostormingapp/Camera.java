@@ -16,20 +16,11 @@ public class Camera implements CameraBridgeViewBase.CvCameraViewListener2 {
         frame = new Mat();
     }
 
-    public Mat getFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame)
-    {
-        return frame;
-    }
+    @Override
+    public void onCameraViewStarted(int width, int height) {}
 
     @Override
-    public void onCameraViewStarted(int width, int height) {
-
-    }
-
-    @Override
-    public void onCameraViewStopped() {
-
-    }
+    public void onCameraViewStopped() {}
 
     @Override
     public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {

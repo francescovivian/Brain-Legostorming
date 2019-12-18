@@ -28,10 +28,10 @@ public class ObjectFinder{
         hsv = new Mat();
         greyFiltered = new Mat();
         split_hsv = new ArrayList<>();
-        Imgproc.cvtColor(frame, hsv, Imgproc.COLOR_RGB2HSV);
+        Imgproc.cvtColor(this.frame, hsv, Imgproc.COLOR_RGB2HSV);
         Core.split(hsv, split_hsv);
         hue = split_hsv.get(0);
-        Imgproc.cvtColor(frame, grey, Imgproc.COLOR_RGB2GRAY);
+        Imgproc.cvtColor(this.frame, grey, Imgproc.COLOR_RGB2GRAY);
         //Imgproc.GaussianBlur(grey,greyBlur, new Size(9,9),2,2);
         Imgproc.bilateralFilter(grey, greyFiltered, 10, 10, 10);
     }
@@ -111,7 +111,7 @@ public class ObjectFinder{
             double dx = Math.abs(p1.x - p2.x);
             double dy = Math.abs(p1.y - p2.y);
 
-            if (color.equals("black") && (dx <= 5 || dy <= 100))
+            if (color.equals("black") && (dx >= 100 || dy <= 100) && p2.x <= 320)
                 lines.add(new Line(p1, p2));
         }
         return lines;
