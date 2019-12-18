@@ -61,16 +61,14 @@ public class AutoActivity extends AppCompatActivity {
     private Test1 test1;
 
 
-    private int dimR, dimC;
-    int startX, startY;
-    char orientation;
-    private int mine; //mine presenti nel campo
+    private int dimR, dimC, startX, startY, mine;
+    private char orientation;
 
     private CameraBridgeViewBase camera;
     //LinearLayout matrixView;
     private TextView txtCronometro;
     private Button btnMain, btnManual, btnStart, btnStop, btnSetMatrix, btnResetMatrix;
-    private EditText eTxtMatrixR, eTxtMatrixC, eTxtStartX, eTxtStartY;
+    private EditText eTxtMatrixR, eTxtMatrixC, eTxtStartX, eTxtStartY, eTxtMine;
     private Spinner spnOrientation;
     PixelGridView pixelGrid;
 
@@ -115,6 +113,7 @@ public class AutoActivity extends AppCompatActivity {
         //matrixView = findViewById(R.id.matrixView);
         spnOrientation = findViewById(R.id.direction_spinner);
         camera = findViewById(R.id.cameraView);
+        eTxtMine = findViewById(R.id.eTxtMine);
         //endregion
 
         Utility.elementToggle(btnStart, btnStop);
@@ -144,6 +143,7 @@ public class AutoActivity extends AppCompatActivity {
                 dimC = Integer.parseInt(eTxtMatrixC.getText().toString());
                 startX = Integer.parseInt(eTxtStartX.getText().toString());
                 startY = Integer.parseInt(eTxtStartY.getText().toString());
+                mine = Integer.parseInt(eTxtMine.getText().toString());
                 orientation = String.valueOf(spnOrientation.getSelectedItem()).charAt(0);
                 Utility.elementToggle(btnStart, btnSetMatrix, eTxtMatrixR, eTxtMatrixC, eTxtStartX, eTxtStartY, spnOrientation);
                 pixelGrid = new PixelGridView(this);
@@ -206,14 +206,13 @@ public class AutoActivity extends AppCompatActivity {
             aggiornaTimer(txtCronometro, String.format("%02d:%02d:%02d:%03d", ore, minuti, secondi, millisecondi));
             ev3.cancel();
             bluechan.close();
-            Utility.elementToggle(btnStart, btnMain, btnManual);
+            Utility.elementToggle(btnStart, btnMain, btnManual, txtCronometro);
         });
     }
 
     private void legoMain(EV3.Api api) {
         //final String TAG = Prelude.ReTAG("legoMain");
 
-        mine = 7;
         robot = new Robot(api);
 
         if (choosen == 1) {
@@ -231,6 +230,7 @@ public class AutoActivity extends AppCompatActivity {
             test3.start();
         }*/
 
+        btnStop.performClick();
         Utility.playMp3Audio(getApplicationContext(),"mammamia.mp3");
     }
 
