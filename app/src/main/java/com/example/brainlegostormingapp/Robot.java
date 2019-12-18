@@ -1,6 +1,9 @@
 package com.example.brainlegostormingapp;
 
+import android.app.Activity;
+import android.content.Context;
 import android.view.SurfaceView;
+import android.widget.TextView;
 
 import com.example.brainlegostormingapp.ObjectOfInterest.Ball;
 import com.example.brainlegostormingapp.ObjectOfInterest.Line;
@@ -38,6 +41,9 @@ public class Robot {
     Camera myCamera;
     Mat frame;
 
+    TextView distanza;
+    Activity activity;
+
     double skew, maxAcceptedSkew;
 
     public Robot(EV3.Api api) {
@@ -57,7 +63,9 @@ public class Robot {
         }
     }
 
-    public Robot(EV3.Api api, CameraBridgeViewBase camera) {
+    public Robot(EV3.Api api, CameraBridgeViewBase camera, TextView distanza, Activity activity) {
+        this.distanza = distanza;
+        this.activity = activity;
         this.camera = camera;
         myCamera = new Camera();
         camera.setVisibility(SurfaceView.VISIBLE);
@@ -309,7 +317,9 @@ public class Robot {
     public void identifyBall()
     {
         try {
-            if (!(this.minePickedUp) && this.getDistance().get() < 35) {
+            Float distance = this.getDistance().get();
+            activity.runOnUiThread(() -> distanza.setText(distance.toString()));
+            if (!(this.minePickedUp) && distance < 35) {
                 Utility.sleep(2000);
                 this.closeHand(25);
                 this.setMinePickedUp(true);

@@ -160,6 +160,14 @@
             android:inputType="numberSigned"
             android:importantForAutofill="no" />
 
+        <TextView
+            android:id="@+id/distanza"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0"
+            android:textSize="25sp"
+            tools:ignore="HardcodedText" />
+
     </LinearLayout>
 
     <LinearLayout

@@ -68,7 +68,7 @@ public class AutoActivity extends AppCompatActivity {
     private CameraBridgeViewBase camera;
     private Camera myCamera;
     //LinearLayout matrixView;
-    private TextView txtCronometro;
+    private TextView txtCronometro, distanza;
     private Button btnMain, btnManual, btnStart, btnStop, btnSetMatrix, btnResetMatrix;
     private EditText eTxtMatrixR, eTxtMatrixC, eTxtStartX, eTxtStartY, eTxtMine;
     private Spinner spnOrientation;
@@ -102,6 +102,7 @@ public class AutoActivity extends AppCompatActivity {
 
         //region FINDVIEW
         txtCronometro = findViewById(R.id.cronometro);
+        distanza = findViewById(R.id.distanza);
         btnMain = findViewById(R.id.mainButton);
         btnManual = findViewById(R.id.manualButton);
         btnStart = findViewById(R.id.btnStartButton);
@@ -215,7 +216,7 @@ public class AutoActivity extends AppCompatActivity {
     private void legoMain(EV3.Api api) {
         //final String TAG = Prelude.ReTAG("legoMain");
 
-        robot = new Robot(api, camera);
+        robot = new Robot(api, camera, distanza, this);
 
         if (choosen == 1) {
             test1 = new Test1(robot, gameField, mine);
