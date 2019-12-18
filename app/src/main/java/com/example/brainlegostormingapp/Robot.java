@@ -40,6 +40,23 @@ public class Robot {
 
     double skew, maxAcceptedSkew;
 
+    public Robot(EV3.Api api) {
+        rm = new Motor(api, EV3.OutputPort.D);
+        lm = new Motor(api, EV3.OutputPort.A);
+        hand = new Motor(api, EV3.OutputPort.C);
+
+        us = api.getUltrasonicSensor(EV3.InputPort._1);
+        ls = api.getLightSensor(EV3.InputPort._4);
+
+        try {
+            rm.setType(TachoMotor.Type.LARGE);
+            lm.setType(TachoMotor.Type.LARGE);
+            hand.setType(TachoMotor.Type.MEDIUM);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public Robot(EV3.Api api, CameraBridgeViewBase camera) {
         this.camera = camera;
         myCamera = new Camera();
@@ -155,7 +172,7 @@ public class Robot {
     public void forwardOnce() {
         int step1 = 0, step2 = 3100, step3 = 0;
         try {
-            this.fixOrientation();
+            fixOrientation();
             lm.setPolarity(TachoMotor.Polarity.FORWARD);
             lm.setTimeSpeed(SPEED, step1, step2, step3, true);
             rm.setPolarity(TachoMotor.Polarity.FORWARD);
