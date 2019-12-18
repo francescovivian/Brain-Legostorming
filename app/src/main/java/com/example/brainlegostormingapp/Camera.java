@@ -12,7 +12,6 @@ public class Camera implements CameraBridgeViewBase.CvCameraViewListener2 {
 
     public Camera()
     {
-        super();
         frame = new Mat();
     }
 

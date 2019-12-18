@@ -66,6 +66,7 @@ public class AutoActivity extends AppCompatActivity {
     private char orientation;
 
     private CameraBridgeViewBase camera;
+    private Camera myCamera;
     //LinearLayout matrixView;
     private TextView txtCronometro;
     private Button btnMain, btnManual, btnStart, btnStop, btnSetMatrix, btnResetMatrix;
@@ -214,7 +215,7 @@ public class AutoActivity extends AppCompatActivity {
     private void legoMain(EV3.Api api) {
         //final String TAG = Prelude.ReTAG("legoMain");
 
-        robot = new Robot(api);
+        robot = new Robot(api, camera);
 
         if (choosen == 1) {
             test1 = new Test1(robot, gameField, mine);
@@ -240,7 +241,7 @@ public class AutoActivity extends AppCompatActivity {
     }
 
     public void avviaFotocamera() {
-        Camera myCamera = new Camera();
+        myCamera = new Camera();
         camera.setVisibility(SurfaceView.VISIBLE);
         camera.setMaxFrameSize(640, 480);
         camera.disableFpsMeter();

@@ -174,7 +174,7 @@ public class ManualActivity extends AppCompatActivity {
     private void legoMain(EV3.Api api) {
         //final String TAG = Prelude.ReTAG("legoMain");
 
-        robot = new Robot(api);
+        robot = new Robot(api,null);
 
         while (!api.ev3.isCancelled()) {
             try {

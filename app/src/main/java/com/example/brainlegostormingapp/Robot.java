@@ -1,10 +1,13 @@
 package com.example.brainlegostormingapp;
 
+import android.view.SurfaceView;
+
 import com.example.brainlegostormingapp.ObjectOfInterest.Ball;
 import com.example.brainlegostormingapp.ObjectOfInterest.Line;
 import com.example.brainlegostormingapp.ObjectOfInterest.ObjectFind;
 import com.example.brainlegostormingapp.Utility.Utility;
 
+import org.opencv.android.CameraBridgeViewBase;
 import org.opencv.android.OpenCVLoader;
 import org.opencv.core.Mat;
 
@@ -31,13 +34,19 @@ public class Robot {
     private ArrayList<Ball> balls;
     private ArrayList<Line> lines;
 
-    Camera camera;
+    CameraBridgeViewBase camera;
+    Camera myCamera;
     Mat frame;
 
     double skew, maxAcceptedSkew;
 
-    public Robot(EV3.Api api) {
-        camera = new Camera();
+    public Robot(EV3.Api api, CameraBridgeViewBase camera) {
+        this.camera = camera;
+        myCamera = new Camera();
+        camera.setVisibility(SurfaceView.VISIBLE);
+        camera.setMaxFrameSize(640, 480);
+        camera.disableFpsMeter();
+        camera.setCvCameraViewListener(myCamera);
         frame = new Mat();
 
         minePickedUp=false;
@@ -241,7 +250,7 @@ public class Robot {
         double skew = 0;
         //metodo che ottiene tutte le lines
 
-        frame = camera.getFrame();
+        frame = myCamera.getFrame();
         ObjectFind objectFind = new ObjectFinder(frame).findObject("l", "b");
         balls = objectFind.getBalls();
         lines = objectFind.getLines();
