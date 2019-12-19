@@ -10,6 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".Activity.AutoActivity"></activity>
+        <activity android:name=".Activity.NearbySimulatorActivity"></activity>
         <activity android:name=".Activity.ManualActivity" />
         <activity android:name=".Activity.MainActivity">
             <intent-filter>
