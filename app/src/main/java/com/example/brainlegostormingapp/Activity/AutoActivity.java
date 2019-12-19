@@ -154,7 +154,7 @@ public class AutoActivity extends AppCompatActivity {
                 startY = Integer.parseInt(eTxtStartY.getText().toString());
                 mine = Integer.parseInt(eTxtMine.getText().toString());
                 orientation = String.valueOf(spnOrientation.getSelectedItem()).charAt(0);
-                Utility.elementToggle(eTxtMatrixR, eTxtMatrixC, eTxtStartX, eTxtStartY, spnOrientation);
+                Utility.elementToggle(eTxtMatrixR, eTxtMatrixC, eTxtStartX, eTxtStartY, eTxtMine, spnOrientation);
                 //compare btnStart e btnReset, scompare btnsetdim
                 Utility.elementVisibilityToggle(btnStart,btnSetMatrix,btnResetMatrix);
                 pixelGrid = new PixelGridView(this);
@@ -181,7 +181,7 @@ public class AutoActivity extends AppCompatActivity {
                 eTxtStartY.setText("0");
                 spnOrientation.setSelection(0);
                 Utility.elementVisibilityToggle(btnResetMatrix,btnStart,btnSetMatrix);
-                Utility.elementToggle(eTxtMatrixR, eTxtMatrixC, eTxtStartX, eTxtStartY, spnOrientation);
+                Utility.elementToggle(eTxtMatrixR, eTxtMatrixC, eTxtStartX, eTxtStartY, eTxtMine, spnOrientation);
             } catch (NumberFormatException ignored) {
                 ignored.printStackTrace();
             }
@@ -223,8 +223,8 @@ public class AutoActivity extends AppCompatActivity {
         ore = (int) (attuale / 3600000) % 24;
         millisecondi = (int) attuale % 1000;
         aggiornaTimer(txtCronometro, String.format("%02d:%02d:%02d:%03d", ore, minuti, secondi, millisecondi));
-        ev3.cancel();
-        bluechan.close();
+        //ev3.cancel();
+        //bluechan.close();
         Utility.elementToggle(btnMain, btnManual);
         Utility.elementVisibilityToggle(btnStop,txtCronometro,btnSetMatrix);
     }
