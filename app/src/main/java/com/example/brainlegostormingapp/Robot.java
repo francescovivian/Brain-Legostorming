@@ -41,9 +41,6 @@ public class Robot {
     Camera myCamera;
     Mat frame;
 
-    TextView distanza;
-    Activity activity;
-
     double skew, maxAcceptedSkew;
 
     public Robot(EV3.Api api) {
@@ -63,9 +60,7 @@ public class Robot {
         }
     }
 
-    public Robot(EV3.Api api, CameraBridgeViewBase camera, TextView distanza, Activity activity) {
-        this.distanza = distanza;
-        this.activity = activity;
+    public Robot(EV3.Api api, CameraBridgeViewBase camera) {
         this.camera = camera;
         myCamera = new Camera();
         camera.setVisibility(SurfaceView.VISIBLE);
@@ -321,45 +316,44 @@ public class Robot {
     public double amIStraight() {
         double skew = 0;
         //metodo che ottiene tutte le lines
-
-        frame = myCamera.getFrame();
-        ObjectFind objectFind = new ObjectFinder(frame).findObject("l", "b");
-        balls = objectFind.getBalls();
-        lines = objectFind.getLines();
-
         double dx,dy, weight;
         int ballsConsidered = 0;
         double totWeight = 0;
 
-        for (Line line : lines) {
-            //Sono nella metà destra
-            if (line.p2.y < 240 && line.p1.y >= 240)
-            {
-                dx = Math.abs(line.p1.x - line.p2.x);
-                dy = Math.abs(line.p1.y - line.p2.y);
-                weight = dx+dy;
-                totWeight += weight;
-                skew += ((frame.height() - line.p2.y) * weight);
-                ballsConsidered++;
+        for (int i = 0; i < 10; i++) {
+            frame = myCamera.getFrame();
+            ObjectFind objectFind = new ObjectFinder(frame).findObject("l", "b");
+            balls = objectFind.getBalls();
+            lines = objectFind.getLines();
+
+            for (Line line : lines) {
+                //Sono nella metà destra
+                if (line.p2.y < 240 && line.p1.y >= 240) {
+                    dx = Math.abs(line.p1.x - line.p2.x);
+                    dy = Math.abs(line.p1.y - line.p2.y);
+                    weight = dx + dy;
+                    totWeight += weight;
+                    skew += ((frame.height() - line.p2.y) * weight);
+                    ballsConsidered++;
+                }
+
+                //Sono nella metà sinistra
+                if (line.p1.y > 240 && line.p2.y <= 240) {
+                    dx = Math.abs(line.p1.x - line.p2.x);
+                    dy = Math.abs(line.p1.y - line.p2.y);
+                    weight = dx + dy;
+                    totWeight += weight;
+                    skew += ((frame.height() - line.p2.y) * weight);
+                    ballsConsidered++;
+                }
             }
 
-            //Sono nella metà sinistra
-            if (line.p1.y > 240 && line.p2.y <= 240)
-            {
-                dx = Math.abs(line.p1.x - line.p2.x);
-                dy = Math.abs(line.p1.y - line.p2.y);
-                weight = dx+dy;
-                totWeight += weight;
-                skew += ((frame.height() - line.p2.y) * weight);
-                ballsConsidered++;
-            }
+            //elabora le linee per qualche frame
+            //controlla che tutte le linee siano angolate correttamente
+            //controlla che tutte le linee finiscano con l'angolazione corretta per il lato dello schermo
+            //potrebbe ritornare la direzione in cui dovrebbe muoversi per raddrizzarsi
+            frame.release();
         }
-
-        //elabora le linee per qualche frame
-        //controlla che tutte le linee siano angolate correttamente
-        //controlla che tutte le linee finiscano con l'angolazione corretta per il lato dello schermo
-        //potrebbe ritornare la direzione in cui dovrebbe muoversi per raddrizzarsi
-        frame.release();
         //skew /= ballsConsidered;
         skew /= totWeight;
         return skew;
@@ -375,8 +369,6 @@ public class Robot {
                     count++;
                 System.out.println(dist);
             }
-            Float distance = this.getDistance().get();
-            activity.runOnUiThread(() -> distanza.setText(distance.toString()));
             return !this.minePickedUp && count >=8;
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();

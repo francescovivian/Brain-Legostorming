@@ -205,7 +205,7 @@ public class NeabrySimulatorActivity extends AppCompatActivity {
     private void legoMain(EV3.Api api) {
         //final String TAG = Prelude.ReTAG("legoMain");
 
-        robot = new Robot(api, camera, distanza, this);
+        robot = new Robot(api, camera);
 
         test2 = new Test2(robot,gameField,getApplicationContext());
         test2.start();
