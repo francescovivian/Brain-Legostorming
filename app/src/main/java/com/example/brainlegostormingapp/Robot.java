@@ -317,9 +317,15 @@ public class Robot {
     public void identifyBall()
     {
         try {
+            int count=0;
+            for(int i=0;i<10;i++){
+                Float dist=this.getDistance().get();
+                if(dist<35)
+                    count++;
+            }
             Float distance = this.getDistance().get();
             activity.runOnUiThread(() -> distanza.setText(distance.toString()));
-            if (!(this.minePickedUp) && distance < 35) {
+            if (!(this.minePickedUp) && count >=8) {
                 Utility.sleep(2000);
                 this.closeHand(25);
                 this.setMinePickedUp(true);
