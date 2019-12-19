@@ -41,7 +41,7 @@ public class Robot {
     Camera myCamera;
     Mat frame;
 
-    double skew, maxAcceptedSkew;
+    private double skew, maxAcceptedSkew;
 
     public Robot(EV3.Api api) {
         rm = new Motor(api, EV3.OutputPort.D);
@@ -313,17 +313,17 @@ public class Robot {
     }
 
     //funzione che mi dice se sono dritto
-    public double amIStraight() {
-        double skew = 0;
+    public void amIStraight() {
+        skew = 0;
         //metodo che ottiene tutte le lines
         double dx,dy, weight;
-        int ballsConsidered = 0;
+        int linesConsidered = 0;
         double totWeight = 0;
 
         for (int i = 0; i < 10; i++) {
             frame = myCamera.getFrame();
-            ObjectFind objectFind = new ObjectFinder(frame).findObject("l", "b");
-            balls = objectFind.getBalls();
+            ObjectFind objectFind = new ObjectFinder(frame).findObject("l");
+            //balls = objectFind.getBalls();
             lines = objectFind.getLines();
 
             for (Line line : lines) {
@@ -334,7 +334,7 @@ public class Robot {
                     weight = dx + dy;
                     totWeight += weight;
                     skew += ((frame.height() - line.p2.y) * weight);
-                    ballsConsidered++;
+                    linesConsidered++;
                 }
 
                 //Sono nella metà sinistra
@@ -344,7 +344,7 @@ public class Robot {
                     weight = dx + dy;
                     totWeight += weight;
                     skew += ((frame.height() - line.p2.y) * weight);
-                    ballsConsidered++;
+                    linesConsidered++;
                 }
             }
 
@@ -354,9 +354,8 @@ public class Robot {
             //potrebbe ritornare la direzione in cui dovrebbe muoversi per raddrizzarsi
             frame.release();
         }
-        //skew /= ballsConsidered;
+        skew /= linesConsidered;
         skew /= totWeight;
-        return skew;
     }
 
     public boolean identifyBall()
@@ -383,7 +382,7 @@ public class Robot {
         this.setMinePickedUp(true);
     }
 
-    public void slightestMove(double skew)
+    public void slightestMove()
     {
         int step1 = 0, step2 = (int) skew, step3 = 0;
         try {//Destra
@@ -406,18 +405,18 @@ public class Robot {
         }
     }
 
-    public void straightenMe(double skew){
+    public void straightenMe(){
         //usa valore di amIstraight per raddrizzarsi molto lentamente per un istante
         //poi continua a luppare amIStraight finche non sono sufficentemente dritto
-        if (skew != 0) this.slightestMove(skew);
+        if (skew != 0) this.slightestMove();
     }
 
     //si raddrizza sulla singola cella
     public void fixOrientation(){
-        skew = this.amIStraight();
+        this.amIStraight();
         while(skew > maxAcceptedSkew) {
-            straightenMe(skew);
-            skew = this.amIStraight();
+            this.straightenMe();
+            this.amIStraight();
         }
     }
 }

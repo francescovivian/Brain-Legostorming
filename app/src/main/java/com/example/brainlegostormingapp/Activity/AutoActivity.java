@@ -268,7 +268,15 @@ public class AutoActivity extends AppCompatActivity {
         lines = objectFind.getLines();*/
         camera.enableView();
     }
-    /*
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResult) {
+        if (requestCode == 1 && grantResult.length > 0 && grantResult[0] == PackageManager.PERMISSION_GRANTED)
+            avviaFotocamera();
+    }
+}
+
+/*
     camera.setVisibility(SurfaceView.VISIBLE);
     camera.setMaxFrameSize(640, 480);
     camera.disableFpsMeter();
@@ -339,13 +347,6 @@ public class AutoActivity extends AppCompatActivity {
     });
 
     camera.enableView();*/
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResult) {
-        if (requestCode == 1 && grantResult.length > 0 && grantResult[0] == PackageManager.PERMISSION_GRANTED)
-            avviaFotocamera();
-    }
-}
 
 /*robot = new Robot(api);
 
