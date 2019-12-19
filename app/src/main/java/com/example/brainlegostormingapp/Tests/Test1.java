@@ -23,12 +23,10 @@ public class Test1 extends Test {
 
     @Override
     public void movement(){
-        robot.fixOrientation();
-
-         /*if (totMine >0) {
+        if (totMine >0) {
             initialize();
             scan();
-        }*/
+        }
     }
 
     public void initialize(){
