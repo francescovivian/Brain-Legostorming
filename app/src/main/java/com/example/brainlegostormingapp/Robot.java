@@ -192,6 +192,21 @@ public class Robot {
         }
     }
 
+    public void forwardHalf() {
+        int step1 = 0, step2 = 1000, step3 = 0;
+        try {
+            //fixOrientation();
+            lm.setPolarity(TachoMotor.Polarity.FORWARD);
+            lm.setTimeSpeed(SPEED, step1, step2, step3, true);
+            rm.setPolarity(TachoMotor.Polarity.FORWARD);
+            rm.setTimeSpeed(SPEED, step1, step2, step3, true);
+            rm.waitCompletion();
+            lm.waitCompletion();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void forwardOnceSearch() {
         int step1 = 0, step2 = 3100, step3 = 0;
         try {
@@ -214,6 +229,20 @@ public class Robot {
 
     public void backwardOnce() {
         int step1 = 0, step2 = 3100, step3 = 0;
+        try {
+            lm.setPolarity(TachoMotor.Polarity.BACKWARDS);
+            lm.setTimeSpeed(SPEED, step1, step2, step3, true);
+            rm.setPolarity(TachoMotor.Polarity.BACKWARDS);
+            rm.setTimeSpeed(SPEED, step1, step2, step3, true);
+            rm.waitCompletion();
+            lm.waitCompletion();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void backwardHalf() {
+        int step1 = 0, step2 = 1000, step3 = 0;
         try {
             lm.setPolarity(TachoMotor.Polarity.BACKWARDS);
             lm.setTimeSpeed(SPEED, step1, step2, step3, true);

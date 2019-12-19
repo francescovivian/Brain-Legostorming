@@ -76,11 +76,11 @@ public class Test1 extends Test {
 
     public void secureMine(){
         robot.openHand(15);       //apre la mano
-        robot.forwardOnce();            //esce di una casella
+        robot.forwardHalf();            //esce di una casella
         Utility.sleep(5000);
         this.securedMine++;
         robot.setMinePickedUp(false);
-        robot.backwardOnce();           //torna indietro di una cella
+        robot.backwardHalf();           //torna indietro di una cella
         Utility.sleep(5000);
         robot.autoMove180Right();       //si gira di 180°
     }
