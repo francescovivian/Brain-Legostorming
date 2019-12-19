@@ -32,6 +32,7 @@ import com.example.brainlegostormingapp.PixelGridView;
 import com.example.brainlegostormingapp.R;
 import com.example.brainlegostormingapp.Robot;
 import com.example.brainlegostormingapp.Tests.Test1;
+import com.example.brainlegostormingapp.Tests.Test2;
 import com.example.brainlegostormingapp.Utility.Utility;
 
 import org.opencv.android.CameraBridgeViewBase;
@@ -60,6 +61,7 @@ public class AutoActivity extends AppCompatActivity {
     private ArrayList<Line> lines;
     private GameField gameField;
     private Test1 test1;
+    private Test2 test2;
 
 
     private int dimR, dimC, startX, startY, mine;
@@ -121,8 +123,10 @@ public class AutoActivity extends AppCompatActivity {
 
         Utility.elementToggle(btnStart, btnStop);
 
-        if (!OpenCVLoader.initDebug()) Log.e(TAG, "Unable to load OpenCV");
-        else Log.d(TAG, "OpenCV loaded");
+        if (!OpenCVLoader.initDebug())
+            Log.e(TAG, "Unable to load OpenCV");
+        else
+            Log.d(TAG, "OpenCV loaded");
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, 1);
@@ -140,7 +144,6 @@ public class AutoActivity extends AppCompatActivity {
 
         btnSetMatrix.setOnClickListener(v -> {
             try {
-                btnResetMatrix.setVisibility(LinearLayout.VISIBLE);
                 btnSetMatrix.setVisibility(LinearLayout.GONE);
                 dimR = Integer.parseInt(eTxtMatrixR.getText().toString());
                 dimC = Integer.parseInt(eTxtMatrixC.getText().toString());
@@ -149,6 +152,8 @@ public class AutoActivity extends AppCompatActivity {
                 mine = Integer.parseInt(eTxtMine.getText().toString());
                 orientation = String.valueOf(spnOrientation.getSelectedItem()).charAt(0);
                 Utility.elementToggle(btnStart, btnSetMatrix, eTxtMatrixR, eTxtMatrixC, eTxtStartX, eTxtStartY, spnOrientation);
+                //compare btnStart e btnReset, scompare btnsetdim
+                Utility.elementVisibilityToggle(btnStart,btnSetMatrix,btnResetMatrix);
                 pixelGrid = new PixelGridView(this);
                 pixelGrid.setNumRows(dimR);
                 pixelGrid.setNumColumns(dimC);
@@ -183,6 +188,7 @@ public class AutoActivity extends AppCompatActivity {
 
         btnStart.setOnClickListener(v ->
         {
+            Utility.elementVisibilityToggle(btnStart,btnStop);
             try {
                 BluetoothConnection blueconn = new BluetoothConnection("EV3BL");
                 bluechan = blueconn.connect();
@@ -195,6 +201,9 @@ public class AutoActivity extends AppCompatActivity {
             } catch (IOException e) {
                 e.printStackTrace();
                 Toast.makeText(this, "Connessione non stabilita", Toast.LENGTH_SHORT).show();
+            }
+            if(choosen == 2){
+                test2.startDiscovery();
             }
         });
 
@@ -209,7 +218,8 @@ public class AutoActivity extends AppCompatActivity {
             aggiornaTimer(txtCronometro, String.format("%02d:%02d:%02d:%03d", ore, minuti, secondi, millisecondi));
             ev3.cancel();
             bluechan.close();
-            Utility.elementToggle(btnStart, btnMain, btnManual, txtCronometro);
+            Utility.elementToggle(btnStart, btnMain, btnManual);
+            Utility.elementVisibilityToggle(btnStop,btnStart,txtCronometro,btnSetMatrix);
         });
     }
 
@@ -224,12 +234,12 @@ public class AutoActivity extends AppCompatActivity {
         }
         /*if (choosen == 2)
         {
-            test2 = new Test1(robot, gameField,mine);
+            test2 = new Test2(robot, gameField,mine);
             test2.start();
         }
         if (choosen == 3)
         {
-            test3 = new Test1(robot, gameField,mine);
+            test3 = new Test3(robot, gameField,mine);
             test3.start();
         }*/
 

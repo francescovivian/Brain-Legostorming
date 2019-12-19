@@ -4,26 +4,24 @@ import android.content.Context;
 
 import androidx.annotation.NonNull;
 
+import com.example.brainlegostormingapp.Position;
+import com.example.brainlegostormingapp.Utility.Constant;
+import com.google.android.gms.nearby.Nearby;
+import com.google.android.gms.nearby.connection.*;
+
+import static com.example.brainlegostormingapp.Utility.Constant.*;
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 import com.example.brainlegostormingapp.GameField;
 import com.example.brainlegostormingapp.Robot;
-import com.example.brainlegostormingapp.Tests.Test;
-import com.google.android.gms.nearby.Nearby;
-import com.google.android.gms.nearby.connection.ConnectionInfo;
-import com.google.android.gms.nearby.connection.ConnectionLifecycleCallback;
-import com.google.android.gms.nearby.connection.ConnectionResolution;
-import com.google.android.gms.nearby.connection.ConnectionsStatusCodes;
-import com.google.android.gms.nearby.connection.DiscoveredEndpointInfo;
-import com.google.android.gms.nearby.connection.DiscoveryOptions;
-import com.google.android.gms.nearby.connection.EndpointDiscoveryCallback;
-import com.google.android.gms.nearby.connection.Payload;
-import com.google.android.gms.nearby.connection.PayloadCallback;
-import com.google.android.gms.nearby.connection.PayloadTransferUpdate;
-import com.google.android.gms.nearby.connection.Strategy;
-import static com.example.brainlegostormingapp.Utility.Constant.*;
 
 public class Test2 extends Test {
 
-    private android.content.Context context;
+    private Context context;
+    private String testoRicevuto;
+    private static final Strategy STRATEGY = Strategy.P2P_STAR;
+    private int IDRobot;
+    Position positionReceived;
 
     public Test2(Robot robot, GameField field, Context context) {
         super(robot, field);
@@ -32,12 +30,14 @@ public class Test2 extends Test {
 
 
 
-    private void startDiscovery() {
+
+    //start discovery è chiamata al click del btn Start nella AutoActivity
+    public void startDiscovery() {
         DiscoveryOptions discoveryOptions =
-                new DiscoveryOptions.Builder().setStrategy(Strategy.P2P_STAR).build();
+                new DiscoveryOptions.Builder().setStrategy(STRATEGY).build();
         Nearby.getConnectionsClient(context)
                 .startDiscovery(
-                        SERVICE_ID,
+                        SERVICE_ID,/*com.example.brainlegostormingapp";*/
                         endpointDiscoveryCallback,
                         discoveryOptions)
                 .addOnSuccessListener(
@@ -50,7 +50,7 @@ public class Test2 extends Test {
                         });
     }
 
-    /*When nearby devices are found, the discoverer can initiate connections. The following example requests a connection with a device as soon as it is discovered.*/
+    /*Quando trova dei dispositivi, il discoverer inizializza la connessione*/
     private final EndpointDiscoveryCallback endpointDiscoveryCallback =
             new EndpointDiscoveryCallback() {
                 @Override
@@ -62,13 +62,11 @@ public class Test2 extends Test {
                                     endpointId,
                                     mConnectionLifecycleCallback /*Is the callback that will be invoked when discoverers request to connect to the advertiser*/
                             )
-                            .addOnSuccessListener(
-                                    (Void unused) -> {
+                            .addOnSuccessListener((Void unused) -> {
                                         // We successfully requested a connection. Now both sides
                                         // must accept before the connection is established.
                                     })
-                            .addOnFailureListener(
-                                    (Exception e) -> {
+                            .addOnFailureListener((Exception e) -> {
                                         // Nearby Connections failed to request the connection.
                                     });
                 }
@@ -83,18 +81,25 @@ public class Test2 extends Test {
             new ConnectionLifecycleCallback() {
                 @Override
                 public void onConnectionInitiated(String endpointId, ConnectionInfo connectionInfo) {
-                    // Automatically accept the connection on both sides.
+                    // Accetta in automatico la connesione per entrambe le parti
                     Nearby.getConnectionsClient(context).acceptConnection(endpointId, mPayloadCallback);
+                    //ricavo il nome dell'endpoint acui mi sto connettendo
+                    String endpoint = connectionInfo.getEndpointName();
                 }
 
                 @Override
                 public void onConnectionResult(String endpointId, ConnectionResolution result) {
+                    /*endpointId -> id della stazione base*/
                     switch (result.getStatus().getStatusCode()) {
                         case ConnectionsStatusCodes.STATUS_OK:
-                            // We're connected! Can now start sending and receiving data.
+                            //Ora siamo connessi, si possono spedire dati
+                            Nearby.getConnectionsClient(context).stopDiscovery();
+                            String firstMessage = "Benvenuto sono " + NOME_GRUPPO;
+                            Nearby.getConnectionsClient(context).sendPayload(
+                                    endpointId, Payload.fromBytes(firstMessage.getBytes(UTF_8)));
                             break;
                         case ConnectionsStatusCodes.STATUS_CONNECTION_REJECTED:
-                            // The connection was rejected by one or both sides.
+                            // La connessione è stata rifiutata da una delle 2 parti
                             break;
                         default:
                             // The connection was broken before it was accepted.
@@ -113,12 +118,25 @@ public class Test2 extends Test {
             new PayloadCallback() {
                 @Override
                 public void onPayloadReceived(@NonNull String s, @NonNull Payload payload) {
+                    testoRicevuto = new String(payload.asBytes(), UTF_8);
+                    if (testoRicevuto.contains("Coordinate obiettivo")) {
+                        testoRicevuto = testoRicevuto.replace("Coordinate obiettivo:", "");
+                        testoRicevuto = testoRicevuto.substring(0,testoRicevuto.length()-1);
+                        String coordinata[]= testoRicevuto.split(";");
+                        positionReceived = new Position(Integer.parseInt(coordinata[0]),Integer.parseInt(coordinata[1]));
+                    }
 
+                    if(testoRicevuto == IDRobot + "STOP"){
+                        //TODO stop the motors
+                    }
+                    else if(testoRicevuto == IDRobot + "RESUME"){
+                        //TODO resume the game
+                    }
                 }
 
                 @Override
                 public void onPayloadTransferUpdate(@NonNull String s, @NonNull PayloadTransferUpdate payloadTransferUpdate) {
-
+                    //Quando ho finito il trasferimento dei dati spediti entra in questo metodo
                 }
 
             };

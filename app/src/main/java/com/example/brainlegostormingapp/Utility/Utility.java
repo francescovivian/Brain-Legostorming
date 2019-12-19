@@ -22,6 +22,14 @@ public class Utility {
         for(View view : v)
             view.setEnabled(!view.isEnabled());
     }
+    public static void elementVisibilityToggle(View... v){
+        for(View view : v){
+            if(view.getVisibility() == View.VISIBLE)
+                view.setVisibility(View.GONE);
+            else if(view.getVisibility() == View.GONE)
+                view.setVisibility(View.VISIBLE);
+        }
+    }
     public static void playMp3Audio(Context context, String filename) {
         try {
             AssetFileDescriptor afd = context.getAssets().openFd(filename);
