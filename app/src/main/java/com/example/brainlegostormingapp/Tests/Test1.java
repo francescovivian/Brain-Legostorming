@@ -23,7 +23,8 @@ public class Test1 extends Test {
 
     @Override
     public void movement(){
-        if (totMine >0) {
+        //effettuo movimenti solo se ci sono effettivamente mine da raccogliere
+        if (totMine > 0) {
             initialize();
             scan();
         }
@@ -34,7 +35,8 @@ public class Test1 extends Test {
         alignToOrigin();  //raggiungo l'origine
     }
 
-    public void alignToOrigin(){   //processa celle dalla posizione di partenza fino all'origine
+    //processa celle dalla posizione di partenza fino all'origine della matrice (posizione [0][0])
+    public void alignToOrigin(){
         robot.openHand(15);
         Utility.sleep(5000);
         robot.autoMove90Left();
@@ -54,11 +56,14 @@ public class Test1 extends Test {
                 }
             }
         }
-        robot.autoMove180Right();       //mi giro pronto per scansionare tutto il campo
-        Utility.sleep(5000);
+        if(!testEnded) {
+            robot.autoMove180Right();       //mi giro pronto per scansionare tutto il campo
+            Utility.sleep(5000);
+        }
     }
 
-    public void processNextCell(){ //processa la cella seguente
+    //processa la cella seguente
+    public void processNextCell(){
         if(ballNextCell())
             storeBall();
         robot.forwardOnceSearch();
@@ -69,18 +74,18 @@ public class Test1 extends Test {
         backToStart();                  //torna alla posizione di partenza
         secureMine();                   //deposita la mina
         if(securedMine>=totMine)        //se ho finito di raccogliere mine
-            testEnded=true;
+            testEnded=true;             //TODO ma e se invece facessimo terminare la prova senza dover usare una miriade di if ovunque? (ditemi se e' fattibile)
         else                            //altrimenti torno alla posizione in cui ero
             backToLastMinePos();
     }
 
     public void secureMine(){
         robot.openHand(15);       //apre la mano
-        robot.forwardHalf();            //esce di una casella
+        robot.forwardHalf();            //avanza un poco
         Utility.sleep(5000);
         this.securedMine++;
         robot.setMinePickedUp(false);
-        robot.backwardHalf();           //torna indietro di una cella
+        robot.backwardHalf();           //torna indietro
         Utility.sleep(5000);
         robot.autoMove180Right();       //si gira di 180°
     }
@@ -90,6 +95,7 @@ public class Test1 extends Test {
         return false;
     }
 
+    //scansiona il campo
     public void scan(){
         for(int i=0;i<field.getRow();i++){
             if(testEnded)
@@ -101,6 +107,8 @@ public class Test1 extends Test {
         }
         backToStart();
     }
+
+    //scanziona una riga andando verso sinistra
     public void scanLeft(){
         for(int i=0;i<field.getColumn()-1;i++){ //scorro tutta la riga andando verso sinistra
             if(!testEnded) {            //se il test non è finito
@@ -139,6 +147,7 @@ public class Test1 extends Test {
         }
     }
 
+    //scanziona una riga andando verso destra
     public void scanRight() {
         for (int i = 0; i < field.getColumn() - 1; i++) { //scorro tutta la riga andando verso destra
             if(!testEnded) {
@@ -177,6 +186,7 @@ public class Test1 extends Test {
         }
     }
 
+    //ritorno alla posizione di partenza
     public void backToStart(){  // si presuppone che il robot sia già girato verso il "basso"
         for(int i=field.getRobotPosition().getY();i>0;i--){ //scendo fino alla base della griglia
             robot.forwardOnce();
@@ -207,7 +217,7 @@ public class Test1 extends Test {
         }
     }
 
-    //si aspetta che il robot sia rivolto verso l'alto
+    //ritorna alla posizione in cui a raccolto l'ultima mina, si aspetta che il robot sia rivolto verso l'alto
     public void backToLastMinePos(){ //il robot arriva rivolto verso "l'alto"
         if(field.getRobotPosition().getX()>field.getLastMinePosition().getX()){ // sono a destra rispetto alla posizione dell'ultima mina
             robot.autoMove90Left();
