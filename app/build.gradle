@@ -34,4 +34,5 @@ dependencies {
     implementation project(':lib')
     implementation 'com.quickbirdstudios:opencv:4.1.0'
     implementation 'com.google.android.gms:play-services-nearby:17.0.0'
+    implementation 'androidx.recyclerview:recyclerview:1.1.0'
 }
