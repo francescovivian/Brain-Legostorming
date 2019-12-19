@@ -23,19 +23,21 @@
 
         <Button
             android:id="@+id/btnManual"
-            android:background="@drawable/layout_bg_scuro"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:background="@drawable/layout_bg_scuro"
+            android:fontFamily="@font/press_start_2p"
             android:text="MANUAL"
             tools:ignore="HardcodedText" />
 
         <Button
             android:id="@+id/btnTest1"
-            android:background="@drawable/layout_bg_chiaro"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:background="@drawable/layout_bg_chiaro"
+            android:fontFamily="@font/press_start_2p"
             android:text="TEST 1"
             tools:ignore="HardcodedText" />
     </LinearLayout>
@@ -48,19 +50,21 @@
 
         <Button
             android:id="@+id/btnTest2"
-            android:background="@drawable/layout_bg_chiaro"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:background="@drawable/layout_bg_chiaro"
+            android:fontFamily="@font/press_start_2p"
             android:text="TEST 2"
             tools:ignore="HardcodedText" />
 
         <Button
             android:id="@+id/btnTest3"
-            android:background="@drawable/layout_bg_chiaro"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:background="@drawable/layout_bg_chiaro"
+            android:fontFamily="@font/press_start_2p"
             android:text="TEST 3"
             tools:ignore="HardcodedText" />
     </LinearLayout>
@@ -70,10 +74,11 @@
 
         <Button
             android:id="@+id/btnNearby"
-            android:background="@drawable/layout_bg_chiaro"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:background="@drawable/layout_bg_chiaro"
+            android:fontFamily="@font/indie_flower"
             android:text="FAKE NEARBY"
             tools:ignore="HardcodedText" />
     </LinearLayout>
