@@ -3,6 +3,7 @@ package com.example.brainlegostormingapp.Activity;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.opengl.Visibility;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.SurfaceView;
@@ -78,6 +79,7 @@ public class AutoActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        //region initiate
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_auto);
         getSupportActionBar().hide();
@@ -102,6 +104,8 @@ public class AutoActivity extends AppCompatActivity {
                                 | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                                 | View.SYSTEM_UI_FLAG_FULLSCREEN));
 
+        //endregion
+
         //region FINDVIEW
         txtCronometro = findViewById(R.id.cronometro);
         distanza = findViewById(R.id.distanza);
@@ -121,7 +125,6 @@ public class AutoActivity extends AppCompatActivity {
         eTxtMine = findViewById(R.id.eTxtMine);
         //endregion
 
-        Utility.elementToggle(btnStart, btnStop);
 
         if (!OpenCVLoader.initDebug())
             Log.e(TAG, "Unable to load OpenCV");
@@ -143,15 +146,15 @@ public class AutoActivity extends AppCompatActivity {
         });
 
         btnSetMatrix.setOnClickListener(v -> {
+            txtCronometro.setVisibility(View.GONE);
             try {
-                btnSetMatrix.setVisibility(LinearLayout.GONE);
                 dimR = Integer.parseInt(eTxtMatrixR.getText().toString());
                 dimC = Integer.parseInt(eTxtMatrixC.getText().toString());
                 startX = Integer.parseInt(eTxtStartX.getText().toString());
                 startY = Integer.parseInt(eTxtStartY.getText().toString());
                 mine = Integer.parseInt(eTxtMine.getText().toString());
                 orientation = String.valueOf(spnOrientation.getSelectedItem()).charAt(0);
-                Utility.elementToggle(btnStart, btnSetMatrix, eTxtMatrixR, eTxtMatrixC, eTxtStartX, eTxtStartY, spnOrientation);
+                Utility.elementToggle(eTxtMatrixR, eTxtMatrixC, eTxtStartX, eTxtStartY, spnOrientation);
                 //compare btnStart e btnReset, scompare btnsetdim
                 Utility.elementVisibilityToggle(btnStart,btnSetMatrix,btnResetMatrix);
                 pixelGrid = new PixelGridView(this);
@@ -177,9 +180,8 @@ public class AutoActivity extends AppCompatActivity {
                 eTxtStartX.setText("0");
                 eTxtStartY.setText("0");
                 spnOrientation.setSelection(0);
-                btnResetMatrix.setVisibility(LinearLayout.GONE);
-                btnSetMatrix.setVisibility(LinearLayout.VISIBLE);
-                Utility.elementToggle(btnStart, btnSetMatrix, eTxtMatrixR, eTxtMatrixC, eTxtStartX, eTxtStartY, spnOrientation);
+                Utility.elementVisibilityToggle(btnResetMatrix,btnStart,btnSetMatrix);
+                Utility.elementToggle(eTxtMatrixR, eTxtMatrixC, eTxtStartX, eTxtStartY, spnOrientation);
             } catch (NumberFormatException ignored) {
                 ignored.printStackTrace();
             }
@@ -188,7 +190,7 @@ public class AutoActivity extends AppCompatActivity {
 
         btnStart.setOnClickListener(v ->
         {
-            Utility.elementVisibilityToggle(btnStart,btnStop);
+            Utility.elementVisibilityToggle(btnStart,btnStop,btnResetMatrix);
             try {
                 BluetoothConnection blueconn = new BluetoothConnection("EV3BL");
                 bluechan = blueconn.connect();
@@ -196,7 +198,7 @@ public class AutoActivity extends AppCompatActivity {
                 Utility.playMp3Audio(getApplicationContext(),"rally.mp3");
                 Prelude.trap(() -> ev3.run(this::legoMain));
                 Toast.makeText(this, "Connessione stabilita con successo", Toast.LENGTH_SHORT).show();
-                Utility.elementToggle(btnResetMatrix, btnStart, btnStop, btnMain, btnManual);
+                Utility.elementToggle(btnMain, btnManual);
                 tempoInizio = System.currentTimeMillis();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -208,19 +210,23 @@ public class AutoActivity extends AppCompatActivity {
         });
 
         btnStop.setOnClickListener(v -> {
-            robot.stopRLEngines();
-            Utility.elementToggle(btnStop);
-            attuale = System.currentTimeMillis() - tempoInizio;
-            secondi = (int) (attuale / 1000) % 60;
-            minuti = (int) (attuale / 60000) % 60;
-            ore = (int) (attuale / 3600000) % 24;
-            millisecondi = (int) attuale % 1000;
-            aggiornaTimer(txtCronometro, String.format("%02d:%02d:%02d:%03d", ore, minuti, secondi, millisecondi));
-            ev3.cancel();
-            bluechan.close();
-            Utility.elementToggle(btnStart, btnMain, btnManual);
-            Utility.elementVisibilityToggle(btnStop,btnStart,txtCronometro,btnSetMatrix);
+            endAll();
         });
+    }
+
+    private void endAll()
+    {
+        robot.stopRLEngines();
+        attuale = System.currentTimeMillis() - tempoInizio;
+        secondi = (int) (attuale / 1000) % 60;
+        minuti = (int) (attuale / 60000) % 60;
+        ore = (int) (attuale / 3600000) % 24;
+        millisecondi = (int) attuale % 1000;
+        aggiornaTimer(txtCronometro, String.format("%02d:%02d:%02d:%03d", ore, minuti, secondi, millisecondi));
+        ev3.cancel();
+        bluechan.close();
+        Utility.elementToggle(btnMain, btnManual);
+        Utility.elementVisibilityToggle(btnStop,txtCronometro,btnSetMatrix);
     }
 
     private void legoMain(EV3.Api api) {
@@ -243,8 +249,8 @@ public class AutoActivity extends AppCompatActivity {
             test3.start();
         }*/
 
-        btnStop.performClick();
         Utility.playMp3Audio(getApplicationContext(),"mammamia.mp3");
+        endAll();
     }
 
     public void aggiornaTimer(TextView tv, String tempo) {

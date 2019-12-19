@@ -26,6 +26,8 @@ import it.unive.dais.legodroid.lib.comm.BluetoothConnection;
 import it.unive.dais.legodroid.lib.plugs.LightSensor;
 import it.unive.dais.legodroid.lib.util.Prelude;
 
+import static com.example.brainlegostormingapp.Utility.Constant.SPEED;
+
 public class ManualActivity extends AppCompatActivity {
     private static final String TAG = "ManualActivity";
 
@@ -96,15 +98,23 @@ public class ManualActivity extends AppCompatActivity {
         if (!OpenCVLoader.initDebug()) Log.e(TAG, "Unable to load OpenCV");
         else Log.d(TAG, "OpenCV loaded");
 
-        btnStart.setOnClickListener(v -> robot.forwardOnce());
+        btnStart.setOnClickListener(v -> robot.startRLEngines(SPEED,'f'));
 
         btnStop.setOnClickListener(v -> robot.stopAllEngines());
 
-        btnRetro.setOnClickListener(v -> robot.backwardOnce());
+        btnRetro.setOnClickListener(v -> robot.startRLEngines(SPEED,'b'));
 
-        btnRight.setOnClickListener(v -> robot.autoMove90Right());
+        btnRight.setOnClickListener(v ->
+        {
+            robot.startEngine('r','b');
+            robot.startEngine('l','f');
+        });
 
-        btnLeft.setOnClickListener(v -> robot.autoMove90Left());
+        btnLeft.setOnClickListener(v ->
+        {
+            robot.startEngine('r','f');
+            robot.startEngine('l','b');
+        });
 
         btnOpen.setOnClickListener(v -> robot.openHand(15));
 

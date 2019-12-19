@@ -23,8 +23,10 @@ public class Test1 extends Test {
 
     @Override
     public void movement(){
-        initialize();
-        scan();
+        if (totMine >0) {
+            initialize();
+            scan();
+        }
     }
 
     public void initialize(){
@@ -38,16 +40,18 @@ public class Test1 extends Test {
         robot.autoMove90Left();
         Utility.sleep(5000);
         for (int i = field.getStartPosition().getX(); i > 0; i--) {
-            robot.forwardOnce();
-            field.setRobotPosition(field.getRobotPosition().getX()-1,field.getRobotPosition().getY());
-            Utility.sleep(5000);
-            if(robot.getMinePickedUp()==true){ //ho raccolto una mina nell'ultimo avanzamento
-                field.setLastMinePosition(field.getRobotPosition().getX(),field.getRobotPosition().getY());
-                robot.autoMove90Left();
+            if(!testEnded) {
+                robot.forwardOnceSearch();
+                field.setRobotPosition(field.getRobotPosition().getX() - 1, field.getRobotPosition().getY());
                 Utility.sleep(5000);
-                storeBall();        //la deposito nella zona sicura
-                robot.autoMove90Left();
-                Utility.sleep(5000);
+                if (robot.getMinePickedUp() == true) { //ho raccolto una mina nell'ultimo avanzamento
+                    field.setLastMinePosition(field.getRobotPosition().getX(), field.getRobotPosition().getY());
+                    robot.autoMove90Left();
+                    Utility.sleep(5000);
+                    storeBall();        //la deposito nella zona sicura
+                    robot.autoMove90Left();
+                    Utility.sleep(5000);
+                }
             }
         }
         robot.autoMove180Right();       //mi giro pronto per scansionare tutto il campo
@@ -57,23 +61,23 @@ public class Test1 extends Test {
     public void processNextCell(){ //processa la cella seguente
         if(ballNextCell())
             storeBall();
-        robot.forwardOnce();
+        robot.forwardOnceSearch();
     }
 
     //metodo per portare la pallina nella zona sicura
     public void storeBall(){
         backToStart();                  //torna alla posizione di partenza
         secureMine();                   //deposita la mina
-        if(securedMine==totMine)        //se ho finito di raccogliere mine
+        if(securedMine>=totMine)        //se ho finito di raccogliere mine
             testEnded=true;
         else                            //altrimenti torno alla posizione in cui ero
             backToLastMinePos();
     }
 
     public void secureMine(){
+        robot.openHand(15);       //apre la mano
         robot.forwardOnce();            //esce di una casella
         Utility.sleep(5000);
-        robot.openHand(15);       //apre la mano
         this.securedMine++;
         robot.setMinePickedUp(false);
         robot.backwardOnce();           //torna indietro di una cella
@@ -100,10 +104,10 @@ public class Test1 extends Test {
     public void scanLeft(){
         for(int i=0;i<field.getColumn()-1;i++){ //scorro tutta la riga andando verso sinistra
             if(!testEnded) {            //se il test non è finito
-                robot.forwardOnce();
+                robot.forwardOnceSearch();
                 field.setRobotPosition(field.getRobotPosition().getX() - 1, field.getRobotPosition().getY());
                 Utility.sleep(5000);
-                if (robot.getMinePickedUp() == true) { //ho raccolto una mina nell'ultimo avanzamento
+                if (robot.getMinePickedUp()) { //ho raccolto una mina nell'ultimo avanzamento
                     field.setLastMinePosition(field.getRobotPosition().getX(), field.getRobotPosition().getY());
                     robot.autoMove90Left();
                     Utility.sleep(5000);
@@ -116,10 +120,10 @@ public class Test1 extends Test {
         if(field.getRobotPosition().getY()<field.getRow()-1  && !testEnded) { // se ho una riga sopra ed il test non è finito
             robot.autoMove90Right(); //arrivato infondo alla riga giro a destra per salire
             Utility.sleep(5000);
-            robot.forwardOnce(); //salgo nella riga sopra
+            robot.forwardOnceSearch(); //salgo nella riga sopra
             field.setRobotPosition(field.getRobotPosition().getX(), field.getRobotPosition().getY() + 1);
             Utility.sleep(5000);
-            if(robot.getMinePickedUp()==true){ //ho raccolto una mina nell'ultimo avanzamento
+            if(robot.getMinePickedUp()){ //ho raccolto una mina nell'ultimo avanzamento
                 field.setLastMinePosition(field.getRobotPosition().getX(),field.getRobotPosition().getY());
                 robot.autoMove180Left();
                 Utility.sleep(5000);
@@ -138,10 +142,10 @@ public class Test1 extends Test {
     public void scanRight() {
         for (int i = 0; i < field.getColumn() - 1; i++) { //scorro tutta la riga andando verso destra
             if(!testEnded) {
-                robot.forwardOnce();
+                robot.forwardOnceSearch();
                 field.setRobotPosition(field.getRobotPosition().getX() + 1, field.getRobotPosition().getY());
                 Utility.sleep(5000);
-                if (robot.getMinePickedUp() == true) { //ho raccolto una mina nell'ultimo avanzamento
+                if (robot.getMinePickedUp()) { //ho raccolto una mina nell'ultimo avanzamento
                     field.setLastMinePosition(field.getRobotPosition().getX(), field.getRobotPosition().getY());
                     robot.autoMove90Right();
                     Utility.sleep(5000);
@@ -154,10 +158,10 @@ public class Test1 extends Test {
         if (field.getRobotPosition().getY() < field.getRow() - 1  && !testEnded) { // se ho una riga sopra ed il test non è finito
             robot.autoMove90Left(); //arrivato infondo alla riga giro a sinistra per salire
             Utility.sleep(5000);
-            robot.forwardOnce(); //salgo nella riga sopra
+            robot.forwardOnceSearch(); //salgo nella riga sopra
             field.setRobotPosition(field.getRobotPosition().getX(), field.getRobotPosition().getY() + 1);
             Utility.sleep(5000);
-            if(robot.getMinePickedUp()==true){ //ho raccolto una mina nell'ultimo avanzamento
+            if(robot.getMinePickedUp()){ //ho raccolto una mina nell'ultimo avanzamento
                 field.setLastMinePosition(field.getRobotPosition().getX(),field.getRobotPosition().getY());
                 robot.autoMove180Right();
                 Utility.sleep(5000);

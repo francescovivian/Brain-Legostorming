@@ -180,12 +180,31 @@ public class Robot {
     public void forwardOnce() {
         int step1 = 0, step2 = 3100, step3 = 0;
         try {
-            fixOrientation();
+            //fixOrientation();
             lm.setPolarity(TachoMotor.Polarity.FORWARD);
             lm.setTimeSpeed(SPEED, step1, step2, step3, true);
             rm.setPolarity(TachoMotor.Polarity.FORWARD);
             rm.setTimeSpeed(SPEED, step1, step2, step3, true);
-            identifyBall();
+            rm.waitCompletion();
+            lm.waitCompletion();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void forwardOnceSearch() {
+        int step1 = 0, step2 = 3100, step3 = 0;
+        try {
+            //fixOrientation();
+            boolean isPresent = identifyBall();
+            lm.setPolarity(TachoMotor.Polarity.FORWARD);
+            lm.setTimeSpeed(SPEED, step1, step2, step3, true);
+            rm.setPolarity(TachoMotor.Polarity.FORWARD);
+            rm.setTimeSpeed(SPEED, step1, step2, step3, true);
+            if (isPresent)
+            {
+                catchBall();
+            }
             rm.waitCompletion();
             lm.waitCompletion();
         } catch (IOException e) {
@@ -318,7 +337,7 @@ public class Robot {
         return skew;
     }
 
-    public void identifyBall()
+    public boolean identifyBall()
     {
         try {
             int count=0;
@@ -326,17 +345,22 @@ public class Robot {
                 Float dist=this.getDistance().get();
                 if(dist<35)
                     count++;
+                System.out.println(dist);
             }
             Float distance = this.getDistance().get();
             activity.runOnUiThread(() -> distanza.setText(distance.toString()));
-            if (!(this.minePickedUp) && count >=8) {
-                Utility.sleep(2000);
-                this.closeHand(25);
-                this.setMinePickedUp(true);
-            }
+            return !this.minePickedUp && count >=8;
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
+        return false; // Non dovrebbe mai arrivare qua
+    }
+
+    public void catchBall()
+    {
+        Utility.sleep(2000);
+        this.closeHand(25);
+        this.setMinePickedUp(true);
     }
 
     public void slightestMove(double skew)
