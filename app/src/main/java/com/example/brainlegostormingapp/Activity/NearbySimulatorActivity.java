@@ -45,6 +45,7 @@ public class NearbySimulatorActivity extends AppCompatActivity {
     private EV3 ev3;
     private GameField gameField;
     private Test2 test2;
+    private boolean connected;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,7 +90,6 @@ public class NearbySimulatorActivity extends AppCompatActivity {
         spnOrientation = findViewById(R.id.direction_spinner);
         eTxtMine = findViewById(R.id.eTxtMine);
         //endregion
-
 
         btnMain.setOnClickListener(v -> {
             Intent mainIntent = new Intent(getBaseContext(), MainActivity.class);
@@ -142,7 +142,7 @@ public class NearbySimulatorActivity extends AppCompatActivity {
 
         btnStart.setOnClickListener(v ->
         {
-            Utility.elementVisibilityToggle(btnStart,btnStop,btnInvia);
+
             try {
                 BluetoothConnection blueconn = new BluetoothConnection("EV3BL");
                 bluechan = blueconn.connect();
@@ -150,12 +150,14 @@ public class NearbySimulatorActivity extends AppCompatActivity {
                 Utility.playMp3Audio(getApplicationContext(),"rally.mp3");
                 Prelude.trap(() -> ev3.run(this::legoMain));
                 Toast.makeText(this, "Connessione stabilita con successo", Toast.LENGTH_SHORT).show();
+                Utility.elementVisibilityToggle(btnStart,btnStop,btnInvia);
                 Utility.elementToggle(btnResetMatrix, btnStart, btnStop, btnMain, btnManual);
                 tempoInizio = System.currentTimeMillis();
             } catch (IOException e) {
                 e.printStackTrace();
                 Toast.makeText(this, "Connessione non stabilita", Toast.LENGTH_SHORT).show();
             }
+
         });
 
         btnStop.setOnClickListener(v -> {

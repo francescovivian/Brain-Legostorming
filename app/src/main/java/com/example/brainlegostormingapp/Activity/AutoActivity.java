@@ -194,7 +194,6 @@ public class AutoActivity extends AppCompatActivity implements MyRecyclerViewAda
 
         btnStart.setOnClickListener(v ->
         {
-            Utility.elementVisibilityToggle(btnStart,btnStop,btnResetMatrix);
             try {
                 BluetoothConnection blueconn = new BluetoothConnection("EV3BL");
                 bluechan = blueconn.connect();
@@ -203,6 +202,7 @@ public class AutoActivity extends AppCompatActivity implements MyRecyclerViewAda
                 Prelude.trap(() -> ev3.run(this::legoMain));
                 Toast.makeText(this, "Connessione stabilita con successo", Toast.LENGTH_SHORT).show();
                 Utility.elementToggle(btnMain, btnManual);
+                Utility.elementVisibilityToggle(btnStart,btnStop,btnResetMatrix);
                 tempoInizio = System.currentTimeMillis();
             } catch (IOException e) {
                 e.printStackTrace();
