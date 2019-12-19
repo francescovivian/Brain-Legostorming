@@ -1,11 +1,9 @@
 package com.example.brainlegostormingapp.Activity;
 
-import android.Manifest;
+import androidx.appcompat.app.AppCompatActivity;
+
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.SurfaceView;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -15,34 +13,21 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-
-import com.example.brainlegostormingapp.Camera;
 import com.example.brainlegostormingapp.GameField;
-import com.example.brainlegostormingapp.ObjectOfInterest.Ball;
-import com.example.brainlegostormingapp.ObjectOfInterest.Line;
-import com.example.brainlegostormingapp.PixelGridView;
 import com.example.brainlegostormingapp.Position;
 import com.example.brainlegostormingapp.R;
 import com.example.brainlegostormingapp.Robot;
-import com.example.brainlegostormingapp.Tests.Test1;
 import com.example.brainlegostormingapp.Tests.Test2;
 import com.example.brainlegostormingapp.Utility.Utility;
 
-import org.opencv.android.CameraBridgeViewBase;
-import org.opencv.android.OpenCVLoader;
-import org.opencv.core.Mat;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
 import it.unive.dais.legodroid.lib.EV3;
 import it.unive.dais.legodroid.lib.comm.BluetoothConnection;
 import it.unive.dais.legodroid.lib.util.Prelude;
 
-public class NeabrySimulatorActivity extends AppCompatActivity {
+public class NearbySimulatorActivity extends AppCompatActivity {
     private static final String TAG = "NearbySimulatorActivity";
 
     private long tempoInizio, attuale;
@@ -60,11 +45,11 @@ public class NeabrySimulatorActivity extends AppCompatActivity {
     private EV3 ev3;
     private GameField gameField;
     private Test2 test2;
-    private CameraBridgeViewBase camera;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_nearbysimulator);
+        setContentView(R.layout.activity_nearby_simulator);
         getSupportActionBar().hide();
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -105,12 +90,6 @@ public class NeabrySimulatorActivity extends AppCompatActivity {
         eTxtMine = findViewById(R.id.eTxtMine);
         //endregion
 
-        Utility.elementToggle(btnStart, btnStop);
-
-        if (!OpenCVLoader.initDebug())
-            Log.e(TAG, "Unable to load OpenCV");
-        else
-            Log.d(TAG, "OpenCV loaded");
 
         btnMain.setOnClickListener(v -> {
             Intent mainIntent = new Intent(getBaseContext(), MainActivity.class);
@@ -124,17 +103,16 @@ public class NeabrySimulatorActivity extends AppCompatActivity {
 
         btnSetMatrix.setOnClickListener(v -> {
             try {
-                btnSetMatrix.setVisibility(LinearLayout.GONE);
                 dimR = Integer.parseInt(eTxtMatrixR.getText().toString());
                 dimC = Integer.parseInt(eTxtMatrixC.getText().toString());
                 startX = Integer.parseInt(eTxtStartX.getText().toString());
                 startY = Integer.parseInt(eTxtStartY.getText().toString());
                 mine = Integer.parseInt(eTxtMine.getText().toString());
                 orientation = String.valueOf(spnOrientation.getSelectedItem()).charAt(0);
-                Utility.elementToggle(btnStart, btnSetMatrix, eTxtMatrixR, eTxtMatrixC, eTxtStartX, eTxtStartY, spnOrientation);
+
+                Utility.elementToggle(eTxtMatrixR, eTxtMatrixC, eTxtStartX, eTxtStartY, eTxtMine, spnOrientation);
                 //compare btnStart e btnReset, scompare btnsetdim
                 Utility.elementVisibilityToggle(btnStart,btnSetMatrix,btnResetMatrix);
-
                 gameField = new GameField(dimR, dimC, orientation, startX, startY);
 
                 //Per fare i quadrati rossi
@@ -154,9 +132,9 @@ public class NeabrySimulatorActivity extends AppCompatActivity {
                 eTxtStartX.setText("0");
                 eTxtStartY.setText("0");
                 spnOrientation.setSelection(0);
-                btnResetMatrix.setVisibility(LinearLayout.GONE);
-                btnSetMatrix.setVisibility(LinearLayout.VISIBLE);
-                Utility.elementToggle(btnStart, btnSetMatrix, eTxtMatrixR, eTxtMatrixC, eTxtStartX, eTxtStartY, spnOrientation);
+                Utility.elementToggle(eTxtMatrixR, eTxtMatrixC, eTxtStartX, eTxtStartY, eTxtMine, spnOrientation);
+                //compare btnStart e btnReset, scompare btnsetdim
+                Utility.elementVisibilityToggle(btnStart,btnSetMatrix,btnResetMatrix);
             } catch (NumberFormatException ignored) {
                 ignored.printStackTrace();
             }
@@ -164,7 +142,7 @@ public class NeabrySimulatorActivity extends AppCompatActivity {
 
         btnStart.setOnClickListener(v ->
         {
-            Utility.elementVisibilityToggle(btnStart,btnStop);
+            Utility.elementVisibilityToggle(btnStart,btnStop,btnInvia);
             try {
                 BluetoothConnection blueconn = new BluetoothConnection("EV3BL");
                 bluechan = blueconn.connect();
@@ -183,12 +161,7 @@ public class NeabrySimulatorActivity extends AppCompatActivity {
         btnStop.setOnClickListener(v -> {
             robot.stopRLEngines();
             Utility.elementToggle(btnStop);
-            attuale = System.currentTimeMillis() - tempoInizio;
-            secondi = (int) (attuale / 1000) % 60;
-            minuti = (int) (attuale / 60000) % 60;
-            ore = (int) (attuale / 3600000) % 24;
-            millisecondi = (int) attuale % 1000;
-            aggiornaTimer(txtCronometro, String.format("%02d:%02d:%02d:%03d", ore, minuti, secondi, millisecondi));
+            //manca il timer
             ev3.cancel();
             bluechan.close();
             Utility.elementToggle(btnStart, btnMain, btnManual);
@@ -201,22 +174,12 @@ public class NeabrySimulatorActivity extends AppCompatActivity {
             test2.sendPosition(new Position(x,y));
         });
     }
-
     private void legoMain(EV3.Api api) {
         //final String TAG = Prelude.ReTAG("legoMain");
 
-        robot = new Robot(api, camera);
+        robot = new Robot(api);
 
         test2 = new Test2(robot,gameField,getApplicationContext());
         test2.start();
     }
-
-    public void aggiornaTimer(TextView tv, String tempo) {
-        runOnUiThread(() -> tv.setText(tempo));
-    }
-
-
-
 }
-
-

@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity
             startActivity(autoIntent);
         });
         btnFakeNearby.setOnClickListener(v -> {
-            Intent nearbyIntent = new Intent(getBaseContext(),NeabrySimulatorActivity.class);
+            Intent nearbyIntent = new Intent(getBaseContext(), NearbySimulatorActivity.class);
             startActivity(nearbyIntent);
         });
     }
