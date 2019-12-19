@@ -22,9 +22,12 @@ import java.util.ArrayList;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.brainlegostormingapp.Camera;
 import com.example.brainlegostormingapp.GameField;
+import com.example.brainlegostormingapp.MatrixField.MyRecyclerViewAdapter;
 import com.example.brainlegostormingapp.ObjectFinder;
 import com.example.brainlegostormingapp.ObjectOfInterest.Ball;
 import com.example.brainlegostormingapp.ObjectOfInterest.Line;
@@ -47,7 +50,7 @@ import it.unive.dais.legodroid.lib.EV3;
 import it.unive.dais.legodroid.lib.comm.BluetoothConnection;
 import it.unive.dais.legodroid.lib.util.Prelude;
 
-public class AutoActivity extends AppCompatActivity {
+public class AutoActivity extends AppCompatActivity implements MyRecyclerViewAdapter.ItemClickListener {
     private static final String TAG = "AutoActivity";
     private long tempoInizio, attuale;
     private int secondi, minuti, ore, millisecondi;
@@ -76,6 +79,8 @@ public class AutoActivity extends AppCompatActivity {
     private EditText eTxtMatrixR, eTxtMatrixC, eTxtStartX, eTxtStartY, eTxtMine;
     private Spinner spnOrientation;
     PixelGridView pixelGrid;
+
+    MyRecyclerViewAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -211,6 +216,24 @@ public class AutoActivity extends AppCompatActivity {
         btnStop.setOnClickListener(v -> {
             endAll();
         });
+
+
+
+        // data to populate the RecyclerView with
+        String[] data = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48"};
+
+        // set up the RecyclerView
+        RecyclerView recyclerView = findViewById(R.id.matrixField);
+        int numberOfColumns = 6;
+        recyclerView.setLayoutManager(new GridLayoutManager(this, numberOfColumns));
+        adapter = new MyRecyclerViewAdapter(this, data);
+        adapter.setClickListener(this);
+        recyclerView.setAdapter(adapter);
+    }
+
+    @Override
+    public void onItemClick(View view, int position) {
+        Log.i("TAG", "You clicked number " + adapter.getItem(position) + ", which is at cell position " + position);
     }
 
     //termina la prova, calcola e mostra il tempo finale e TODO mostra la matrice
