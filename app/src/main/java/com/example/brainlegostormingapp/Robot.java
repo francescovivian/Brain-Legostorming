@@ -282,6 +282,7 @@ public class Robot {
 
         double dx,dy, weight;
         int ballsConsidered = 0;
+        double totWeight = 0;
 
         for (Line line : lines) {
             //Sono nella metà destra
@@ -290,6 +291,7 @@ public class Robot {
                 dx = Math.abs(line.p1.x - line.p2.x);
                 dy = Math.abs(line.p1.y - line.p2.y);
                 weight = dx+dy;
+                totWeight += weight;
                 skew += ((frame.height() - line.p2.y) * weight);
                 ballsConsidered++;
             }
@@ -300,6 +302,7 @@ public class Robot {
                 dx = Math.abs(line.p1.x - line.p2.x);
                 dy = Math.abs(line.p1.y - line.p2.y);
                 weight = dx+dy;
+                totWeight += weight;
                 skew += ((frame.height() - line.p2.y) * weight);
                 ballsConsidered++;
             }
@@ -310,7 +313,8 @@ public class Robot {
         //controlla che tutte le linee finiscano con l'angolazione corretta per il lato dello schermo
         //potrebbe ritornare la direzione in cui dovrebbe muoversi per raddrizzarsi
         frame.release();
-        skew /= ballsConsidered;
+        //skew /= ballsConsidered;
+        skew /= totWeight;
         return skew;
     }
 
