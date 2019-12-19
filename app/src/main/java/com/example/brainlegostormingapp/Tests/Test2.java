@@ -28,8 +28,9 @@ public class Test2 extends Test {
         this.context = context;
     }
 
-
-
+    public void sendPosition(Position position){
+        //TODO implement the movement
+    }
 
     //start discovery è chiamata al click del btn Start nella AutoActivity
     public void startDiscovery() {

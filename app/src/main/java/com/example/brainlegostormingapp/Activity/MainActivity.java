@@ -16,7 +16,7 @@ public class MainActivity extends AppCompatActivity
 {
     private static final String TAG = "MainActivity";
 
-    Button btnManual, btnTest1, btnTest2, btnTest3;
+    Button btnManual, btnTest1, btnTest2, btnTest3,btnFakeNearby;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -46,6 +46,7 @@ public class MainActivity extends AppCompatActivity
         btnTest1 = findViewById(R.id.btnTest1);
         btnTest2 = findViewById(R.id.btnTest2);
         btnTest3 = findViewById(R.id.btnTest3);
+        btnFakeNearby = findViewById(R.id.btnNearby);
 
         btnManual.setOnClickListener(v ->
         {
@@ -71,6 +72,11 @@ public class MainActivity extends AppCompatActivity
         {
             Intent autoIntent = new Intent(getBaseContext(),AutoActivity.class);
             autoIntent.putExtra("choosen",3);
+            startActivity(autoIntent);
+        });
+        btnFakeNearby.setOnClickListener(v ->
+        {
+            Intent autoIntent = new Intent(getBaseContext(),NeabrySimulatorActivity.class);
             startActivity(autoIntent);
         });
     }
