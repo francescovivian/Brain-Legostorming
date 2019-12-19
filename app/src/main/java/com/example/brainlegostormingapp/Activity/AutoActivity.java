@@ -213,6 +213,7 @@ public class AutoActivity extends AppCompatActivity {
         });
     }
 
+    //termina la prova, calcola e mostra il tempo finale e TODO mostra la matrice
     private void endAll()
     {
         robot.stopRLEngines();
@@ -233,6 +234,7 @@ public class AutoActivity extends AppCompatActivity {
 
         robot = new Robot(api, camera);
 
+        //selezione della prova
         if (choosen == 1) {
             test1 = new Test1(robot, gameField, mine);
             test1.start();
@@ -248,8 +250,9 @@ public class AutoActivity extends AppCompatActivity {
             test3.start();
         }*/
 
+        //suono di fine prova
         Utility.playMp3Audio(getApplicationContext(),"mammamia.mp3");
-        endAll();
+        this.endAll();
     }
 
     public void aggiornaTimer(TextView tv, String tempo) {
