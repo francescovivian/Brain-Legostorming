@@ -322,7 +322,7 @@ public class Robot {
         int linesConsidered = 0;
         double totWeight = 0;
 
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 10; i++) {
             frame = myCamera.getFrame();
             //metodo che ottiene tutte le lines
             ObjectFind objectFind = new ObjectFinder(frame).findObject("l", "b");
@@ -336,8 +336,7 @@ public class Robot {
                     dy = Math.abs(line.p1.y - line.p2.y);
                     weight = dx + dy;
                     totWeight += weight;
-                    skew += ((frame.height() - line.p2.y) * weight);
-                    linesConsidered++;
+                    skew += ((frame.height()/2 - line.p2.y) * weight);
                 }
 
                 //Sono nella metà sinistra
@@ -346,9 +345,9 @@ public class Robot {
                     dy = Math.abs(line.p1.y - line.p2.y);
                     weight = dx + dy;
                     totWeight += weight;
-                    skew += ((frame.height() - line.p2.y) * weight);
-                    linesConsidered++;
+                    skew += ((frame.height()/2 - line.p2.y) * weight);
                 }
+                linesConsidered++;
             }
 
             //elabora le linee per qualche frame
@@ -358,7 +357,6 @@ public class Robot {
             frame.release();
             Utility.sleep(2000);
         }
-        skew /= linesConsidered;
         skew /= totWeight;
     }
 
