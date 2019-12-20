@@ -5,8 +5,8 @@
     <string name="direction_prompt">Direzione</string>
     <string-array name="direction">
         <item>Nord</item>
-        <item>Est</item>
         <item>Sud</item>
+        <item>Est</item>
         <item>Ovest</item>
     </string-array>
 </resources>

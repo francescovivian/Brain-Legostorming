@@ -175,7 +175,7 @@ public class ManualActivity extends AppCompatActivity {
 
         robot = new Robot(api);
 
-        while (!api.ev3.isCancelled()) {
+        /*while (!api.ev3.isCancelled()) {
             try {
                 Future<LightSensor.Color> Fcol = robot.getColor();
                 LightSensor.Color col = Fcol.get();
@@ -186,7 +186,7 @@ public class ManualActivity extends AppCompatActivity {
             }
         }
 
-        runOnUiThread(() -> findViewById(R.id.colorView).setBackgroundColor(LightSensor.Color.WHITE.toARGB32()));
+        runOnUiThread(() -> findViewById(R.id.colorView).setBackgroundColor(LightSensor.Color.WHITE.toARGB32()));*/
     }
 
     public void aggiornaTimer(TextView tv, String tempo) {

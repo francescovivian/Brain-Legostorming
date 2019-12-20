@@ -16,13 +16,15 @@ public class PixelGridView extends View {
     private Paint redPaint = new Paint();
     private boolean[][] cellChecked;
     boolean start = false;
+    private char orientation;
 
-    public PixelGridView(Context context) {
-        this(context, null);
+    public PixelGridView(Context context, char orientation) {
+        this(context, null, orientation);
     }
 
-    public PixelGridView(Context context, AttributeSet attrs) {
+    public PixelGridView(Context context, AttributeSet attrs, char orientation) {
         super(context, attrs);
+        this.orientation = orientation;
         blackPaint.setStyle(Paint.Style.FILL_AND_STROKE);
         blackPaint.setColor(Color.BLACK);
         redPaint.setStyle(Paint.Style.FILL_AND_STROKE);
@@ -105,7 +107,7 @@ public class PixelGridView extends View {
     }
 
     public void changeCellChecked(int column, int row) {
-        cellChecked[column + 1][numRows - row - 2] = true;
+        if (orientation == 's') cellChecked[column + 1][numRows - row - 2] = true;
         invalidate();
     }
 }

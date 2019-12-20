@@ -125,6 +125,7 @@ public class AutoActivity extends AppCompatActivity /*implements MyRecyclerViewA
         eTxtStartY = findViewById(R.id.eTxtStartY);
         matrixView = findViewById(R.id.matrixView);
         spnOrientation = findViewById(R.id.direction_spinner);
+        spnOrientation.setSelection(1);
         camera = findViewById(R.id.cameraView);
         eTxtMine = findViewById(R.id.eTxtMine);
         //endregion
@@ -161,7 +162,7 @@ public class AutoActivity extends AppCompatActivity /*implements MyRecyclerViewA
                 Utility.elementToggle(eTxtMatrixR, eTxtMatrixC, eTxtStartX, eTxtStartY, eTxtMine, spnOrientation);
                 //compare btnStart e btnReset, scompare btnsetdim
                 Utility.elementVisibilityToggle(btnStart,btnSetMatrix,btnResetMatrix);
-                pixelGrid = new PixelGridView(this);
+                pixelGrid = new PixelGridView(this, Character.toLowerCase(orientation));
                 pixelGrid.setNumRows(dimR);
                 pixelGrid.setNumColumns(dimC);
 
@@ -183,7 +184,7 @@ public class AutoActivity extends AppCompatActivity /*implements MyRecyclerViewA
                 eTxtMatrixC.setText("0");
                 eTxtStartX.setText("0");
                 eTxtStartY.setText("0");
-                spnOrientation.setSelection(0);
+                spnOrientation.setSelection(1);
                 Utility.elementVisibilityToggle(btnResetMatrix,btnStart,btnSetMatrix);
                 Utility.elementToggle(eTxtMatrixR, eTxtMatrixC, eTxtStartX, eTxtStartY, eTxtMine, spnOrientation);
             } catch (NumberFormatException ignored) {
