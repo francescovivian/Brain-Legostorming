@@ -8,6 +8,9 @@ public class Test implements TestInterface {
     public Robot robot;
     public GameField field;
 
+    public int totMine;
+    public int securedMine;
+
     public Test(Robot robot, GameField field){
         this.robot=robot;
         this.field=field;

@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 
 import com.example.brainlegostormingapp.Position;
 import com.example.brainlegostormingapp.Utility.Constant;
+import com.example.brainlegostormingapp.Utility.Utility;
 import com.google.android.gms.nearby.Nearby;
 import com.google.android.gms.nearby.connection.*;
 
@@ -15,6 +16,9 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 import com.example.brainlegostormingapp.GameField;
 import com.example.brainlegostormingapp.Robot;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+
 public class Test2 extends Test {
 
     private Context context;
@@ -22,6 +26,11 @@ public class Test2 extends Test {
     private static final Strategy STRATEGY = Strategy.P2P_STAR;
     private int IDRobot;
     Position positionReceived;
+
+    //Variabili aggiunte da TheExpert
+    ArrayList<Position> positionList= new ArrayList<Position>();
+    ArrayList<String> movements=new ArrayList<String>();
+    //Fine
 
     public Test2(Robot robot, GameField field, Context context) {
         super(robot, field);
@@ -141,5 +150,94 @@ public class Test2 extends Test {
                 }
 
             };
+
+
+
+    /*Inizio funzioni dell'algoritmo della seconda prova*/
+
+    @Override
+    public void movement(){
+        while(securedMine<totMine){
+            if(positionList.isEmpty()){
+                //codice per attendere l'arrivo di una posizione
+            }
+            else{
+                Position actualMine =positionList.remove(0); //tolgo la prima mina che c'è in coda e shifto la coda a sinistra
+                goTo(actualMine);
+            }
+        }
+    }
+
+    /*
+    * Il robot è nella posizione iniziale e rivolto verso il centro del campo
+    * Arriva alla mina richiesta e la raccoglie
+    * Salva le varie mosse per arrivare alla mina nello stack movements
+    * Per tornare a start e fare il percorso a ritroso, le mosse di rotazione dovranno essere effettuate al contrario
+    * Le mosse di avanzamento/indietreggiamento dovranno essere effettuate come scritte nello stack
+    * Esempio:  90LEFT nello stack      ->      devo effettuare 90RIGHT
+    *           FW nello stack          ->      devo effettuare FW
+    *           HBW nello stack         ->      devo effettuare HBW
+    *
+    * LEGENDA MOSSE:
+    *   90LEFT:     rotazione di 90° a sinistra
+    *   90RIGHT:    rotazione di 90° a destra
+    *   180LEFT:    rotazione di 180° a sinistra
+    *   180RIGHT:   rotazione di 180° a destra
+    *   FW:         avanzamento di una cella
+    *   HFW:        avanzamento di mezza cella
+    *   BW:         inidietreggiamento di una cella
+    *   HBW:        inidietreggiamento di mezza cella
+    * */
+    public void goTo(Position actualMine){
+        while(field.getRobotPosition().getX()!=actualMine.getX()){
+
+        }
+    }
+
+
+    //Nel caso andando alla mina si ripassasse per la posizione iniziale, svuoto lo stack delle mosse precedenti
+    public void emptyStack(){
+        this.movements=new ArrayList<String>(); // ;) ;)
+    }
+
+    /*
+    * Right90, FW, Left90 se può
+    * se non ha una mina davanti, termina
+    * altrimenti se ha una cella a destra prova dodgeRight
+    * */
+    public void dodgeRight(){
+        robot.autoMove90Right();
+        Utility.sleep(5000);
+        if(robot.identifyBall()){ //trovo una pallina a destra
+            robot.autoMove90Left();
+            Utility.sleep(5000);
+            dodgeLeft();
+        }
+    }
+
+    public void dodgeLeft(){
+
+    }
+
+    public void sorpassaSX(){
+
+    }
+
+    public boolean sorpassaDX(){
+        robot.autoMove90Right();
+        if(!robot.identifyBall()){
+            robot.forwardOnce();
+            robot.autoMove90Left();
+            int mosse=0;
+            while(robot.identifyBall()){
+                robot.autoMove90Right();
+                robot.forwardOnce();
+                robot.autoMove90Left();
+                mosse++;
+            }
+            robot.forwardOnce();
+        }
+        return false;
+    }
 }
 
