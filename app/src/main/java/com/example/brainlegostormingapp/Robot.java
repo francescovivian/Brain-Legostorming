@@ -318,34 +318,34 @@ public class Robot {
     //funzione che mi dice se sono dritto
     public void amIStraight() {
         skew = 0;
-        double dx,dy, weight;
+//        double dx,dy, weight;
         int linesConsidered = 0;
-        double totWeight = 0;
+//        double totWeight = 0;
 
         for (int i = 0; i < 10; i++) {
             frame = myCamera.getFrame();
             //metodo che ottiene tutte le lines
             ObjectFind objectFind = new ObjectFinder(frame).findObject("l", "b");
-            balls = objectFind.getBalls();
+//            balls = objectFind.getBalls();
             lines = objectFind.getLines();
 
             for (Line line : lines) {
                 //Sono nella metà destra
                 if (line.p1.y > 240 && line.p2.y <= 240) {
-                    dx = Math.abs(line.p1.x - line.p2.x);
-                    dy = Math.abs(line.p1.y - line.p2.y);
-                    weight = dx + dy;
-                    totWeight += weight;
-                    skew += ((frame.height()/2 - line.p2.y) * weight);
+//                    dx = Math.abs(line.p1.x - line.p2.x);
+//                    dy = Math.abs(line.p1.y - line.p2.y);
+//                    weight = dx + dy;
+//                    totWeight += weight;
+                    skew += ((frame.height()/2 - line.p2.y) /** weight*/);
                 }
 
                 //Sono nella metà sinistra
                 if (line.p1.y < 240 && line.p2.y >= 240) {
-                    dx = Math.abs(line.p1.x - line.p2.x);
-                    dy = Math.abs(line.p1.y - line.p2.y);
-                    weight = dx + dy;
-                    totWeight += weight;
-                    skew += ((frame.height()/2 - line.p2.y) * weight);
+//                    dx = Math.abs(line.p1.x - line.p2.x);
+//                    dy = Math.abs(line.p1.y - line.p2.y);
+//                    weight = dx + dy;
+//                    totWeight += weight;
+                    skew += ((frame.height()/2 - line.p2.y) /** weight*/);
                 }
                 linesConsidered++;
             }
@@ -357,7 +357,7 @@ public class Robot {
             frame.release();
             Utility.sleep(2000);
         }
-        skew /= totWeight;
+//        skew /= totWeight;
         skew *= 10;
     }
 
