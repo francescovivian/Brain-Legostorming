@@ -107,7 +107,7 @@ public class Test1 extends Test {
         backToStart();
     }
 
-    //scanziona una riga andando verso sinistra
+    //scansiona una riga andando verso sinistra
     public void scanLeft(){
         for(int i=0;i<field.getColumn()-1;i++){ //scorro tutta la riga andando verso sinistra
             if(!testEnded) {            //se il test non è finito
@@ -148,7 +148,7 @@ public class Test1 extends Test {
         }
     }
 
-    //scanziona una riga andando verso destra
+    //scansiona una riga andando verso destra
     public void scanRight() {
         for (int i = 0; i < field.getColumn() - 1; i++) { //scorro tutta la riga andando verso destra
             if(!testEnded) {
