@@ -316,14 +316,20 @@ public class Robot {
     public void amIStraight() {
         skew = 0;
         //metodo che ottiene tutte le lines
+
+        frame = myCamera.getFrame();
+        ObjectFind objectFind = new ObjectFinder(frame).findObject("l", "b");
+        balls = objectFind.getBalls();
+        lines = objectFind.getLines();
+
         double dx,dy, weight;
         int linesConsidered = 0;
         double totWeight = 0;
 
         for (int i = 0; i < 10; i++) {
             frame = myCamera.getFrame();
-            ObjectFind objectFind = new ObjectFinder(frame).findObject("l");
-            //balls = objectFind.getBalls();
+            objectFind = new ObjectFinder(frame).findObject("l", "b");
+            balls = objectFind.getBalls();
             lines = objectFind.getLines();
 
             for (Line line : lines) {
@@ -353,6 +359,7 @@ public class Robot {
             //controlla che tutte le linee finiscano con l'angolazione corretta per il lato dello schermo
             //potrebbe ritornare la direzione in cui dovrebbe muoversi per raddrizzarsi
             frame.release();
+            Utility.sleep(250);
         }
         skew /= linesConsidered;
         skew /= totWeight;
