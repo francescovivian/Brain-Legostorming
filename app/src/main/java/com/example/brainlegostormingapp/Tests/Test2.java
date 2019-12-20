@@ -208,15 +208,64 @@ public class Test2 extends Test {
     public void dodgeRight(){
         robot.autoMove90Right();
         Utility.sleep(5000);
-        if(robot.identifyBall()){ //trovo una pallina a destra
-            robot.autoMove90Left();
+        if(robot.identifyBall()){               //trovo una pallina a destra
+            robot.autoMove90Left();             //mi raddrizzo verso l'alto
             Utility.sleep(5000);
-            dodgeLeft();
+            dodgeLeft();                        //tento il dodge verso sinistra
+        }
+        else if (true) {                        //TODO ho muro a destra e voglio andare verso l'alto
+            robot.autoMove90Left();             //mi raddrizzo verso l'alto
+            Utility.sleep(5000);
+            dodgeLeft();                        //tento il dodge verso sinistra
+        }
+        else {
+            robot.forwardOnce();                //mi sposto nella cella a destra
+            //TODO aggiorna posizione robot
+            Utility.sleep(5000);
+            robot.autoMove90Left();             //mi raddrizzo verso l'alto
+
         }
     }
 
     public void dodgeLeft(){
+        robot.autoMove90Left();
+        Utility.sleep(5000);
+        if(robot.identifyBall()){               //trovo una pallina a sinistra
+            robot.autoMove90Right();
+            Utility.sleep(5000);
+            //TODO tornare indietro e provare a passare a sinistra da riga piu in basso
+            // o a destra da riga piu in basso
+        }
+        else if (true) {                        //TODO ho muro a sinistra e voglio andare verso l'alto
+            robot.autoMove90Left();
+            Utility.sleep(5000);
+            dodgeLeft();
+        }
+        else {
+            robot.forwardOnce();                //mi sposto nella cella a sinistra
+            //TODO aggiorna posizione robot
+            Utility.sleep(5000);
+            robot.autoMove90Left();             //mi raddrizzo verso l'alto
+        }
+    }
 
+    public void alignToBall(){
+        if(true){ //todo posizione robot diversa da riga della mina
+            if(robot.identifyBall() && !rightBallAhead()){               //trovo una pallina davanti
+                dodgeRight();
+            }
+            else if(rightBallAhead()){
+                //todo raccoglie la mina
+            }
+            else {
+                robot.forwardOnce();
+                alignToBall();
+            }
+        }
+    }
+
+    private boolean rightBallAhead() {
+        return true; //todo controlla che davanti a se ci sia la cella con la mina da raccogliere
     }
 
     public void sorpassaSX(){
