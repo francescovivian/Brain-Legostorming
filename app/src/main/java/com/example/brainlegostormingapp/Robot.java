@@ -82,7 +82,7 @@ public class Robot {
         ls = api.getLightSensor(EV3.InputPort._4);
 
         skew = 0;
-        maxAcceptedSkew = 30;
+        maxAcceptedSkew = 800;
 
         try {
             rm.setType(TachoMotor.Type.LARGE);
@@ -358,6 +358,7 @@ public class Robot {
             Utility.sleep(2000);
         }
         skew /= totWeight;
+        skew *= 10;
     }
 
     public boolean identifyBall()
@@ -388,13 +389,14 @@ public class Robot {
     {
         int step1 = 0, step2 = (int) skew, step3 = 0;
         try {//Destra
-            if (skew > 0) {
+            if (skew < 0) {
+                step2 = -step2; //ricavo il valore postivo
                 lm.setPolarity(TachoMotor.Polarity.FORWARD);
                 lm.setTimeSpeed(2, step1, step2, step3, true);
                 rm.setPolarity(TachoMotor.Polarity.BACKWARDS);
                 rm.setTimeSpeed(2, step1, step2, step3, true);
             }//Sinistra
-            else if (skew < 0) {
+            else if (skew > 0) {
                 rm.setPolarity(TachoMotor.Polarity.FORWARD);
                 rm.setTimeSpeed(2, step1, step2, step3, true);
                 lm.setPolarity(TachoMotor.Polarity.BACKWARDS);
@@ -416,7 +418,7 @@ public class Robot {
     //si raddrizza sulla singola cella
     public void fixOrientation(){
         this.amIStraight();
-        while(skew > maxAcceptedSkew) {
+        while(Math.abs(skew) > maxAcceptedSkew) {
             this.straightenMe();
             this.amIStraight();
         }
