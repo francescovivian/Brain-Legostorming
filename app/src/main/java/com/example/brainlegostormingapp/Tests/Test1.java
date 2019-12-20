@@ -10,15 +10,13 @@ import java.util.concurrent.Future;
 
 public class Test1 extends Test {
 
-    private int totMine;
-    private int securedMine;
 
     private boolean testEnded;
 
      public Test1(Robot robot, GameField field, int mine){
         super(robot, field);
-        this.totMine=mine;
-        this.testEnded=false;
+        totMine=mine;
+        testEnded=false;
     }
 
     @Override
