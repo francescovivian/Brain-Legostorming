@@ -326,7 +326,7 @@ public class Robot {
         int linesConsidered = 0;
         double totWeight = 0;
 
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 5; i++) {
             frame = myCamera.getFrame();
             objectFind = new ObjectFinder(frame).findObject("l", "b");
             balls = objectFind.getBalls();
@@ -359,7 +359,7 @@ public class Robot {
             //controlla che tutte le linee finiscano con l'angolazione corretta per il lato dello schermo
             //potrebbe ritornare la direzione in cui dovrebbe muoversi per raddrizzarsi
             frame.release();
-            Utility.sleep(250);
+            Utility.sleep(1000);
         }
         skew /= linesConsidered;
         skew /= totWeight;
