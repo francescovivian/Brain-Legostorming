@@ -41,6 +41,8 @@ public class Robot {
     Camera myCamera;
     Mat frame;
 
+    private PixelGridView pixelGrid;
+
     private double skew, maxAcceptedSkew;
 
     public Robot(EV3.Api api) {
@@ -60,7 +62,8 @@ public class Robot {
         }
     }
 
-    public Robot(EV3.Api api, CameraBridgeViewBase camera) {
+    public Robot(EV3.Api api, CameraBridgeViewBase camera, PixelGridView pixelGrid) {
+        this.pixelGrid = pixelGrid;
         this.camera = camera;
         myCamera = new Camera();
         camera.setVisibility(SurfaceView.VISIBLE);
@@ -315,20 +318,14 @@ public class Robot {
     //funzione che mi dice se sono dritto
     public void amIStraight() {
         skew = 0;
-        //metodo che ottiene tutte le lines
-
-        frame = myCamera.getFrame();
-        ObjectFind objectFind = new ObjectFinder(frame).findObject("l", "b");
-        balls = objectFind.getBalls();
-        lines = objectFind.getLines();
-
         double dx,dy, weight;
         int linesConsidered = 0;
         double totWeight = 0;
 
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 4; i++) {
             frame = myCamera.getFrame();
-            objectFind = new ObjectFinder(frame).findObject("l", "b");
+            //metodo che ottiene tutte le lines
+            ObjectFind objectFind = new ObjectFinder(frame).findObject("l", "b");
             balls = objectFind.getBalls();
             lines = objectFind.getLines();
 
@@ -359,7 +356,7 @@ public class Robot {
             //controlla che tutte le linee finiscano con l'angolazione corretta per il lato dello schermo
             //potrebbe ritornare la direzione in cui dovrebbe muoversi per raddrizzarsi
             frame.release();
-            Utility.sleep(1000);
+            Utility.sleep(2000);
         }
         skew /= linesConsidered;
         skew /= totWeight;
@@ -425,5 +422,10 @@ public class Robot {
             this.straightenMe();
             this.amIStraight();
         }
+    }
+
+    public void changeCellChecked(int c, int r)
+    {
+        pixelGrid.changeCellChecked(c,r);
     }
 }

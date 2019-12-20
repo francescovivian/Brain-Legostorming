@@ -105,7 +105,7 @@ public class PixelGridView extends View {
     }
 
     public void changeCellChecked(int column, int row) {
-        cellChecked[column + 1][numRows - row - 2] = !cellChecked[column + 1][numRows - row - 2];
+        cellChecked[column + 1][numRows - row - 2] = true;
         invalidate();
     }
 }
