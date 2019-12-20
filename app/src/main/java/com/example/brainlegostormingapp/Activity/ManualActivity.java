@@ -95,10 +95,7 @@ public class ManualActivity extends AppCompatActivity {
                 btnLeft, btnRight, btnOpen,
                 btnClose, btnCancel);
 
-        if (!OpenCVLoader.initDebug()) Log.e(TAG, "Unable to load OpenCV");
-        else Log.d(TAG, "OpenCV loaded");
-
-        btnStart.setOnClickListener(v -> robot.forwardOnce());
+        btnStart.setOnClickListener(v -> robot.startRLEngines('f'));
 
         btnStop.setOnClickListener(v -> robot.stopAllEngines());
 
