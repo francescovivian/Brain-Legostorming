@@ -277,7 +277,9 @@ public class AutoActivity extends AppCompatActivity /*implements MyRecyclerViewA
         }*/
 
         //suono di fine prova
+        Utility.sleep(5000);
         Utility.playMp3Audio(getApplicationContext(),"mammamia.mp3");
+        Utility.sleep(5000);
         this.endAll();
     }
 
