@@ -73,7 +73,7 @@ public class AutoActivity extends AppCompatActivity implements MyRecyclerViewAda
 
     private CameraBridgeViewBase camera;
     private Camera myCamera;
-    //LinearLayout matrixView;
+    LinearLayout matrixView;
     private TextView txtCronometro;
     private Button btnMain, btnManual, btnStart, btnStop, btnSetMatrix, btnResetMatrix;
     private EditText eTxtMatrixR, eTxtMatrixC, eTxtStartX, eTxtStartY, eTxtMine;
@@ -123,7 +123,7 @@ public class AutoActivity extends AppCompatActivity implements MyRecyclerViewAda
         eTxtMatrixC = findViewById(R.id.eTxtDimC);
         eTxtStartX = findViewById(R.id.eTxtStartX);
         eTxtStartY = findViewById(R.id.eTxtStartY);
-        //matrixView = findViewById(R.id.matrixView);
+        matrixView = findViewById(R.id.matrixView);
         spnOrientation = findViewById(R.id.direction_spinner);
         camera = findViewById(R.id.cameraView);
         eTxtMine = findViewById(R.id.eTxtMine);
@@ -170,7 +170,7 @@ public class AutoActivity extends AppCompatActivity implements MyRecyclerViewAda
                 //Per fare i quadrati rossi
                 //pixelGrid.changeCellChecked(2,3);
 
-                //matrixView.addView(pixelGrid);
+                matrixView.addView(pixelGrid);
             } catch (NumberFormatException ignored) {
                 ignored.printStackTrace();
             }
@@ -217,7 +217,7 @@ public class AutoActivity extends AppCompatActivity implements MyRecyclerViewAda
             endAll();
         });
 
-
+        /*
         //todo la matrice viene inizializzata qui. ma poi andrebbe aggiornata
         // (oppure inizializata in un onlick da qualche altra parte)
         //data to populate the RecyclerView with
@@ -231,7 +231,7 @@ public class AutoActivity extends AppCompatActivity implements MyRecyclerViewAda
         recyclerView.setLayoutManager(new GridLayoutManager(this, numberOfColumns));
         adapter = new MyRecyclerViewAdapter(this, data);
         adapter.setClickListener(this);
-        recyclerView.setAdapter(adapter);
+        recyclerView.setAdapter(adapter);*/
     }
 
 
@@ -260,7 +260,7 @@ public class AutoActivity extends AppCompatActivity implements MyRecyclerViewAda
     private void legoMain(EV3.Api api) {
         //final String TAG = Prelude.ReTAG("legoMain");
 
-        robot = new Robot(api, camera);
+        robot = new Robot(api, camera, pixelGrid);
 
         //selezione della prova
         if (choosen == 1) {

@@ -211,12 +211,12 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <!--<LinearLayout
+        <LinearLayout
             android:id="@+id/matrixView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal">
-        </LinearLayout>-->
+        </LinearLayout>
 
         <org.opencv.android.JavaCameraView
             android:layout_width="fill_parent"
@@ -227,7 +227,8 @@
             opencv:camera_id="any" />
 
     </LinearLayout>
-    <RelativeLayout
+
+    <!--<RelativeLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -237,5 +238,5 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:visibility="visible" />
-    </RelativeLayout>
+    </RelativeLayout>-->
 </LinearLayout>

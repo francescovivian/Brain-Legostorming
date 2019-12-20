@@ -41,6 +41,8 @@ public class Robot {
     Camera myCamera;
     Mat frame;
 
+    private PixelGridView pixelGrid;
+
     private double skew, maxAcceptedSkew;
 
     public Robot(EV3.Api api) {
@@ -60,7 +62,8 @@ public class Robot {
         }
     }
 
-    public Robot(EV3.Api api, CameraBridgeViewBase camera) {
+    public Robot(EV3.Api api, CameraBridgeViewBase camera, PixelGridView pixelGrid) {
+        this.pixelGrid = pixelGrid;
         this.camera = camera;
         myCamera = new Camera();
         camera.setVisibility(SurfaceView.VISIBLE);
@@ -425,5 +428,10 @@ public class Robot {
             this.straightenMe();
             this.amIStraight();
         }
+    }
+
+    public void changeCellChecked(int c, int r)
+    {
+        pixelGrid.changeCellChecked(c,r);
     }
 }
