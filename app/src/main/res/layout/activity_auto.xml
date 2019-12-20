@@ -207,25 +207,24 @@
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
         android:orientation="vertical">
 
-        <LinearLayout
-            android:id="@+id/matrixView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal">
-        </LinearLayout>
-
         <org.opencv.android.JavaCameraView
+            android:id="@+id/cameraView"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:visibility="gone"
-            android:id="@+id/cameraView"
-            opencv:show_fps="true"
-            opencv:camera_id="any" />
+            opencv:camera_id="any"
+            opencv:show_fps="true" />
+    </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/matrixView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
     </LinearLayout>
 
     <!--<RelativeLayout

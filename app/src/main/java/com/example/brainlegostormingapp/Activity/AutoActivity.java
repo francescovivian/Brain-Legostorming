@@ -50,7 +50,7 @@ import it.unive.dais.legodroid.lib.EV3;
 import it.unive.dais.legodroid.lib.comm.BluetoothConnection;
 import it.unive.dais.legodroid.lib.util.Prelude;
 
-public class AutoActivity extends AppCompatActivity implements MyRecyclerViewAdapter.ItemClickListener {
+public class AutoActivity extends AppCompatActivity /*implements MyRecyclerViewAdapter.ItemClickListener*/ {
     private static final String TAG = "AutoActivity";
     private long tempoInizio, attuale;
     private int secondi, minuti, ore, millisecondi;
@@ -213,9 +213,7 @@ public class AutoActivity extends AppCompatActivity implements MyRecyclerViewAda
             }
         });
 
-        btnStop.setOnClickListener(v -> {
-            endAll();
-        });
+        btnStop.setOnClickListener(v -> endAll());
 
         /*
         //todo la matrice viene inizializzata qui. ma poi andrebbe aggiornata
@@ -234,12 +232,12 @@ public class AutoActivity extends AppCompatActivity implements MyRecyclerViewAda
         recyclerView.setAdapter(adapter);*/
     }
 
-
+    /*
     //TODO: qui va messa la logica che si vuole implementare per un click sulla matrice
     @Override
     public void onItemClick(View view, int position) {
         Log.i("TAG", "You clicked " + adapter.getItem(position) + ", which is at cell position " + position);
-    }
+    }*/
 
     //termina la prova, calcola e mostra il tempo finale e TODO mostra la matrice
     private void endAll()
@@ -251,8 +249,8 @@ public class AutoActivity extends AppCompatActivity implements MyRecyclerViewAda
         ore = (int) (attuale / 3600000) % 24;
         millisecondi = (int) attuale % 1000;
         aggiornaTimer(txtCronometro, String.format("%02d:%02d:%02d:%03d", ore, minuti, secondi, millisecondi));
-        //ev3.cancel();
-        //bluechan.close();
+        ev3.cancel();
+        bluechan.close();
         Utility.elementToggle(btnMain, btnManual);
         Utility.elementVisibilityToggle(btnStop,txtCronometro,btnSetMatrix);
     }

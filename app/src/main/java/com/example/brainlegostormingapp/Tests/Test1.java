@@ -15,8 +15,8 @@ public class Test1 extends Test {
 
      public Test1(Robot robot, GameField field, int mine){
         super(robot, field);
-        totMine=mine;
-        testEnded=false;
+        this.totMine=mine;
+        this.testEnded=false;
     }
 
     @Override
