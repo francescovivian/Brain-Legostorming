@@ -249,8 +249,8 @@ public class AutoActivity extends AppCompatActivity /*implements MyRecyclerViewA
         ore = (int) (attuale / 3600000) % 24;
         millisecondi = (int) attuale % 1000;
         aggiornaTimer(txtCronometro, String.format("%02d:%02d:%02d:%03d", ore, minuti, secondi, millisecondi));
-        ev3.cancel();
-        bluechan.close();
+        //ev3.cancel();
+        //bluechan.close();
         Utility.elementToggle(btnMain, btnManual);
         Utility.elementVisibilityToggle(btnStop,txtCronometro,btnSetMatrix);
     }
