@@ -331,7 +331,7 @@ public class Robot {
 
             for (Line line : lines) {
                 //Sono nella metà destra
-                if (line.p2.y < 240 && line.p1.y >= 240) {
+                if (line.p1.y > 240 && line.p2.y <= 240) {
                     dx = Math.abs(line.p1.x - line.p2.x);
                     dy = Math.abs(line.p1.y - line.p2.y);
                     weight = dx + dy;
@@ -340,7 +340,7 @@ public class Robot {
                 }
 
                 //Sono nella metà sinistra
-                if (line.p1.y > 240 && line.p2.y <= 240) {
+                if (line.p1.y < 240 && line.p2.y >= 240) {
                     dx = Math.abs(line.p1.x - line.p2.x);
                     dy = Math.abs(line.p1.y - line.p2.y);
                     weight = dx + dy;
