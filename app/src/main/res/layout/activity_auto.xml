@@ -159,6 +159,22 @@
             android:inputType="numberSigned"
             android:importantForAutofill="no" />
 
+        <TextView
+            android:id="@+id/txtDistance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="D:"
+            android:textSize="25sp"
+            tools:ignore="HardcodedText" />
+
+        <TextView
+            android:id="@+id/distance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0"
+            android:textSize="25sp"
+            tools:ignore="HardcodedText" />
+
     </LinearLayout>
 
     <LinearLayout

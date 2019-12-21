@@ -74,13 +74,13 @@ public class AutoActivity extends AppCompatActivity /*implements MyRecyclerViewA
     private CameraBridgeViewBase camera;
     private Camera myCamera;
     LinearLayout matrixView;
-    private TextView txtCronometro;
+    private TextView txtCronometro, txtDistance;
     private Button btnMain, btnManual, btnStart, btnStop, btnSetMatrix, btnResetMatrix;
     private EditText eTxtMatrixR, eTxtMatrixC, eTxtStartX, eTxtStartY, eTxtMine;
     private Spinner spnOrientation;
     PixelGridView pixelGrid;
 
-    MyRecyclerViewAdapter adapter;
+    //MyRecyclerViewAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,6 +113,7 @@ public class AutoActivity extends AppCompatActivity /*implements MyRecyclerViewA
 
         //region FINDVIEW
         txtCronometro = findViewById(R.id.cronometro);
+        txtDistance = findViewById(R.id.distance);
         btnMain = findViewById(R.id.mainButton);
         btnManual = findViewById(R.id.manualButton);
         btnStart = findViewById(R.id.btnStartButton);
@@ -249,7 +250,7 @@ public class AutoActivity extends AppCompatActivity /*implements MyRecyclerViewA
         minuti = (int) (attuale / 60000) % 60;
         ore = (int) (attuale / 3600000) % 24;
         millisecondi = (int) attuale % 1000;
-        aggiornaTimer(txtCronometro, String.format("%02d:%02d:%02d:%03d", ore, minuti, secondi, millisecondi));
+        runOnUiThread(() -> txtCronometro.setText(String.format("%02d:%02d:%02d:%03d", ore, minuti, secondi, millisecondi)));
         //ev3.cancel();
         //bluechan.close();
         Utility.elementToggle(btnMain, btnManual);
@@ -259,7 +260,7 @@ public class AutoActivity extends AppCompatActivity /*implements MyRecyclerViewA
     private void legoMain(EV3.Api api) {
         //final String TAG = Prelude.ReTAG("legoMain");
 
-        robot = new Robot(api, camera, pixelGrid);
+        robot = new Robot(api, camera, pixelGrid, this, txtDistance);
 
         //selezione della prova
         if (choosen == 1) {
@@ -282,10 +283,6 @@ public class AutoActivity extends AppCompatActivity /*implements MyRecyclerViewA
         Utility.playMp3Audio(getApplicationContext(),"mammamia.mp3");
         Utility.sleep(5000);
         this.endAll();
-    }
-
-    public void aggiornaTimer(TextView tv, String tempo) {
-        runOnUiThread(() -> tv.setText(tempo));
     }
 
     public void avviaFotocamera() {

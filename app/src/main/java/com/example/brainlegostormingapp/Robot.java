@@ -41,6 +41,9 @@ public class Robot {
     Camera myCamera;
     Mat frame;
 
+    Activity activity;
+    TextView txtDistance;
+
     private PixelGridView pixelGrid;
 
     private double skew, maxAcceptedSkew;
@@ -62,7 +65,9 @@ public class Robot {
         }
     }
 
-    public Robot(EV3.Api api, CameraBridgeViewBase camera, PixelGridView pixelGrid) {
+    public Robot(EV3.Api api, CameraBridgeViewBase camera, PixelGridView pixelGrid, Activity activity, TextView txtDistance) {
+        this.activity = activity;
+        this.txtDistance = txtDistance;
         this.pixelGrid = pixelGrid;
         this.camera = camera;
         myCamera = new Camera();
@@ -369,7 +374,7 @@ public class Robot {
                 Float dist=this.getDistance().get();
                 if(dist<35)
                     count++;
-                System.out.println(dist);
+                activity.runOnUiThread(() -> txtDistance.setText(dist.toString()));
             }
             return !this.minePickedUp && count >=8;
         } catch (InterruptedException | ExecutionException e) {

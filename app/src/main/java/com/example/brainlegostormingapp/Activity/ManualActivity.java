@@ -33,13 +33,14 @@ public class ManualActivity extends AppCompatActivity {
 
     private Thread cronometro;
     boolean conta;
+    private int secondi, minuti, ore, millisecondi;
 
     private BluetoothConnection.BluetoothChannel bluechan;
     private EV3 ev3;
 
     private Robot robot;
 
-    TextView testoCronometro;
+    TextView txtCronometro;
 
     Button btnMain, btnAuto, btnStart, btnStop, btnLeft, btnRight, btnRetro, btnOpen, btnClose, btnConn, btnCancel;
 
@@ -80,7 +81,7 @@ public class ManualActivity extends AppCompatActivity {
             startActivity(autoIntent);
         });
 
-        testoCronometro = findViewById(R.id.cronometro);
+        txtCronometro = findViewById(R.id.cronometro);
         btnStart = findViewById(R.id.startButton);
         btnStop = findViewById(R.id.stopButton);
         btnLeft = findViewById(R.id.leftButton);
@@ -126,7 +127,6 @@ public class ManualActivity extends AppCompatActivity {
                     cronometro = new Thread(() ->
                     {
                         long attuale, MINUTO = 60000, ORA = 3600000, tempoInizio = System.currentTimeMillis();
-                        int secondi, minuti, ore, millisecondi;
                         conta = true;
 
                         while (conta) {
@@ -141,8 +141,7 @@ public class ManualActivity extends AppCompatActivity {
                             minuti = (int) (attuale / MINUTO) % 60;
                             ore = (int) (attuale / ORA) % 24;
                             millisecondi = (int) attuale % 1000;
-
-                            aggiornaTimer(testoCronometro, String.format("%02d:%02d:%02d:%03d", ore, minuti, secondi, millisecondi));
+                            runOnUiThread(() -> txtCronometro.setText(String.format("%02d:%02d:%02d:%03d", ore, minuti, secondi, millisecondi)));
                         }
                     });
                     cronometro.start();
@@ -189,7 +188,7 @@ public class ManualActivity extends AppCompatActivity {
         runOnUiThread(() -> findViewById(R.id.colorView).setBackgroundColor(LightSensor.Color.WHITE.toARGB32()));*/
     }
 
-    public void aggiornaTimer(TextView tv, String tempo) {
-        runOnUiThread(() -> tv.setText(tempo));
+    public void aggiornaTimer(String tempo) {
+        runOnUiThread(() -> txtCronometro.setText(tempo));
     }
 }
