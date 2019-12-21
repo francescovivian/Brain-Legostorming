@@ -429,8 +429,8 @@ public class Robot {
         }
     }
 
-    public void changeCellChecked(int c, int r)
+    public void changeCellChecked(int c, int r, int value)
     {
-        pixelGrid.changeCellChecked(c,r);
+        pixelGrid.changeCellChecked(c,r,value);
     }
 }

@@ -11,10 +11,13 @@ import android.view.View;
 public class PixelGridView extends View {
     private int numColumns, numRows;
     private int cellWidth, cellHeight;
-    private Paint blackPaint = new Paint();
     private Paint textPaint = new Paint();
+    private Paint blackPaint = new Paint();
     private Paint redPaint = new Paint();
-    private boolean[][] cellChecked;
+    private Paint greenPaint = new Paint();
+    private Paint yellowPaint = new Paint();
+    private Paint bluePaint = new Paint();
+    private int[][] cellChecked;
     boolean start = false;
     private char orientation;
 
@@ -25,13 +28,19 @@ public class PixelGridView extends View {
     public PixelGridView(Context context, AttributeSet attrs, char orientation) {
         super(context, attrs);
         this.orientation = orientation;
+        textPaint.setStyle(Paint.Style.FILL_AND_STROKE);
+        textPaint.setColor(Color.BLACK);
+        textPaint.setTextSize(25);
         blackPaint.setStyle(Paint.Style.FILL_AND_STROKE);
         blackPaint.setColor(Color.BLACK);
         redPaint.setStyle(Paint.Style.FILL_AND_STROKE);
         redPaint.setColor(Color.RED);
-        textPaint.setStyle(Paint.Style.FILL_AND_STROKE);
-        textPaint.setColor(Color.BLACK);
-        textPaint.setTextSize(25);
+        greenPaint.setStyle(Paint.Style.FILL_AND_STROKE);
+        greenPaint.setColor(Color.GREEN);
+        yellowPaint.setStyle(Paint.Style.FILL_AND_STROKE);
+        yellowPaint.setColor(Color.YELLOW);
+        bluePaint.setStyle(Paint.Style.FILL_AND_STROKE);
+        bluePaint.setColor(Color.BLUE);
     }
 
     public void setNumRows(int numRows) {
@@ -57,7 +66,7 @@ public class PixelGridView extends View {
         cellHeight = getHeight() / numRows;
 
         if (!start) {
-            cellChecked = new boolean[numColumns][numRows];
+            cellChecked = new int[numColumns][numRows];
             start = true;
         }
 
@@ -77,10 +86,40 @@ public class PixelGridView extends View {
 
         for (int i = 0; i < numColumns; i++) {
             for (int j = 0; j < numRows; j++) {
-                if (cellChecked[i][j]) {
+                if (cellChecked[i][j] == 1) {
                     canvas.drawRect(i * cellWidth, j * cellHeight,
                             (i + 1) * cellWidth, (j + 1) * cellHeight,
                             redPaint);
+                }
+            }
+        }
+
+        for (int i = 0; i < numColumns; i++) {
+            for (int j = 0; j < numRows; j++) {
+                if (cellChecked[i][j] == 2) {
+                    canvas.drawRect(i * cellWidth, j * cellHeight,
+                            (i + 1) * cellWidth, (j + 1) * cellHeight,
+                            greenPaint);
+                }
+            }
+        }
+
+        for (int i = 0; i < numColumns; i++) {
+            for (int j = 0; j < numRows; j++) {
+                if (cellChecked[i][j] == 3) {
+                    canvas.drawRect(i * cellWidth, j * cellHeight,
+                            (i + 1) * cellWidth, (j + 1) * cellHeight,
+                            yellowPaint);
+                }
+            }
+        }
+
+        for (int i = 0; i < numColumns; i++) {
+            for (int j = 0; j < numRows; j++) {
+                if (cellChecked[i][j] == 4) {
+                    canvas.drawRect(i * cellWidth, j * cellHeight,
+                            (i + 1) * cellWidth, (j + 1) * cellHeight,
+                            bluePaint);
                 }
             }
         }
@@ -106,8 +145,11 @@ public class PixelGridView extends View {
         }
     }
 
-    public void changeCellChecked(int column, int row) {
-        if (orientation == 's') cellChecked[column + 1][numRows - row - 2] = true;
+    public void changeCellChecked(int column, int row, int value) {
+        if (orientation == 's') cellChecked[column + 1][numRows - row - 2] = value;
+        if (orientation == 'n') cellChecked[numColumns - column - 1][row] = value;
+        //if (orientation == 'e') cellChecked[column + 1][numRows - row - 2] = value;
+        //if (orientation == 'w') cellChecked[column + 1][numRows - row - 2] = value;
         invalidate();
     }
 }
