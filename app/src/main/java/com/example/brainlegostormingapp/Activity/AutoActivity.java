@@ -215,7 +215,21 @@ public class AutoActivity extends AppCompatActivity /*implements MyRecyclerViewA
             }
         });
 
-        btnStop.setOnClickListener(v -> endAll());
+        //termina la prova, calcola e mostra il tempo finale e TODO mostra la matrice
+        btnStop.setOnClickListener(v ->
+        {
+            robot.stopRLEngines();
+            attuale = System.currentTimeMillis() - tempoInizio;
+            secondi = (int) (attuale / 1000) % 60;
+            minuti = (int) (attuale / 60000) % 60;
+            ore = (int) (attuale / 3600000) % 24;
+            millisecondi = (int) attuale % 1000;
+            runOnUiThread(() -> txtCronometro.setText(String.format("%02d:%02d:%02d:%03d", ore, minuti, secondi, millisecondi)));
+            //ev3.cancel();
+            //bluechan.close();
+            Utility.elementToggle(btnMain, btnManual);
+            Utility.elementVisibilityToggle(btnStop,txtCronometro,btnSetMatrix);
+        });
 
         /*
         //todo la matrice viene inizializzata qui. ma poi andrebbe aggiornata
@@ -241,22 +255,6 @@ public class AutoActivity extends AppCompatActivity /*implements MyRecyclerViewA
         Log.i("TAG", "You clicked " + adapter.getItem(position) + ", which is at cell position " + position);
     }*/
 
-    //termina la prova, calcola e mostra il tempo finale e TODO mostra la matrice
-    private void endAll()
-    {
-        robot.stopRLEngines();
-        attuale = System.currentTimeMillis() - tempoInizio;
-        secondi = (int) (attuale / 1000) % 60;
-        minuti = (int) (attuale / 60000) % 60;
-        ore = (int) (attuale / 3600000) % 24;
-        millisecondi = (int) attuale % 1000;
-        runOnUiThread(() -> txtCronometro.setText(String.format("%02d:%02d:%02d:%03d", ore, minuti, secondi, millisecondi)));
-        //ev3.cancel();
-        //bluechan.close();
-        Utility.elementToggle(btnMain, btnManual);
-        Utility.elementVisibilityToggle(btnStop,txtCronometro,btnSetMatrix);
-    }
-
     private void legoMain(EV3.Api api) {
         //final String TAG = Prelude.ReTAG("legoMain");
 
@@ -281,8 +279,8 @@ public class AutoActivity extends AppCompatActivity /*implements MyRecyclerViewA
         //suono di fine prova
         Utility.sleep(5000);
         Utility.playMp3Audio(getApplicationContext(),"mammamia.mp3");
-        Utility.sleep(5000);
-        this.endAll();
+        //Utility.sleep(5000);
+        //btnStop.performClick();
     }
 
     public void avviaFotocamera() {
