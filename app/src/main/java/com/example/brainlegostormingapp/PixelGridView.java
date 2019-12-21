@@ -148,8 +148,22 @@ public class PixelGridView extends View {
     public void changeCellChecked(int column, int row, int value) {
         if (orientation == 's') cellChecked[column + 1][numRows - row - 2] = value;
         if (orientation == 'n') cellChecked[numColumns - column - 1][row] = value;
-        //if (orientation == 'e') cellChecked[column + 1][numRows - row - 2] = value;
-        //if (orientation == 'w') cellChecked[column + 1][numRows - row - 2] = value;
+        if (orientation == 'e')
+        {
+            int tmp;
+            tmp = column;
+            column = row;
+            row = tmp;
+            cellChecked[numColumns - column - 1][numRows - row - 2] = value;
+        }
+        if (orientation == 'o')
+        {
+            int tmp;
+            tmp = column;
+            column = row;
+            row = tmp;
+            cellChecked[column + 1][row] = value;
+        }
         invalidate();
     }
 }

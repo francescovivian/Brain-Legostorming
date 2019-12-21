@@ -170,7 +170,7 @@ public class AutoActivity extends AppCompatActivity /*implements MyRecyclerViewA
                 gameField = new GameField(dimR, dimC, orientation, startX, startY);
 
                 //Per fare i quadrati rossi
-                //pixelGrid.changeCellChecked(2,3);
+                //pixelGrid.changeCellChecked(0,2,1);
 
                 matrixView.addView(pixelGrid);
             } catch (NumberFormatException ignored) {
@@ -180,7 +180,7 @@ public class AutoActivity extends AppCompatActivity /*implements MyRecyclerViewA
 
         btnResetMatrix.setOnClickListener(e -> {
             try {
-                //matrixView.removeAllViews();
+                matrixView.removeAllViews();
                 eTxtMatrixR.setText("0");
                 eTxtMatrixC.setText("0");
                 eTxtStartX.setText("0");
