@@ -320,11 +320,11 @@ public class Test2 extends Test {
         while(field.getRobotPosition().getX()!=finish.getX() || field.getRobotPosition().getY()!=finish.getY()){
             int best_dir=productivePath();
             if(best_dir!=-1){                       //esiste un percorso migliore
-                player.setOrientation(best_dir);    //mi giro e faccio un passo in quella direzione
+                this.setOrientation(best_dir);    //mi giro e faccio un passo in quella direzione
                 forwardOnce();
             }else{                                  //non esiste un percorso migliore, mi muovo in una cella random che non sia già stata percorsa
                 int dirToMove=randomDirection();
-                player.setOrientation(dirToMove);
+                this.setOrientation(dirToMove);
                 forwardOnce();
             }
 
@@ -339,6 +339,55 @@ public class Test2 extends Test {
         }
     }
 
+    private void setOrientation(int newOrientation) {
+        int movement = robotOrientation - newOrientation;
+        if (robotOrientation == 0){
+            if(newOrientation == 1) {
+                robot.autoMove90Right();
+            }
+            else if (newOrientation == 2){
+                robot.autoMove180Right();
+            }
+            else if (newOrientation == 3){
+                robot.autoMove90Left();
+            }
+        }
+        else if (robotOrientation == 1){
+            if(newOrientation == 2) {
+                robot.autoMove90Right();
+            }
+            else if (newOrientation == 3){
+                robot.autoMove180Right();
+            }
+            else if (newOrientation == 0){
+                robot.autoMove90Left();
+            }
+        }
+        else if (robotOrientation == 2){
+            if(newOrientation == 3) {
+                robot.autoMove90Right();
+            }
+            else if (newOrientation == 0){
+                robot.autoMove180Right();
+            }
+            else if (newOrientation == 1){
+                robot.autoMove90Left();
+            }
+        }
+        else if (robotOrientation == 3){
+            if(newOrientation == 0) {
+                robot.autoMove90Right();
+            }
+            else if (newOrientation == 1){
+                robot.autoMove180Right();
+            }
+            else if (newOrientation == 2){
+                robot.autoMove90Left();
+            }
+        }
+        robotOrientation = newOrientation;
+    }
+
     public int productivePath(){
         int initialOrientation=robotOrientation;
         int md_best=md(field.getRobotPosition(),finish);
@@ -346,7 +395,7 @@ public class Test2 extends Test {
 
         ArrayList<Integer> newDirs= new ArrayList<Integer>();
         for(int i=0;i<4;i++){           //per tutte le direzioni
-            player.setOrientation(i);  //todo: dappertutto
+            this.setOrientation(i);  //todo: dappertutto
             if(isAllowedForward()){     //se posso andarci
                 robot.forwardOnce();          //ci vado
                 if(mainField[convertToX("NOW")][convertToY("NOW")]!=2)        //se non ci sono già stato
@@ -355,11 +404,11 @@ public class Test2 extends Test {
                 robot.forwardOnce();
             }
         }
-        player.setOrientation(initialOrientation);  //per sicurezza, non si sa mai
+        this.setOrientation(initialOrientation);  //per sicurezza, non si sa mai
 
         if(newDirs.size()>0){   //c'è almeno una direzione in cui non sono mai stato
             for(int i=0;i<newDirs.size();i++){
-                player.setOrientation(newDirs.get(i));
+                this.setOrientation(newDirs.get(i));
                 if(isAllowedForward()){
                     Position fakePosition=new Position();
                     robot.forwardOnce();                          //avanzo ipoteticamente di una cella
@@ -376,7 +425,7 @@ public class Test2 extends Test {
             }
         }else{
             for(int i=0;i<4;i++){
-                player.setOrientation(i);
+                this.setOrientation(i);
                 if(isAllowedForward()){
                     forwardOnce();                          //avanzo ipoteticamente di una cella
                     if(field.mainField[field.convertToX("NOW")][field.convertToY("NOW")] != 2){ //se la cella non è già stata visitata
