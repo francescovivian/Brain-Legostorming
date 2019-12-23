@@ -489,5 +489,35 @@ public class Test2 extends Test {
             return finish.getX();
         }
     }
+
+    public ArrayList<Integer> betterMdDirections(){
+        ArrayList<Integer> directions=new ArrayList<Integer>();
+
+        int currentMD=md(field.getRobotPosition(),finish);  //md dalla posizione del robot
+
+        for(int i=0;i<4;i++){                               //per ogni direzione
+            Position fakePosition=getNextPosition(i);       //immagino di muovermi  in quella direzione
+
+            if(fakePosition!=null) {
+                int md = md(fakePosition, finish);          //mi calcolo la md
+                if (md < currentMD)                         //se è migliore di quella dalla posizione corrente
+                    directions.add(i);                      //la aggiungo al vettore
+            }
+        }
+        return directions;                                  //ritorno il vettore con le direzioni migliori in cui posso muovermi
+    }
+
+    public Position getNextPosition(int orientation){       //immmagino di spostarmi dalla posizione nella direzione passata dal costruttore senza muovere il robot
+        if(orientation==0 && field.getRobotPosition().getY()<field.getRow()-1)
+            return new Position(field.getRobotPosition().getX(),field.getRobotPosition().getY()+1);
+        else if(orientation==1 && field.getRobotPosition().getX()<field.getColumn()-1)
+            return new Position(field.getRobotPosition().getX()+1,field.getRobotPosition().getY());
+        else if(orientation==2 && field.getRobotPosition().getY()>0)
+            return new Position(field.getRobotPosition().getX(),field.getRobotPosition().getY()-1);
+        else if(orientation==3 && field.getRobotPosition().getX()>0)
+            return new Position(field.getRobotPosition().getX()-1,field.getRobotPosition().getY());
+        else
+            return null;
+    }
 }
 
