@@ -340,8 +340,22 @@ public class Test2 extends Test {
     }
 
     private void setOrientation(int newOrientation) {
-        int movement = robotOrientation - newOrientation;
-        if (robotOrientation == 0){
+        int NewOrientationAux = 0;
+        if (newOrientation == 0){
+            NewOrientationAux = 4;
+        }
+        int movement = robotOrientation - NewOrientationAux;
+        if (movement == 1){
+            robot.autoMove90Right();
+        }
+        else if (movement == 2){
+            robot.autoMove180Right();
+        }
+        else if (movement == 3){
+            robot.autoMove90Left();
+        }
+
+        /*if (robotOrientation == 0){
             if(newOrientation == 1) {
                 robot.autoMove90Right();
             }
@@ -384,7 +398,7 @@ public class Test2 extends Test {
             else if (newOrientation == 2){
                 robot.autoMove90Left();
             }
-        }
+        }*/
         robotOrientation = newOrientation;
     }
 
