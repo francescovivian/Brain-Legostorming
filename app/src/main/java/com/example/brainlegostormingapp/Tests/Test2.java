@@ -321,21 +321,21 @@ public class Test2 extends Test {
             int best_dir=productivePath();
             if(best_dir!=-1){                       //esiste un percorso migliore
                 this.setOrientation(best_dir);    //mi giro e faccio un passo in quella direzione
-                forwardOnce();
+                robot.forwardOnce();
             }else{                                  //non esiste un percorso migliore, mi muovo in una cella random che non sia già stata percorsa
                 int dirToMove=randomDirection();
                 this.setOrientation(dirToMove);
-                forwardOnce();
+                robot.forwardOnce();
             }
 
-            mosse.add(new Position(field.now.x,field.now.y));
+            /*mosse.add(new Position(field.now.x,field.now.y));
             for(int i=0;i<mosse.size();i++){
                 System.out.print("("+mosse.get(i).x+";"+mosse.get(i).y+")->");
             }
             System.out.println();
+            */
             printPlayerPositionInMatrix();
-            field.printField();
-            Utility.sleep(2000);
+            //field.printField();
         }
     }
 
@@ -389,60 +389,20 @@ public class Test2 extends Test {
     }
 
     public int productivePath(){
-        int initialOrientation=robotOrientation;
-        int md_best=md(field.getRobotPosition(),finish);
-        int best_dir=-1;
 
-        ArrayList<Integer> newDirs= new ArrayList<Integer>();
-        for(int i=0;i<4;i++){           //per tutte le direzioni
-            this.setOrientation(i);  //todo: dappertutto
-            if(isAllowedForward()){     //se posso andarci
-                robot.forwardOnce();          //ci vado
-                if(mainField[convertToX("NOW")][convertToY("NOW")]!=2)        //se non ci sono già stato
-                    newDirs.add(i);     //aggiungo la direzione nell'array
-                robot.autoMove180Left(); //torno da dove sono venuto
-                robot.forwardOnce();
+        int best_dir=-1;                                    //se ritorno -1 non ho trovato una direzione migliore, dovrò muovermi random
+
+        ArrayList<Integer> betterDirections=betterMdDirections();
+
+        for(int i=0;i<betterDirections.size();i++){         //per tutte le direzioni
+            int direction=betterDirections.get(i);          //prendo quella corrente
+            Position p=getNextPosition(direction);          //fake posizione andando in quella direzione
+            if(mainField[p.getX()][p.getY()]!=2){           //se non ci sono mai passato
+                setOrientation(direction);                  //mi giro da quella parte
+                if(!robot.identifyBall())                   //se non c'è una mina
+                    return direction;                       //ritorno la direzione corrente che userò per muovermi
             }
         }
-        this.setOrientation(initialOrientation);  //per sicurezza, non si sa mai
-
-        if(newDirs.size()>0){   //c'è almeno una direzione in cui non sono mai stato
-            for(int i=0;i<newDirs.size();i++){
-                this.setOrientation(newDirs.get(i));
-                if(isAllowedForward()){
-                    Position fakePosition=new Position();
-                    robot.forwardOnce();                          //avanzo ipoteticamente di una cella
-                    if(mainField[convertToX("NOW")][convertToY("NOW")] != 2){ //se la cella non è già stata visitata
-                        int md=md(field.getRobotPosition(),finish);  //calcolo la md di quella posizione
-                        if(md<md_best){                     //se ottengo una distanza migliore di quella che avevo
-                            md_best=md;                     //la salvo come migliore
-                            best_dir=robotOrientation;    //mi salvo la direzione di tale distanza migliore
-                        }
-                    }
-                    robot.autoMove180Left();                         //mi giro di 180°
-                    robot.forwardOnce();                      //torno alla cella di partenza
-                }
-            }
-        }else{
-            for(int i=0;i<4;i++){
-                this.setOrientation(i);
-                if(isAllowedForward()){
-                    forwardOnce();                          //avanzo ipoteticamente di una cella
-                    if(field.mainField[field.convertToX("NOW")][field.convertToY("NOW")] != 2){ //se la cella non è già stata visitata
-                        int md=md(field.now,field.finish);  //calcolo la md di quella posizione
-                        if(md<md_best){                     //se ottengo una distanza migliore di quella che avevo
-                            md_best=md;                     //la salvo come migliore
-                            best_dir=player.orientation;    //mi salvo la direzione di tale distanza migliore
-                        }
-                    }
-                    turnLeft();                         //mi giro di 180°
-                    turnLeft();
-                    forwardOnce();                      //torno alla cella di partenza
-                }
-            }
-        }
-        player.orientation=initialOrientation;      //rimetto il player nell'orientamento di partenza
-        System.out.println("Direzione migliore ProductivePath: " + best_dir);
         return best_dir;
     }
 
@@ -518,6 +478,10 @@ public class Test2 extends Test {
             return new Position(field.getRobotPosition().getX()-1,field.getRobotPosition().getY());
         else
             return null;
+    }
+
+    public void printPlayerPositionInMatrix(){
+        mainField[convertToX("NOW")][convertToY("NOW")]=2;
     }
 }
 
