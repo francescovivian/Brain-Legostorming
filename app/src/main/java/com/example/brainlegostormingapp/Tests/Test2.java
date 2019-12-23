@@ -27,14 +27,29 @@ public class Test2 extends Test {
     private int IDRobot;
     Position positionReceived;
 
-    //Variabili aggiunte da TheExpert
-    ArrayList<Position> positionList= new ArrayList<Position>();
-    ArrayList<String> movements=new ArrayList<String>();
+    int[][] mainField;
+
+
+    //Variabili algoritmo Vivian
+    int robotOrientation;
+    Position finish; //todo: servirà a contenere la posizione da raggiungere in quel momento
     //Fine
 
-    public Test2(Robot robot, GameField field, Context context) {
+    public Test2(Robot robot, GameField field, char cRO, Context context) {
         super(robot, field);
         this.context = context;
+        int nRO=0;
+        if(cRO=='n')
+            nRO=0;
+        else if(cRO=='e')
+            nRO=1;
+        else if(cRO=='s')
+            nRO=2;
+        else if(cRO=='o')
+            nRO=3;
+        this.robotOrientation=nRO;
+        this.finish=null;
+        this.mainField=new int[field.getRow()][field.getColumn()];
     }
 
     public void sendPosition(Position position){
@@ -287,6 +302,143 @@ public class Test2 extends Test {
             robot.forwardOnce();
         }
         return false;
+    }
+
+
+
+    /*Algoritmo Vivian*/
+
+
+    public void algorithm(){
+
+        //todo: while che "consuma" tutte le posizioni ricevute tramite nearby
+        finish=new Position(4,4); //todo: deve essere presente la posizione da raggiungere in quel momento
+        int md_best=md(field.getStartPosition(),finish);
+
+        ArrayList<Position> mosse=new ArrayList<Position>();
+
+        while(field.getRobotPosition().getX()!=finish.getX() || field.getRobotPosition().getY()!=finish.getY()){
+            int best_dir=productivePath();
+            if(best_dir!=-1){                       //esiste un percorso migliore
+                player.setOrientation(best_dir);    //mi giro e faccio un passo in quella direzione
+                forwardOnce();
+            }else{                                  //non esiste un percorso migliore, mi muovo in una cella random che non sia già stata percorsa
+                int dirToMove=randomDirection();
+                player.setOrientation(dirToMove);
+                forwardOnce();
+            }
+
+            mosse.add(new Position(field.now.x,field.now.y));
+            for(int i=0;i<mosse.size();i++){
+                System.out.print("("+mosse.get(i).x+";"+mosse.get(i).y+")->");
+            }
+            System.out.println();
+            printPlayerPositionInMatrix();
+            field.printField();
+            Utility.sleep(2000);
+        }
+    }
+
+    public int productivePath(){
+        int initialOrientation=robotOrientation;
+        int md_best=md(field.getRobotPosition(),finish);
+        int best_dir=-1;
+
+        ArrayList<Integer> newDirs= new ArrayList<Integer>();
+        for(int i=0;i<4;i++){           //per tutte le direzioni
+            player.setOrientation(i);  //todo: dappertutto
+            if(isAllowedForward()){     //se posso andarci
+                robot.forwardOnce();          //ci vado
+                if(mainField[convertToX("NOW")][convertToY("NOW")]!=2)        //se non ci sono già stato
+                    newDirs.add(i);     //aggiungo la direzione nell'array
+                robot.autoMove180Left(); //torno da dove sono venuto
+                robot.forwardOnce();
+            }
+        }
+        player.setOrientation(initialOrientation);  //per sicurezza, non si sa mai
+
+        if(newDirs.size()>0){   //c'è almeno una direzione in cui non sono mai stato
+            for(int i=0;i<newDirs.size();i++){
+                player.setOrientation(newDirs.get(i));
+                if(isAllowedForward()){
+                    Position fakePosition=new Position();
+                    robot.forwardOnce();                          //avanzo ipoteticamente di una cella
+                    if(mainField[convertToX("NOW")][convertToY("NOW")] != 2){ //se la cella non è già stata visitata
+                        int md=md(field.getRobotPosition(),finish);  //calcolo la md di quella posizione
+                        if(md<md_best){                     //se ottengo una distanza migliore di quella che avevo
+                            md_best=md;                     //la salvo come migliore
+                            best_dir=robotOrientation;    //mi salvo la direzione di tale distanza migliore
+                        }
+                    }
+                    robot.autoMove180Left();                         //mi giro di 180°
+                    robot.forwardOnce();                      //torno alla cella di partenza
+                }
+            }
+        }else{
+            for(int i=0;i<4;i++){
+                player.setOrientation(i);
+                if(isAllowedForward()){
+                    forwardOnce();                          //avanzo ipoteticamente di una cella
+                    if(field.mainField[field.convertToX("NOW")][field.convertToY("NOW")] != 2){ //se la cella non è già stata visitata
+                        int md=md(field.now,field.finish);  //calcolo la md di quella posizione
+                        if(md<md_best){                     //se ottengo una distanza migliore di quella che avevo
+                            md_best=md;                     //la salvo come migliore
+                            best_dir=player.orientation;    //mi salvo la direzione di tale distanza migliore
+                        }
+                    }
+                    turnLeft();                         //mi giro di 180°
+                    turnLeft();
+                    forwardOnce();                      //torno alla cella di partenza
+                }
+            }
+        }
+        player.orientation=initialOrientation;      //rimetto il player nell'orientamento di partenza
+        System.out.println("Direzione migliore ProductivePath: " + best_dir);
+        return best_dir;
+    }
+
+    public boolean isAllowedForward(){
+        if(robotOrientation==0){
+            return (field.getRobotPosition().getY() < field.getRow()-1) && (!robot.identifyBall());
+        }
+        else if(robotOrientation==1){
+            return (field.getRobotPosition().getX() < field.getColumn()-1) && (!robot.identifyBall());
+        }
+        else if(robotOrientation==2){
+            return (field.getRobotPosition().getY() > 0) && (!robot.identifyBall());
+        }else{
+            return (field.getRobotPosition().getX() > 0) && (!robot.identifyBall());
+        }
+    }
+
+    public int md(Position a, Position b){
+        return abs(a.getX()-b.getX())+abs(a.getY()-b.getY());
+    }
+
+    public int abs(int x){
+        if (x<0)
+            x=-x;
+        return x;
+    }
+
+    public int convertToX(String pos){
+        if(pos=="NOW"){
+            return (field.getRow()-(field.getRobotPosition().getY()))-1;
+        }else if(pos=="START"){
+            return field.getRow()-(field.getStartPosition().getY())-1;
+        }else{
+            return field.getRow()-(finish.getY())-1;
+        }
+    }
+
+    public int convertToY(String pos){
+        if(pos=="NOW"){
+            return field.getRobotPosition().getX();
+        }else if(pos=="START"){
+            return field.getStartPosition().getX();
+        }else {
+            return finish.getX();
+        }
     }
 }
 
