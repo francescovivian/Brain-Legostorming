@@ -150,13 +150,13 @@ public class PixelGridView extends View {
         int r=y, c=x;
         if (orientation == 's')
         {
-            r = numRows - y - 2;
-            c = x + 1;
+            r = x + 1;
+            c = numRows - y - 2;
         }
         if (orientation == 'n')
         {
-            r = y;
-            c = numColumns - x - 1;
+            r = numColumns - x - 1;
+            c = y;
         }
         if (orientation == 'e')
         {

@@ -46,13 +46,13 @@ public class Test2 extends Test {
         super(robot, field);
         this.context = context;
         int nRO=0;
-        if(cRO=='n')
+        if(cRO=='s')
             nRO=0;
-        else if(cRO=='e')
-            nRO=1;
-        else if(cRO=='s')
-            nRO=2;
         else if(cRO=='o')
+            nRO=1;
+        else if(cRO=='n')
+            nRO=2;
+        else if(cRO=='e')
             nRO=3;
         this.robotOrientation=nRO;
         this.finish=null;
@@ -179,7 +179,7 @@ public class Test2 extends Test {
 
     @Override
     public void movement(){
-        while(securedMine<totMine){
+        /*while(securedMine<totMine){
             if(positionList.isEmpty()){
                 //codice per attendere l'arrivo di una posizione
             }
@@ -187,7 +187,8 @@ public class Test2 extends Test {
                 Position actualMine =positionList.remove(0); //tolgo la prima mina che c'è in coda e shifto la coda a sinistra
                 goTo(actualMine);
             }
-        }
+        }*/
+        algorithm();
     }
 
     /*
@@ -326,14 +327,14 @@ public class Test2 extends Test {
 
         while(field.getRobotPosition().getX()!=finish.getX() || field.getRobotPosition().getY()!=finish.getY()){
             int best_dir=productivePath();
-            if(best_dir!=-1){                       //esiste un percorso migliore
-                this.setOrientation(best_dir);    //mi giro e faccio un passo in quella direzione
-                robot.forwardOnce();
-            }else{                                  //non esiste un percorso migliore, mi muovo in una cella random che non sia già stata percorsa
-                int dirToMove=randomDirection();
-                this.setOrientation(dirToMove);
-                robot.forwardOnce();
+            if(best_dir==-1){                   //non esiste un percorso migliore, prendo una direzione random
+                best_dir=randomDirection();
             }
+            this.setOrientation(best_dir);
+            robot.forwardOnce();
+
+            Position p=getNextPosition(best_dir);
+            field.setRobotPosition(p.getX(),p.getY());
 
             /*mosse.add(new Position(field.now.x,field.now.y));
             for(int i=0;i<mosse.size();i++){
@@ -345,6 +346,8 @@ public class Test2 extends Test {
             //field.printField();
         }
     }
+
+    public void updateRobotPosition(){}
 
     public int randomDirection(){
         int dir=-1;
@@ -450,6 +453,7 @@ public class Test2 extends Test {
             Position p=getNextPosition(direction);          //fake posizione andando in quella direzione
             if(mainField[p.getX()][p.getY()]!=2){           //se non ci sono mai passato
                 setOrientation(direction);                  //mi giro da quella parte
+                Utility.sleep(3000);
                 if(!robot.identifyBall())                   //se non c'è una mina
                     return direction;                       //ritorno la direzione corrente che userò per muovermi
             }

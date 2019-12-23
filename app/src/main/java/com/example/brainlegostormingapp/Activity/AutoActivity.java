@@ -37,6 +37,7 @@ import com.example.brainlegostormingapp.R;
 import com.example.brainlegostormingapp.Robot;
 import com.example.brainlegostormingapp.Tests.Test1;
 import com.example.brainlegostormingapp.Tests.Test2;
+import com.example.brainlegostormingapp.Tests.Test3;
 import com.example.brainlegostormingapp.Utility.Utility;
 
 import org.opencv.android.CameraBridgeViewBase;
@@ -66,6 +67,7 @@ public class AutoActivity extends AppCompatActivity /*implements MyRecyclerViewA
     private GameField gameField;
     private Test1 test1;
     private Test2 test2;
+    private Test3 test3;
 
 
     private int dimR, dimC, startX, startY, mine;
@@ -210,9 +212,6 @@ public class AutoActivity extends AppCompatActivity /*implements MyRecyclerViewA
                 e.printStackTrace();
                 Toast.makeText(this, "Connessione non stabilita", Toast.LENGTH_SHORT).show();
             }
-            if(choosen == 2){
-                test2.startDiscovery();
-            }
         });
 
         //termina la prova, calcola e mostra il tempo finale e TODO mostra la matrice
@@ -265,16 +264,17 @@ public class AutoActivity extends AppCompatActivity /*implements MyRecyclerViewA
             test1 = new Test1(robot, gameField, mine);
             test1.start();
         }
-        /*if (choosen == 2)
+        if (choosen == 2)
         {
-            test2 = new Test2(robot, gameField,mine);
+            test2 = new Test2(robot, gameField, orientation, getApplicationContext());
+            //test2.startDiscovery();
             test2.start();
         }
         if (choosen == 3)
         {
             test3 = new Test3(robot, gameField,mine);
             test3.start();
-        }*/
+        }
 
         //suono di fine prova
         Utility.sleep(5000);
