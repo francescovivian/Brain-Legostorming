@@ -113,10 +113,10 @@ public class NearbySimulatorActivity extends AppCompatActivity {
                 Utility.elementToggle(eTxtMatrixR, eTxtMatrixC, eTxtStartX, eTxtStartY, eTxtMine, spnOrientation);
                 //compare btnStart e btnReset, scompare btnsetdim
                 Utility.elementVisibilityToggle(btnStart,btnSetMatrix,btnResetMatrix);
-                gameField = new GameField(dimR, dimC, orientation, startX, startY);
+                gameField = new GameField(dimR, dimC, orientation, startX, startY,null);
 
                 //Per fare i quadrati rossi
-                //pixelGrid.changeCellChecked(2,3);
+                //pixelGrid.minaCheck(2,3);
 
                 //matrixView.addView(pixelGrid);
             } catch (NumberFormatException ignored) {

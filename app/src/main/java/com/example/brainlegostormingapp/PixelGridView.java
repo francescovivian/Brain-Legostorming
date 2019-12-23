@@ -145,25 +145,69 @@ public class PixelGridView extends View {
         }
     }
 
-    public void changeCellChecked(int column, int row, int value) {
-        if (orientation == 's') cellChecked[column + 1][numRows - row - 2] = value;
-        if (orientation == 'n') cellChecked[numColumns - column - 1][row] = value;
+    public Position convert(int x, int y)
+    {
+        int r=y, c=x;
+        if (orientation == 's')
+        {
+            r = numRows - y - 2;
+            c = x + 1;
+        }
+        if (orientation == 'n')
+        {
+            r = y;
+            c = numColumns - x - 1;
+        }
         if (orientation == 'e')
         {
-            int tmp;
-            tmp = column;
-            column = row;
-            row = tmp;
-            cellChecked[numColumns - column - 1][numRows - row - 2] = value;
+            r = numColumns - y - 1;
+            c = numRows - x - 2;
         }
         if (orientation == 'o')
         {
-            int tmp;
-            tmp = column;
-            column = row;
-            row = tmp;
-            cellChecked[column + 1][row] = value;
+            r = y + 1;
+            c = x;
         }
+
+        return new Position(r,c);
+    }
+    public void cellCheck(int x, int y, String item) {
+        int r,c;
+        Position p = convert(x,y);
+        r = p.getX();
+        c = p.getY();
+
+        if (item.equals("ROBOT"))
+        {
+            if (cellChecked[r][c] == 1) cellChecked[r][c] = 3;
+            else cellChecked[r][c] = 2;
+        }
+        else if (item.equals("MINA"))
+        {
+            if (cellChecked[r][c] == 2) cellChecked[r][c] = 3;
+            else cellChecked[r][c] = 1;
+        }
+
+        invalidate();
+    }
+
+    public void cellUncheck(int x, int y, String item) {
+        int r,c;
+        Position p = convert(x,y);
+        r = p.getX();
+        c = p.getY();
+
+        if (item.equals("ROBOT"))
+        {
+            if (cellChecked[r][c] == 3) cellChecked[r][c] = 1;
+            else cellChecked[r][c] = 0;
+        }
+        else if (item.equals("MINA"))
+        {
+            if (cellChecked[r][c] == 3) cellChecked[r][c] = 2;
+            else cellChecked[r][c] = 0;
+        }
+
         invalidate();
     }
 }

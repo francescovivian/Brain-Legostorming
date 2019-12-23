@@ -1,5 +1,7 @@
 package com.example.brainlegostormingapp;
 
+import android.view.View;
+
 public class GameField {
     private int row;
     private int column;
@@ -8,8 +10,10 @@ public class GameField {
     private Position startPosition;
     private Position lastMinePosition;
     private Position robotPosition;
+    private PixelGridView pixelGrid;
 
-    public GameField(int row, int column, char orientation, int startX, int startY) {
+    public GameField(int row, int column, char orientation, int startX, int startY, PixelGridView pixelGrid) {
+        this.pixelGrid = pixelGrid;
         this.row=row;
         this.column=column;
         this.orientation = orientation;
@@ -70,8 +74,10 @@ public class GameField {
     }
 
     public void setRobotPosition(int x, int y){
+        pixelGrid.cellUncheck(robotPosition.getX(),robotPosition.getY(),"ROBOT");
         robotPosition.setX(x);
         robotPosition.setY(y);
+        pixelGrid.cellCheck(x,y,"ROBOT");
     }
 
     public void setOrientation(char orientation) {

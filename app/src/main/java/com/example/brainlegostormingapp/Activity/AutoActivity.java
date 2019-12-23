@@ -167,10 +167,10 @@ public class AutoActivity extends AppCompatActivity /*implements MyRecyclerViewA
                 pixelGrid.setNumRows(dimR);
                 pixelGrid.setNumColumns(dimC);
 
-                gameField = new GameField(dimR, dimC, orientation, startX, startY);
+                gameField = new GameField(dimR, dimC, orientation, startX, startY, pixelGrid);
 
                 //Per fare i quadrati rossi
-                //pixelGrid.changeCellChecked(0,2,1);
+                //pixelGrid.minaCheck(0,2,1);
 
                 matrixView.addView(pixelGrid);
             } catch (NumberFormatException ignored) {

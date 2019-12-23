@@ -87,7 +87,7 @@ public class Robot {
         ls = api.getLightSensor(EV3.InputPort._4);
 
         skew = 0;
-        maxAcceptedSkew = 800;
+        maxAcceptedSkew = 300;
 
         try {
             rm.setType(TachoMotor.Type.LARGE);
@@ -183,7 +183,7 @@ public class Robot {
     public void forwardOnce() {
         int step1 = 0, step2 = 3100, step3 = 0;
         try {
-            fixOrientation();
+            //fixOrientation();
             lm.setPolarity(TachoMotor.Polarity.FORWARD);
             lm.setTimeSpeed(SPEED, step1, step2, step3, true);
             rm.setPolarity(TachoMotor.Polarity.FORWARD);
@@ -212,7 +212,7 @@ public class Robot {
     public void forwardOnceSearch() {
         int step1 = 0, step2 = 3100, step3 = 0;
         try {
-            fixOrientation();
+            //fixOrientation();
             boolean isPresent = identifyBall();
             lm.setPolarity(TachoMotor.Polarity.FORWARD);
             lm.setTimeSpeed(SPEED, step1, step2, step3, true);
@@ -342,6 +342,7 @@ public class Robot {
 //                    weight = dx + dy;
 //                    totWeight += weight;
                     skew += ((frame.height()/2 - line.p2.y) /** weight*/);
+                    linesConsidered++;
                 }
 
                 //Sono nella metà sinistra
@@ -351,8 +352,8 @@ public class Robot {
 //                    weight = dx + dy;
 //                    totWeight += weight;
                     skew += ((frame.height()/2 - line.p2.y) /** weight*/);
+                    linesConsidered++;
                 }
-                linesConsidered++;
             }
 
             //elabora le linee per qualche frame
@@ -363,7 +364,8 @@ public class Robot {
             Utility.sleep(2000);
         }
 //        skew /= totWeight;
-        skew *= 10;
+        skew /= linesConsidered;
+        skew *= 20;
     }
 
     public boolean identifyBall()
@@ -429,8 +431,8 @@ public class Robot {
         }
     }
 
-    public void changeCellChecked(int c, int r, int value)
+    public void minaCheck(int c, int r)
     {
-        pixelGrid.changeCellChecked(c,r,value);
+        pixelGrid.cellCheck(c,r,"MINA");
     }
 }

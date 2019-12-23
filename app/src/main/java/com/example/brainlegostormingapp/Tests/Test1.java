@@ -2,11 +2,7 @@ package com.example.brainlegostormingapp.Tests;
 
 import com.example.brainlegostormingapp.GameField;
 import com.example.brainlegostormingapp.Robot;
-import com.example.brainlegostormingapp.Tests.Test;
 import com.example.brainlegostormingapp.Utility.Utility;
-
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
 
 public class Test1 extends Test {
 
@@ -36,6 +32,7 @@ public class Test1 extends Test {
     //processa celle dalla posizione di partenza fino all'origine della matrice (posizione [0][0])
     public void alignToOrigin(){
         robot.openHand(15);
+        field.setRobotPosition(field.getRobotPosition().getX(), field.getRobotPosition().getY());
         Utility.sleep(5000);
         robot.autoMove90Left();
         Utility.sleep(5000);
@@ -46,7 +43,7 @@ public class Test1 extends Test {
                 Utility.sleep(5000);
                 if (robot.getMinePickedUp() == true) { //ho raccolto una mina nell'ultimo avanzamento
                     field.setLastMinePosition(field.getRobotPosition().getX(), field.getRobotPosition().getY());
-                    robot.changeCellChecked(field.getRobotPosition().getX(),field.getRobotPosition().getY(),1);
+                    robot.minaCheck(field.getRobotPosition().getX(),field.getRobotPosition().getY());
                     robot.autoMove90Left();
                     Utility.sleep(5000);
                     storeBall();        //la deposito nella zona sicura
@@ -116,7 +113,7 @@ public class Test1 extends Test {
                 Utility.sleep(5000);
                 if (robot.getMinePickedUp()) { //ho raccolto una mina nell'ultimo avanzamento
                     field.setLastMinePosition(field.getRobotPosition().getX(), field.getRobotPosition().getY());
-                    robot.changeCellChecked(field.getRobotPosition().getX(),field.getRobotPosition().getY(),1);
+                    robot.minaCheck(field.getRobotPosition().getX(),field.getRobotPosition().getY());
                     robot.autoMove90Left();
                     Utility.sleep(5000);
                     storeBall();
@@ -133,7 +130,7 @@ public class Test1 extends Test {
             Utility.sleep(5000);
             if(robot.getMinePickedUp()){ //ho raccolto una mina nell'ultimo avanzamento
                 field.setLastMinePosition(field.getRobotPosition().getX(),field.getRobotPosition().getY());
-                robot.changeCellChecked(field.getRobotPosition().getX(),field.getRobotPosition().getY(),1);
+                robot.minaCheck(field.getRobotPosition().getX(),field.getRobotPosition().getY());
                 robot.autoMove180Left();
                 Utility.sleep(5000);
                 storeBall();
@@ -157,7 +154,7 @@ public class Test1 extends Test {
                 Utility.sleep(5000);
                 if (robot.getMinePickedUp()) { //ho raccolto una mina nell'ultimo avanzamento
                     field.setLastMinePosition(field.getRobotPosition().getX(), field.getRobotPosition().getY());
-                    robot.changeCellChecked(field.getRobotPosition().getX(),field.getRobotPosition().getY(),1);
+                    robot.minaCheck(field.getRobotPosition().getX(),field.getRobotPosition().getY());
                     robot.autoMove90Right();
                     Utility.sleep(5000);
                     storeBall();
@@ -174,7 +171,7 @@ public class Test1 extends Test {
             Utility.sleep(5000);
             if(robot.getMinePickedUp()){ //ho raccolto una mina nell'ultimo avanzamento
                 field.setLastMinePosition(field.getRobotPosition().getX(),field.getRobotPosition().getY());
-                robot.changeCellChecked(field.getRobotPosition().getX(),field.getRobotPosition().getY(),1);
+                robot.minaCheck(field.getRobotPosition().getX(),field.getRobotPosition().getY());
                 robot.autoMove180Right();
                 Utility.sleep(5000);
                 storeBall();
