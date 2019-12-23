@@ -159,11 +159,11 @@ public class AutoActivity extends AppCompatActivity /*implements MyRecyclerViewA
                 startX = Integer.parseInt(eTxtStartX.getText().toString());
                 startY = Integer.parseInt(eTxtStartY.getText().toString());
                 mine = Integer.parseInt(eTxtMine.getText().toString());
-                orientation = String.valueOf(spnOrientation.getSelectedItem()).charAt(0);
+                orientation = Character.toLowerCase(String.valueOf(spnOrientation.getSelectedItem()).charAt(0));
                 Utility.elementToggle(eTxtMatrixR, eTxtMatrixC, eTxtStartX, eTxtStartY, eTxtMine, spnOrientation);
                 //compare btnStart e btnReset, scompare btnsetdim
                 Utility.elementVisibilityToggle(btnStart,btnSetMatrix,btnResetMatrix);
-                pixelGrid = new PixelGridView(this, Character.toLowerCase(orientation));
+                pixelGrid = new PixelGridView(this, orientation);
                 pixelGrid.setNumRows(dimR);
                 pixelGrid.setNumColumns(dimC);
 

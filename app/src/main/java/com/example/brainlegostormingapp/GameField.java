@@ -12,8 +12,13 @@ public class GameField {
     public GameField(int row, int column, char orientation, int startX, int startY) {
         this.row=row;
         this.column=column;
-        this.grid = new int[row][column];
         this.orientation = orientation;
+        if (this.orientation == 'e' || this.orientation == 'o')
+        {
+            this.row=column;
+            this.column=row;
+        }
+        this.grid = new int[this.row][this.column];
         startPosition = new Position(startX, startY);
         lastMinePosition = new Position(0,0);
         robotPosition = new Position(startX,startY);
