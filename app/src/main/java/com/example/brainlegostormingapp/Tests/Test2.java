@@ -17,7 +17,9 @@ import com.example.brainlegostormingapp.GameField;
 import com.example.brainlegostormingapp.Robot;
 
 import java.lang.reflect.Array;
+import java.util.AbstractMap;
 import java.util.ArrayList;
+import java.util.Random;
 
 public class Test2 extends Test {
 
@@ -33,6 +35,11 @@ public class Test2 extends Test {
     //Variabili algoritmo Vivian
     int robotOrientation;
     Position finish; //todo: servirà a contenere la posizione da raggiungere in quel momento
+    //Fine
+
+    //Variabili algoritmo Schizzerotto
+    private ArrayList<String> movements=new ArrayList<String>();
+    private ArrayList<Position> positionList=new ArrayList<Position>();
     //Fine
 
     public Test2(Robot robot, GameField field, char cRO, Context context) {
@@ -337,6 +344,36 @@ public class Test2 extends Test {
             printPlayerPositionInMatrix();
             //field.printField();
         }
+    }
+
+    public int randomDirection(){
+        int dir=-1;
+        int initialOrientation=robotOrientation;
+
+        //creo un vettore con le direzioni che non hanno 2
+        ArrayList<Integer> newDirs=new ArrayList<Integer>();
+
+        for(int i=0;i<4;i++){                                   //per tutte le direzioni
+            Position current=getNextPosition(i);                //prendo la posizione virtuale
+            if(mainField[current.getX()][current.getY()]!=2)    //se non ci sono mai statp
+                newDirs.add(i);                                 //la aggiungo al vettore
+        }
+
+        for(int i=0;i<newDirs.size();i++){                      //controllo se nelle posizioni che ho nel vettore ci sono mine o no
+            setOrientation(newDirs.get(i));                     //mi giro nella posizione corrente
+            if(!robot.identifyBall())                           //se posso andarci
+                return newDirs.get(i);                          //ritorno tale direzione
+        }
+
+                                                                //non ho trovato una direzione in cui non sono mai stato ed in cui non ci sono mine
+        for(int i=0;i<4;i++){                                   //per le 4 direzioni
+            dir=(robotOrientation+1)%4;
+            setOrientation(dir);                                //mi giro nella direzione corrente
+            if(!robot.identifyBall())                           //se non ci sono mine
+                return dir;                                     //restituisco tale direzione
+        }
+
+        return dir;                                             //se arriva qui, qualcosa è andato storto
     }
 
     private void setOrientation(int newOrientation) {
