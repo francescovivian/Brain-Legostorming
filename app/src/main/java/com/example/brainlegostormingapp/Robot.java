@@ -23,6 +23,7 @@ import it.unive.dais.legodroid.lib.EV3;
 import it.unive.dais.legodroid.lib.plugs.LightSensor;
 import it.unive.dais.legodroid.lib.plugs.TachoMotor;
 import it.unive.dais.legodroid.lib.plugs.UltrasonicSensor;
+import it.unive.dais.legodroid.lib.plugs.GyroSensor;
 
 import static com.example.brainlegostormingapp.Utility.Constant.*;
 
@@ -33,6 +34,8 @@ public class Robot {
 
     private final UltrasonicSensor us;
     private final LightSensor ls;
+    private final GyroSensor gs;
+
 
     private ArrayList<Ball> balls;
     private ArrayList<Line> lines;
@@ -55,6 +58,7 @@ public class Robot {
 
         us = api.getUltrasonicSensor(EV3.InputPort._1);
         ls = api.getLightSensor(EV3.InputPort._4);
+        gs = api.getGyroSensor(EV3.InputPort._2);
 
         try {
             rm.setType(TachoMotor.Type.LARGE);
@@ -309,8 +313,18 @@ public class Robot {
             e.printStackTrace();
         }
         return null; //Questo non era previsto, potrebbe causare problemi
+
     }
 
+    public Future<Float> getAngle() {
+        try {
+            return gs.getAngle();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null; //Questo non era previsto, potrebbe causare problemi
+
+    }
     public Future<LightSensor.Color> getColor() {
         try {
             return ls.getColor();
@@ -371,22 +385,22 @@ public class Robot {
     public boolean identifyBall()
     {
         try {
-            int count=0;
-            for(int i=0;i<10;i++){
-                Float dist=this.getDistance().get();
+            int count = 0;
+            for(int i = 0; i < 10; i ++){
+                Float dist = this.getDistance().get();
+                Float angle = this.getAngle().get();
                 if(dist<35)
                     count++;
-                activity.runOnUiThread(() -> txtDistance.setText(dist.toString()));
+                activity.runOnUiThread(() -> txtDistance.setText(angle.toString()));
             }
-            return !this.minePickedUp && count >=8;
+            return !this.minePickedUp && count >= 8;
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
         return false; // Non dovrebbe mai arrivare qua
     }
 
-    public void catchBall()
-    {
+    public void catchBall() {
         Utility.sleep(2000);
         this.closeHand(25);
         this.setMinePickedUp(true);
