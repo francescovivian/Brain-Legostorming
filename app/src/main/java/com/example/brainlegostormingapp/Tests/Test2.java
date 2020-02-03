@@ -333,7 +333,7 @@ public class Test2 extends Test {
 
 
         //todo: while che "consuma" tutte le posizioni ricevute tramite nearby
-        int md_best=md(field.getStartPosition(),finish);
+        //int md_best=md(field.getStartPosition(),finish);
 
         ArrayList<Position> mosse=new ArrayList<Position>();
 
@@ -343,7 +343,8 @@ public class Test2 extends Test {
                 Utility.sleep(100);
             }
             Position target=positionList.remove(0);*/
-            Position target = new Position(4,4);
+            //Position target = new Position(4,4);
+            Position target = new Position(1,2);
             vaiA(target);
             vaiA(field.getStartPosition());
         }
@@ -361,7 +362,7 @@ public class Test2 extends Test {
             }
             else if (minaRaccolta){
                 //se ho raccolto la mina devo tornare indietro seguendo il percorso inverso
-                reverseMove(movements.remove(0));
+                reverseMove(movements.remove(movements.size()-1));
             }
             else {
                 int best_dir = productivePath();
@@ -375,7 +376,7 @@ public class Test2 extends Test {
 
                 Position p = getNextPosition(best_dir);
                 field.setRobotPosition(p.getX(), p.getY());
-                cronologiaMovimenti.add(new Position(p.getX(), p.getY()));
+                //cronologiaMovimenti.add(new Position(p.getX(), p.getY()));
             }
             /*mosse.add(new Position(field.now.x,field.now.y));
             for(int i=0;i<mosse.size();i++){
@@ -427,6 +428,7 @@ public class Test2 extends Test {
         Utility.sleep(5000);
         robot.autoMove180Right();
         Utility.sleep(5000);
+        robotOrientation = (robotOrientation + 2)%4;
     }
 
     private boolean devoRaccogliere() {
