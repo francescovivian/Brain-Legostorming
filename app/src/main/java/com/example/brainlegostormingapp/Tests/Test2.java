@@ -47,6 +47,8 @@ public class Test2 extends Test {
     public Test2(Robot robot, GameField field, char cRO, Context context) {
         super(robot, field);
         this.context = context;
+        //todo cambiare con il valore definitivo
+        this.totMine = 9;
         int nRO=0;
         if(cRO=='s')
             nRO=0;
