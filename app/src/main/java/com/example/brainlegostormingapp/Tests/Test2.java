@@ -48,7 +48,8 @@ public class Test2 extends Test {
         super(robot, field);
         this.context = context;
         //todo cambiare con il valore definitivo
-        this.totMine = 9;
+        totMine = 9;
+        securedMine = 0;
         int nRO=0;
         if(cRO=='s')
             nRO=0;
