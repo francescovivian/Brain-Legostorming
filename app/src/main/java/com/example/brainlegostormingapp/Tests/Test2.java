@@ -41,6 +41,7 @@ public class Test2 extends Test {
     private ArrayList<String> movements=new ArrayList<String>();
     private ArrayList<Position> positionList=new ArrayList<Position>();
     private boolean minaRaccolta = false;
+    private ArrayList<Position> cronologiaMovimenti;
     //Fine
 
     public Test2(Robot robot, GameField field, char cRO, Context context) {
@@ -327,20 +328,37 @@ public class Test2 extends Test {
 
     public void algorithm(){
 
+
         //todo: while che "consuma" tutte le posizioni ricevute tramite nearby
-        finish=new Position(4,4); //todo: deve essere presente la posizione da raggiungere in quel momento
         int md_best=md(field.getStartPosition(),finish);
 
         ArrayList<Position> mosse=new ArrayList<Position>();
 
+        while(this.securedMine<this.totMine){
+            //todo: togliere il commento sotto qua una volta che implementato il riempimento del vettore di posizioni
+            /*while(positionList.size()<1){
+                Utility.sleep(100);
+            }
+            Position target=positionList.remove(0);*/
+            Position target = new Position(4,4);
+            vaiA(target);
+            vaiA(field.getStartPosition());
+        }
+    }
+
+    private void vaiA(Position target) {
+        finish = target;
         while(field.getRobotPosition().getX()!=finish.getX() || field.getRobotPosition().getY()!=finish.getY()){
             if (!minaRaccolta && devoRaccogliere()) {
-                minaRaccolta = true;
-                robot.forwardOnceSearch();
-                Utility.sleep(5000);
-                robot.backwardOnce();
-                Utility.sleep(5000);
-                finish = field.getStartPosition();
+                raccogliMina();
+            }
+            else if (minaRaccolta && sonoSuStart()){
+                setOrientation(2);
+                mollaMina();
+            }
+            else if (minaRaccolta){
+                //se ho raccolto la mina devo tornare indietro seguendo il percorso inverso
+                reverseMove(movements.remove(0));
             }
             else {
                 int best_dir = productivePath();
@@ -349,10 +367,12 @@ public class Test2 extends Test {
                 }
                 this.setOrientation(best_dir);
                 robot.forwardOnce();
+                movements.add("FW");
                 Utility.sleep(5000);
 
                 Position p = getNextPosition(best_dir);
                 field.setRobotPosition(p.getX(), p.getY());
+                cronologiaMovimenti.add(new Position(p.getX(), p.getY()));
             }
             /*mosse.add(new Position(field.now.x,field.now.y));
             for(int i=0;i<mosse.size();i++){
@@ -363,6 +383,47 @@ public class Test2 extends Test {
             printPlayerPositionInMatrix();
             //field.printField();
         }
+    }
+
+    private void reverseMove(String nextMove) {
+        if (nextMove == "FW") {
+            robot.forwardOnce();
+            Position p = getNextPosition(robotOrientation);
+            field.setRobotPosition(p.getX(), p.getY());
+        }
+        else if (nextMove == "90LEFT") {
+            robot.autoMove90Right();
+            robotOrientation = (robotOrientation + 1)%4;
+        }
+        else if (nextMove == "90RIGHT") {
+            robot.autoMove90Left();
+            robotOrientation = (robotOrientation - 1)%4;
+        }
+        Utility.sleep(5000);
+    }
+
+    private void mollaMina() {
+        robot.openHand(15);       //apre la mano
+        robot.forwardHalf();            //avanza un poco
+        Utility.sleep(5000);
+        this.securedMine++;
+        minaRaccolta = false;
+        robot.backwardHalf();           //torna indietro
+        Utility.sleep(5000);
+        robot.autoMove180Right();       //si gira di 180°
+    }
+
+    private boolean sonoSuStart() {
+        return (field.getRobotPosition() == field.getStartPosition());
+    }
+
+    private void raccogliMina() {
+        minaRaccolta = true;
+        robot.forwardOnceSearch();
+        movements.add("FW");
+        Utility.sleep(5000);
+        robot.autoMove180Right();
+        Utility.sleep(5000);
     }
 
     private boolean devoRaccogliere() {
@@ -425,14 +486,17 @@ public class Test2 extends Test {
         int movement = (NewOrientationAux - robotOrientation)%4;
         if (movement == 1){
             robot.autoMove90Right();
+            movements.add("90RIGHT");
             Utility.sleep(5000);
         }
         else if (movement == 2){
             robot.autoMove180Right();
+            movements.add("180RIGHT");
             Utility.sleep(5000);
         }
         else if (movement == 3){
             robot.autoMove90Left();
+            movements.add("90LEFT");
             Utility.sleep(5000);
         }
         //aggiorno l'orientamento scritto del robot
