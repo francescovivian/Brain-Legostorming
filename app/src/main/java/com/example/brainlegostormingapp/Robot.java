@@ -89,6 +89,7 @@ public class Robot {
 
         us = api.getUltrasonicSensor(EV3.InputPort._1);
         ls = api.getLightSensor(EV3.InputPort._4);
+        gs = api.getGyroSensor(EV3.InputPort._2);
 
         skew = 0;
         maxAcceptedSkew = 300;
