@@ -246,7 +246,7 @@ public class Test2 extends Test {
             //TODO aggiorna posizione robot
             Utility.sleep(5000);
             robot.autoMove90Left();             //mi raddrizzo verso l'alto
-
+            Utility.sleep(5000);
         }
     }
 
@@ -269,6 +269,7 @@ public class Test2 extends Test {
             //TODO aggiorna posizione robot
             Utility.sleep(5000);
             robot.autoMove90Left();             //mi raddrizzo verso l'alto
+            Utility.sleep(5000);
         }
     }
 
@@ -297,14 +298,20 @@ public class Test2 extends Test {
 
     public boolean sorpassaDX(){
         robot.autoMove90Right();
+        Utility.sleep(5000);
         if(!robot.identifyBall()){
             robot.forwardOnce();
+            Utility.sleep(5000);
             robot.autoMove90Left();
+            Utility.sleep(5000);
             int mosse=0;
             while(robot.identifyBall()){
                 robot.autoMove90Right();
+                Utility.sleep(5000);
                 robot.forwardOnce();
+                Utility.sleep(5000);
                 robot.autoMove90Left();
+                Utility.sleep(5000);
                 mosse++;
             }
             robot.forwardOnce();
@@ -387,56 +394,71 @@ public class Test2 extends Test {
         int movement = robotOrientation - NewOrientationAux;
         if (movement == 1){
             robot.autoMove90Right();
+            Utility.sleep(5000);
         }
         else if (movement == 2){
             robot.autoMove180Right();
+            Utility.sleep(5000);
         }
         else if (movement == 3){
             robot.autoMove90Left();
+            Utility.sleep(5000);
         }
 
         /*if (robotOrientation == 0){
             if(newOrientation == 1) {
                 robot.autoMove90Right();
+                Utility.sleep(5000);
             }
             else if (newOrientation == 2){
                 robot.autoMove180Right();
+                Utility.sleep(5000);
             }
             else if (newOrientation == 3){
                 robot.autoMove90Left();
+                Utility.sleep(5000);
             }
         }
         else if (robotOrientation == 1){
             if(newOrientation == 2) {
                 robot.autoMove90Right();
+                Utility.sleep(5000);
             }
             else if (newOrientation == 3){
                 robot.autoMove180Right();
+                Utility.sleep(5000);
             }
             else if (newOrientation == 0){
                 robot.autoMove90Left();
+                Utility.sleep(5000);
             }
         }
         else if (robotOrientation == 2){
             if(newOrientation == 3) {
                 robot.autoMove90Right();
+                Utility.sleep(5000);
             }
             else if (newOrientation == 0){
                 robot.autoMove180Right();
+                Utility.sleep(5000);
             }
             else if (newOrientation == 1){
                 robot.autoMove90Left();
+                Utility.sleep(5000);
             }
         }
         else if (robotOrientation == 3){
             if(newOrientation == 0) {
                 robot.autoMove90Right();
+                Utility.sleep(5000);
             }
             else if (newOrientation == 1){
                 robot.autoMove180Right();
+                Utility.sleep(5000);
             }
             else if (newOrientation == 2){
                 robot.autoMove90Left();
+                Utility.sleep(5000);
             }
         }*/
         robotOrientation = newOrientation;
