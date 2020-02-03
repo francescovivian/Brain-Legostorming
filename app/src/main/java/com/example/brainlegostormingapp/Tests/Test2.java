@@ -40,6 +40,7 @@ public class Test2 extends Test {
     //Variabili algoritmo Schizzerotto
     private ArrayList<String> movements=new ArrayList<String>();
     private ArrayList<Position> positionList=new ArrayList<Position>();
+    private boolean minaRaccolta = false;
     //Fine
 
     public Test2(Robot robot, GameField field, char cRO, Context context) {
@@ -333,19 +334,26 @@ public class Test2 extends Test {
         ArrayList<Position> mosse=new ArrayList<Position>();
 
         while(field.getRobotPosition().getX()!=finish.getX() || field.getRobotPosition().getY()!=finish.getY()){
-            if (devoRaccogliere()){
+            if (!minaRaccolta && devoRaccogliere()) {
+                minaRaccolta = true;
                 robot.forwardOnceSearch();
+                Utility.sleep(5000);
+                robot.backwardOnce();
+                Utility.sleep(5000);
+                finish = field.getStartPosition();
             }
-            int best_dir=productivePath();
-            if(best_dir==-1){                   //non esiste un percorso migliore, prendo una direzione random
-                best_dir=randomDirection();
+            else {
+                int best_dir = productivePath();
+                if (best_dir == -1) {                   //non esiste un percorso migliore, prendo una direzione random
+                    best_dir = randomDirection();
+                }
+                this.setOrientation(best_dir);
+                robot.forwardOnce();
+                Utility.sleep(5000);
+
+                Position p = getNextPosition(best_dir);
+                field.setRobotPosition(p.getX(), p.getY());
             }
-            this.setOrientation(best_dir);
-            robot.forwardOnce();
-
-            Position p=getNextPosition(best_dir);
-            field.setRobotPosition(p.getX(),p.getY());
-
             /*mosse.add(new Position(field.now.x,field.now.y));
             for(int i=0;i<mosse.size();i++){
                 System.out.print("("+mosse.get(i).x+";"+mosse.get(i).y+")->");
