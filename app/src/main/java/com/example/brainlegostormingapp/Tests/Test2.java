@@ -422,7 +422,12 @@ public class Test2 extends Test {
     }
 
     private void raccogliMina() {
+        //setto la flag a true per i cicli successivi
         minaRaccolta = true;
+        //setto la posizione della mina che ho appena raccolto nella matrice
+        Position p = getNextPosition(robotOrientation);
+        robot.minaCheck(p.getX(), p.getY());
+        //muovo effettivamente il robot per racccogliere la mina
         robot.forwardOnceSearch();
         movements.add("FW");
         Utility.sleep(5000);
