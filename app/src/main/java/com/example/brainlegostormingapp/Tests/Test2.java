@@ -333,6 +333,9 @@ public class Test2 extends Test {
         ArrayList<Position> mosse=new ArrayList<Position>();
 
         while(field.getRobotPosition().getX()!=finish.getX() || field.getRobotPosition().getY()!=finish.getY()){
+            if (devoRaccogliere()){
+                robot.forwardOnceSearch();
+            }
             int best_dir=productivePath();
             if(best_dir==-1){                   //non esiste un percorso migliore, prendo una direzione random
                 best_dir=randomDirection();
@@ -352,6 +355,23 @@ public class Test2 extends Test {
             printPlayerPositionInMatrix();
             //field.printField();
         }
+    }
+
+    private boolean devoRaccogliere() {
+        if(robotOrientation == 0){
+            return (field.getRobotPosition().getX() == finish.getX() && field.getRobotPosition().getY() + 1 == finish.getY());
+        }
+        else if(robotOrientation == 1){
+            return (field.getRobotPosition().getX() + 1 == finish.getX() && field.getRobotPosition().getY()  == finish.getY());
+        }
+        else if(robotOrientation == 2){
+            return (field.getRobotPosition().getX() == finish.getX() && field.getRobotPosition().getY() -1 == finish.getY());
+        }
+        else if (robotOrientation == 3){
+            return (field.getRobotPosition().getX() - 1 == finish.getX() && field.getRobotPosition().getY()  == finish.getY());
+        }
+        else
+            return false;
     }
 
     public void updateRobotPosition(){}
@@ -387,11 +407,14 @@ public class Test2 extends Test {
     }
 
     private void setOrientation(int newOrientation) {
-        int NewOrientationAux = 0;
+        int NewOrientationAux;
         if (newOrientation == 0){
             NewOrientationAux = 4;
         }
-        int movement = robotOrientation - NewOrientationAux;
+        else{
+            NewOrientationAux = newOrientation;
+        }
+        int movement = (NewOrientationAux - robotOrientation)%4;
         if (movement == 1){
             robot.autoMove90Right();
             Utility.sleep(5000);
@@ -404,63 +427,8 @@ public class Test2 extends Test {
             robot.autoMove90Left();
             Utility.sleep(5000);
         }
-
-        /*if (robotOrientation == 0){
-            if(newOrientation == 1) {
-                robot.autoMove90Right();
-                Utility.sleep(5000);
-            }
-            else if (newOrientation == 2){
-                robot.autoMove180Right();
-                Utility.sleep(5000);
-            }
-            else if (newOrientation == 3){
-                robot.autoMove90Left();
-                Utility.sleep(5000);
-            }
-        }
-        else if (robotOrientation == 1){
-            if(newOrientation == 2) {
-                robot.autoMove90Right();
-                Utility.sleep(5000);
-            }
-            else if (newOrientation == 3){
-                robot.autoMove180Right();
-                Utility.sleep(5000);
-            }
-            else if (newOrientation == 0){
-                robot.autoMove90Left();
-                Utility.sleep(5000);
-            }
-        }
-        else if (robotOrientation == 2){
-            if(newOrientation == 3) {
-                robot.autoMove90Right();
-                Utility.sleep(5000);
-            }
-            else if (newOrientation == 0){
-                robot.autoMove180Right();
-                Utility.sleep(5000);
-            }
-            else if (newOrientation == 1){
-                robot.autoMove90Left();
-                Utility.sleep(5000);
-            }
-        }
-        else if (robotOrientation == 3){
-            if(newOrientation == 0) {
-                robot.autoMove90Right();
-                Utility.sleep(5000);
-            }
-            else if (newOrientation == 1){
-                robot.autoMove180Right();
-                Utility.sleep(5000);
-            }
-            else if (newOrientation == 2){
-                robot.autoMove90Left();
-                Utility.sleep(5000);
-            }
-        }*/
+        //aggiorno l'orientamento scritto del robot
+        //robotOrientation = (robotOrientation + movement)%4;
         robotOrientation = newOrientation;
     }
 
