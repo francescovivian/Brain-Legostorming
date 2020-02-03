@@ -23,6 +23,7 @@ import it.unive.dais.legodroid.lib.EV3;
 import it.unive.dais.legodroid.lib.plugs.LightSensor;
 import it.unive.dais.legodroid.lib.plugs.TachoMotor;
 import it.unive.dais.legodroid.lib.plugs.UltrasonicSensor;
+import it.unive.dais.legodroid.lib.plugs.GyroSensor;
 
 import static com.example.brainlegostormingapp.Utility.Constant.*;
 
@@ -33,6 +34,8 @@ public class Robot {
 
     private final UltrasonicSensor us;
     private final LightSensor ls;
+    private final GyroSensor gs;
+
 
     private ArrayList<Ball> balls;
     private ArrayList<Line> lines;
@@ -55,6 +58,7 @@ public class Robot {
 
         us = api.getUltrasonicSensor(EV3.InputPort._1);
         ls = api.getLightSensor(EV3.InputPort._4);
+        gs = api.getGyroSensor(EV3.InputPort._2);
 
         try {
             rm.setType(TachoMotor.Type.LARGE);
@@ -85,6 +89,7 @@ public class Robot {
 
         us = api.getUltrasonicSensor(EV3.InputPort._1);
         ls = api.getLightSensor(EV3.InputPort._4);
+        gs = api.getGyroSensor(EV3.InputPort._2);
 
         skew = 0;
         maxAcceptedSkew = 300;
@@ -107,24 +112,29 @@ public class Robot {
     }
 
     public void autoMove90Right() {
+        fixOrientationGS();
         autoMove90('r');
     }
 
     public void autoMove90Left() {
+        fixOrientationGS();
         autoMove90('l');
     }
 
     public void autoMove180Right() {
+        fixOrientationGS();
         autoMove180('r');
     }
 
     public void autoMove180Left() {
+        fixOrientationGS();
         autoMove180('l');
     }
 
     public void autoMove90(char direction) {
         int step1 = 0, step2 = 1000, step3 = 0;
         try {
+            fixOrientationGS();
             if (direction == 'r') {
                 lm.setPolarity(TachoMotor.Polarity.FORWARD);
                 lm.setTimeSpeed(SPEED, step1, step2, step3, true);
@@ -146,6 +156,7 @@ public class Robot {
     public void autoMove180(char direction) {
         int step1 = 0, step2 = 2000, step3 = 0;
         try {
+            fixOrientationGS();
             if (direction == 'r') {
                 lm.setPolarity(TachoMotor.Polarity.FORWARD);
                 lm.setTimeSpeed(SPEED, step1, step2, step3, true);
@@ -184,6 +195,7 @@ public class Robot {
         int step1 = 0, step2 = 3100, step3 = 0;
         try {
             //fixOrientation();
+            fixOrientationGS();
             lm.setPolarity(TachoMotor.Polarity.FORWARD);
             lm.setTimeSpeed(SPEED, step1, step2, step3, true);
             rm.setPolarity(TachoMotor.Polarity.FORWARD);
@@ -198,6 +210,7 @@ public class Robot {
     public void forwardHalf() {
         int step1 = 0, step2 = 1500, step3 = 0;
         try {
+            fixOrientationGS();
             lm.setPolarity(TachoMotor.Polarity.FORWARD);
             lm.setTimeSpeed(SPEED, step1, step2, step3, true);
             rm.setPolarity(TachoMotor.Polarity.FORWARD);
@@ -213,6 +226,7 @@ public class Robot {
         int step1 = 0, step2 = 3100, step3 = 0;
         try {
             //fixOrientation();
+            fixOrientationGS();
             boolean isPresent = identifyBall();
             lm.setPolarity(TachoMotor.Polarity.FORWARD);
             lm.setTimeSpeed(SPEED, step1, step2, step3, true);
@@ -232,6 +246,7 @@ public class Robot {
     public void backwardOnce() {
         int step1 = 0, step2 = 3100, step3 = 0;
         try {
+            fixOrientationGS();
             lm.setPolarity(TachoMotor.Polarity.BACKWARDS);
             lm.setTimeSpeed(SPEED, step1, step2, step3, true);
             rm.setPolarity(TachoMotor.Polarity.BACKWARDS);
@@ -246,6 +261,7 @@ public class Robot {
     public void backwardHalf() {
         int step1 = 0, step2 = 1500, step3 = 0;
         try {
+            fixOrientationGS();
             lm.setPolarity(TachoMotor.Polarity.BACKWARDS);
             lm.setTimeSpeed(SPEED, step1, step2, step3, true);
             rm.setPolarity(TachoMotor.Polarity.BACKWARDS);
@@ -309,8 +325,18 @@ public class Robot {
             e.printStackTrace();
         }
         return null; //Questo non era previsto, potrebbe causare problemi
+
     }
 
+    public Future<Float> getAngle() {
+        try {
+            return gs.getAngle();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null; //Questo non era previsto, potrebbe causare problemi
+
+    }
     public Future<LightSensor.Color> getColor() {
         try {
             return ls.getColor();
@@ -319,6 +345,55 @@ public class Robot {
         }
         return null; //Questo non era previsto, potrebbe causare problemi
     }
+
+    public boolean identifyBall()
+    {
+        try {
+            int count = 0;
+            for(int i = 0; i < 10; i ++){
+                Float dist = this.getDistance().get();
+                if(dist<35)
+                    count++;
+                activity.runOnUiThread(() -> txtDistance.setText(dist.toString()));
+            }
+            return !this.minePickedUp && count >= 8;
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+        return false; // Non dovrebbe mai arrivare qua
+    }
+
+    public float identifyOrientation()
+    {
+        try
+        {
+            return this.getAngle().get();
+        }
+        catch (InterruptedException | ExecutionException e)
+        {
+            e.printStackTrace();
+        }
+
+        return 0;
+    }
+
+    public void catchBall() {
+        Utility.sleep(2000);
+        this.closeHand(25);
+        this.setMinePickedUp(true);
+    }
+
+    public void minaCheck(int c, int r)
+    {
+        pixelGrid.cellCheck(c,r,"MINA");
+    }
+
+    public void fixOrientationGS()
+    {
+        Float orientation = identifyOrientation();
+    }
+
+    //region Vecchio Raddrizzamento
 
     //funzione che mi dice se sono dritto
     public void amIStraight() {
@@ -368,30 +443,6 @@ public class Robot {
         skew *= 20;
     }
 
-    public boolean identifyBall()
-    {
-        try {
-            int count=0;
-            for(int i=0;i<10;i++){
-                Float dist=this.getDistance().get();
-                if(dist<35)
-                    count++;
-                activity.runOnUiThread(() -> txtDistance.setText(dist.toString()));
-            }
-            return !this.minePickedUp && count >=8;
-        } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
-        }
-        return false; // Non dovrebbe mai arrivare qua
-    }
-
-    public void catchBall()
-    {
-        Utility.sleep(2000);
-        this.closeHand(25);
-        this.setMinePickedUp(true);
-    }
-
     public void slightestMove()
     {
         int step1 = 0, step2 = (int) skew, step3 = 0;
@@ -431,8 +482,5 @@ public class Robot {
         }
     }
 
-    public void minaCheck(int c, int r)
-    {
-        pixelGrid.cellCheck(c,r,"MINA");
-    }
+    //endregion
 }

@@ -40,11 +40,16 @@ public class Test2 extends Test {
     //Variabili algoritmo Schizzerotto
     private ArrayList<String> movements=new ArrayList<String>();
     private ArrayList<Position> positionList=new ArrayList<Position>();
+    private boolean minaRaccolta = false;
+    private ArrayList<Position> cronologiaMovimenti;
     //Fine
 
     public Test2(Robot robot, GameField field, char cRO, Context context) {
         super(robot, field);
         this.context = context;
+        //todo cambiare con il valore definitivo
+        totMine = 9;
+        securedMine = 0;
         int nRO=0;
         if(cRO=='s')
             nRO=0;
@@ -246,7 +251,7 @@ public class Test2 extends Test {
             //TODO aggiorna posizione robot
             Utility.sleep(5000);
             robot.autoMove90Left();             //mi raddrizzo verso l'alto
-
+            Utility.sleep(5000);
         }
     }
 
@@ -269,6 +274,7 @@ public class Test2 extends Test {
             //TODO aggiorna posizione robot
             Utility.sleep(5000);
             robot.autoMove90Left();             //mi raddrizzo verso l'alto
+            Utility.sleep(5000);
         }
     }
 
@@ -297,14 +303,20 @@ public class Test2 extends Test {
 
     public boolean sorpassaDX(){
         robot.autoMove90Right();
+        Utility.sleep(5000);
         if(!robot.identifyBall()){
             robot.forwardOnce();
+            Utility.sleep(5000);
             robot.autoMove90Left();
+            Utility.sleep(5000);
             int mosse=0;
             while(robot.identifyBall()){
                 robot.autoMove90Right();
+                Utility.sleep(5000);
                 robot.forwardOnce();
+                Utility.sleep(5000);
                 robot.autoMove90Left();
+                Utility.sleep(5000);
                 mosse++;
             }
             robot.forwardOnce();
@@ -319,23 +331,53 @@ public class Test2 extends Test {
 
     public void algorithm(){
 
+
         //todo: while che "consuma" tutte le posizioni ricevute tramite nearby
-        finish=new Position(4,4); //todo: deve essere presente la posizione da raggiungere in quel momento
-        int md_best=md(field.getStartPosition(),finish);
+        //int md_best=md(field.getStartPosition(),finish);
 
         ArrayList<Position> mosse=new ArrayList<Position>();
 
-        while(field.getRobotPosition().getX()!=finish.getX() || field.getRobotPosition().getY()!=finish.getY()){
-            int best_dir=productivePath();
-            if(best_dir==-1){                   //non esiste un percorso migliore, prendo una direzione random
-                best_dir=randomDirection();
+        while(this.securedMine<this.totMine){
+            //todo: togliere il commento sotto qua una volta che implementato il riempimento del vettore di posizioni
+            /*while(positionList.size()<1){
+                Utility.sleep(100);
             }
-            this.setOrientation(best_dir);
-            robot.forwardOnce();
+            Position target=positionList.remove(0);*/
+            //Position target = new Position(4,4);
+            Position target = new Position(1,2);
+            vaiA(target);
+            vaiA(field.getStartPosition());
+        }
+    }
 
-            Position p=getNextPosition(best_dir);
-            field.setRobotPosition(p.getX(),p.getY());
+    private void vaiA(Position target) {
+        finish = target;
+        while(field.getRobotPosition().getX()!=finish.getX() || field.getRobotPosition().getY()!=finish.getY()){
+            if (!minaRaccolta && devoRaccogliere()) {
+                raccogliMina();
+            }
+            else if (minaRaccolta && sonoSuStart()){
+                setOrientation(2);
+                mollaMina();
+            }
+            else if (minaRaccolta){
+                //se ho raccolto la mina devo tornare indietro seguendo il percorso inverso
+                reverseMove(movements.remove(movements.size()-1));
+            }
+            else {
+                int best_dir = productivePath();
+                if (best_dir == -1) {                   //non esiste un percorso migliore, prendo una direzione random
+                    best_dir = randomDirection();
+                }
+                this.setOrientation(best_dir);
+                robot.forwardOnce();
+                movements.add("FW");
+                Utility.sleep(5000);
 
+                Position p = getNextPosition(best_dir);
+                field.setRobotPosition(p.getX(), p.getY());
+                //cronologiaMovimenti.add(new Position(p.getX(), p.getY()));
+            }
             /*mosse.add(new Position(field.now.x,field.now.y));
             for(int i=0;i<mosse.size();i++){
                 System.out.print("("+mosse.get(i).x+";"+mosse.get(i).y+")->");
@@ -345,6 +387,65 @@ public class Test2 extends Test {
             printPlayerPositionInMatrix();
             //field.printField();
         }
+    }
+
+    private void reverseMove(String nextMove) {
+        if (nextMove == "FW") {
+            robot.forwardOnce();
+            Position p = getNextPosition(robotOrientation);
+            field.setRobotPosition(p.getX(), p.getY());
+        }
+        else if (nextMove == "90LEFT") {
+            robot.autoMove90Right();
+            robotOrientation = (robotOrientation + 1)%4;
+        }
+        else if (nextMove == "90RIGHT") {
+            robot.autoMove90Left();
+            robotOrientation = (robotOrientation - 1)%4;
+        }
+        Utility.sleep(5000);
+    }
+
+    private void mollaMina() {
+        robot.openHand(15);       //apre la mano
+        robot.forwardHalf();            //avanza un poco
+        Utility.sleep(5000);
+        this.securedMine++;
+        minaRaccolta = false;
+        robot.backwardHalf();           //torna indietro
+        Utility.sleep(5000);
+        robot.autoMove180Right();       //si gira di 180°
+    }
+
+    private boolean sonoSuStart() {
+        return (field.getRobotPosition() == field.getStartPosition());
+    }
+
+    private void raccogliMina() {
+        minaRaccolta = true;
+        robot.forwardOnceSearch();
+        movements.add("FW");
+        Utility.sleep(5000);
+        robot.autoMove180Right();
+        Utility.sleep(5000);
+        robotOrientation = (robotOrientation + 2)%4;
+    }
+
+    private boolean devoRaccogliere() {
+        if(robotOrientation == 0){
+            return (field.getRobotPosition().getX() == finish.getX() && field.getRobotPosition().getY() + 1 == finish.getY());
+        }
+        else if(robotOrientation == 1){
+            return (field.getRobotPosition().getX() + 1 == finish.getX() && field.getRobotPosition().getY()  == finish.getY());
+        }
+        else if(robotOrientation == 2){
+            return (field.getRobotPosition().getX() == finish.getX() && field.getRobotPosition().getY() -1 == finish.getY());
+        }
+        else if (robotOrientation == 3){
+            return (field.getRobotPosition().getX() - 1 == finish.getX() && field.getRobotPosition().getY()  == finish.getY());
+        }
+        else
+            return false;
     }
 
     public void updateRobotPosition(){}
@@ -380,65 +481,31 @@ public class Test2 extends Test {
     }
 
     private void setOrientation(int newOrientation) {
-        int NewOrientationAux = 0;
+        int NewOrientationAux;
         if (newOrientation == 0){
             NewOrientationAux = 4;
         }
-        int movement = robotOrientation - NewOrientationAux;
+        else{
+            NewOrientationAux = newOrientation;
+        }
+        int movement = (NewOrientationAux - robotOrientation)%4;
         if (movement == 1){
             robot.autoMove90Right();
+            movements.add("90RIGHT");
+            Utility.sleep(5000);
         }
         else if (movement == 2){
             robot.autoMove180Right();
+            movements.add("180RIGHT");
+            Utility.sleep(5000);
         }
         else if (movement == 3){
             robot.autoMove90Left();
+            movements.add("90LEFT");
+            Utility.sleep(5000);
         }
-
-        /*if (robotOrientation == 0){
-            if(newOrientation == 1) {
-                robot.autoMove90Right();
-            }
-            else if (newOrientation == 2){
-                robot.autoMove180Right();
-            }
-            else if (newOrientation == 3){
-                robot.autoMove90Left();
-            }
-        }
-        else if (robotOrientation == 1){
-            if(newOrientation == 2) {
-                robot.autoMove90Right();
-            }
-            else if (newOrientation == 3){
-                robot.autoMove180Right();
-            }
-            else if (newOrientation == 0){
-                robot.autoMove90Left();
-            }
-        }
-        else if (robotOrientation == 2){
-            if(newOrientation == 3) {
-                robot.autoMove90Right();
-            }
-            else if (newOrientation == 0){
-                robot.autoMove180Right();
-            }
-            else if (newOrientation == 1){
-                robot.autoMove90Left();
-            }
-        }
-        else if (robotOrientation == 3){
-            if(newOrientation == 0) {
-                robot.autoMove90Right();
-            }
-            else if (newOrientation == 1){
-                robot.autoMove180Right();
-            }
-            else if (newOrientation == 2){
-                robot.autoMove90Left();
-            }
-        }*/
+        //aggiorno l'orientamento scritto del robot
+        //robotOrientation = (robotOrientation + movement)%4;
         robotOrientation = newOrientation;
     }
 
