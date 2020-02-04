@@ -35,7 +35,7 @@ public class Robot {
     private final UltrasonicSensor us;
     private final LightSensor ls;
     private final GyroSensor gs;
-    private float scartogs = -1;
+    private Float scartogs = null;
 
 
     private ArrayList<Ball> balls;
@@ -362,11 +362,10 @@ public class Robot {
         return false; // Non dovrebbe mai arrivare qua
     }
 
-    public Float identifyOrientation()
-    {
+    public Float identifyOrientation() {
         try {
-            float angle = this.getAngle().get();
-            if(scartogs == -1)
+            Float angle = this.getAngle().get();
+            if( scartogs == null)
                 scartogs = angle;
             return angle - scartogs;
         }
@@ -387,7 +386,7 @@ public class Robot {
         pixelGrid.cellCheck(c,r,"MINA");
     }
     public void straightenMeGS(float angle) {
-        int step1 = 0, step2 = 1000, step3 = 0;
+        int step1 = 0, step2 = 800, step3 = 0;
         try {//Destra
             if (angle > 0) {
                 step2 = -step2; //ricavo il valore postivo
@@ -409,23 +408,20 @@ public class Robot {
         }
     }
     public void fixOrientationGS() {
-        Float angle = identifyOrientation() % 90;
-        if (angle > 45){
-            angle -= 90;
-        }
-        if (angle < -45)
-            angle += 90;
-        while (angle <= -3 || angle >= 3) {
-            Utility.sleep(500);
-            straightenMeGS(angle);
+        Float angle = 0.f;
+        do {
             angle = identifyOrientation() % 90;
-            if (angle > 45){
+            if (angle > 45)
                 angle -= 90;
-            }
-            if (angle < -45)
+            else if (angle < -45)
                 angle += 90;
-        }
-        scartogs = -1;
+
+            if (angle <= -2 || angle >= 2) {
+                Utility.sleep(500);
+                straightenMeGS(angle);
+                Utility.sleep(250);
+            }
+        }while (angle <= -2 || angle >= 2);
     }
 
     //region Vecchio Raddrizzamento
