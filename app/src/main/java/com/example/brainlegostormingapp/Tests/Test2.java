@@ -46,8 +46,8 @@ public class Test2 extends Test {
         super(robot, field);
         this.context = context;
         //todo cambiare con il valore definitivo
-        totMine = 9;
-        securedMine = 0;
+        this.totMine = 9;
+        this.securedMine = 0;
         int nRO=0;
         if(cRO=='s')
             nRO=0;
@@ -346,7 +346,7 @@ public class Test2 extends Test {
     }
 
     private boolean sonoSuStart() {
-        return (field.getRobotPosition() == field.getStartPosition());
+        return (field.getRobotPosition().getX() == field.getStartPosition().getX() && field.getRobotPosition().getY() == field.getStartPosition().getY());
     }
 
     private void raccogliMina() {
