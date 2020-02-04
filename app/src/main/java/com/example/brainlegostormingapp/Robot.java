@@ -349,9 +349,9 @@ public class Robot {
     {
         try {
             int count = 0;
-            for(int i = 0; i < 10; i ++){
+            for (int i = 0; i < 10; i ++){
                 Float dist = this.getDistance().get();
-                if(dist<35)
+                if (dist<35)
                     count++;
                 activity.runOnUiThread(() -> txtDistance.setText(dist.toString()));
             }
@@ -365,14 +365,13 @@ public class Robot {
     public Float identifyOrientation() {
         try {
             Float angle = this.getAngle().get();
-            if( scartogs == null)
+            if (scartogs == null)
                 scartogs = angle;
             return angle - scartogs;
         }
         catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
-
         return 0.f;
     }
 
@@ -386,20 +385,20 @@ public class Robot {
         pixelGrid.cellCheck(c,r,"MINA");
     }
     public void straightenMeGS(float angle) {
-        int step1 = 0, step2 = 800, step3 = 0;
+        int step1 = 0, step2 = 400, step3 = 0;
         try {//Destra
             if (angle > 0) {
                 step2 = -step2; //ricavo il valore postivo
                 lm.setPolarity(TachoMotor.Polarity.FORWARD);
-                lm.setTimeSpeed(2, step1, step2, step3, true);
+                lm.setTimeSpeed(4, step1, step2, step3, true);
                 rm.setPolarity(TachoMotor.Polarity.BACKWARDS);
-                rm.setTimeSpeed(2, step1, step2, step3, true);
+                rm.setTimeSpeed(4, step1, step2, step3, true);
             }//Sinistra
             else if (angle < 0) {
                 rm.setPolarity(TachoMotor.Polarity.FORWARD);
-                rm.setTimeSpeed(2, step1, step2, step3, true);
+                rm.setTimeSpeed(4, step1, step2, step3, true);
                 lm.setPolarity(TachoMotor.Polarity.BACKWARDS);
-                lm.setTimeSpeed(2, step1, step2, step3, true);
+                lm.setTimeSpeed(4, step1, step2, step3, true);
             }
             rm.waitCompletion();
             lm.waitCompletion();
