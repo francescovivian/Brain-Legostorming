@@ -540,7 +540,7 @@ public class Test2 extends Test {
     }
 
 
-
+    //region legacy code
     /*
      * Right90, FW, Left90 se può
      * se non ha una mina davanti, termina
@@ -605,5 +605,6 @@ public class Test2 extends Test {
             }
         }
     }*/
+    //end region
 }
 
