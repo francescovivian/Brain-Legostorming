@@ -32,12 +32,10 @@ public class Test2 extends Test {
     int[][] mainField;
 
 
-    //Variabili algoritmo Vivian
+    //Variabili algoritmo
     int robotOrientation;
     Position finish; //todo: servirà a contenere la posizione da raggiungere in quel momento
-    //Fine
 
-    //Variabili algoritmo Schizzerotto
     private ArrayList<String> movements=new ArrayList<String>();
     private ArrayList<Position> positionList=new ArrayList<Position>();
     private boolean minaRaccolta = false;
@@ -216,81 +214,11 @@ public class Test2 extends Test {
     *   BW:         inidietreggiamento di una cella
     *   HBW:        inidietreggiamento di mezza cella
     * */
-    public void goTo(Position actualMine){
-        while(field.getRobotPosition().getX()!=actualMine.getX()){
-
-        }
-    }
 
 
     //Nel caso andando alla mina si ripassasse per la posizione iniziale, svuoto lo stack delle mosse precedenti
     public void emptyStack(){
         this.movements=new ArrayList<String>(); // ;) ;)
-    }
-
-    /*
-    * Right90, FW, Left90 se può
-    * se non ha una mina davanti, termina
-    * altrimenti se ha una cella a destra prova dodgeRight
-    * */
-    public void dodgeRight(){
-        robot.autoMove90Right();
-        Utility.sleep(5000);
-        if(robot.identifyBall()){               //trovo una pallina a destra
-            robot.autoMove90Left();             //mi raddrizzo verso l'alto
-            Utility.sleep(5000);
-            dodgeLeft();                        //tento il dodge verso sinistra
-        }
-        else if (true) {                        //TODO ho muro a destra e voglio andare verso l'alto
-            robot.autoMove90Left();             //mi raddrizzo verso l'alto
-            Utility.sleep(5000);
-            dodgeLeft();                        //tento il dodge verso sinistra
-        }
-        else {
-            robot.forwardOnce();                //mi sposto nella cella a destra
-            //TODO aggiorna posizione robot
-            Utility.sleep(5000);
-            robot.autoMove90Left();             //mi raddrizzo verso l'alto
-            Utility.sleep(5000);
-        }
-    }
-
-    public void dodgeLeft(){
-        robot.autoMove90Left();
-        Utility.sleep(5000);
-        if(robot.identifyBall()){               //trovo una pallina a sinistra
-            robot.autoMove90Right();
-            Utility.sleep(5000);
-            //TODO tornare indietro e provare a passare a sinistra da riga piu in basso
-            // o a destra da riga piu in basso
-        }
-        else if (true) {                        //TODO ho muro a sinistra e voglio andare verso l'alto
-            robot.autoMove90Left();
-            Utility.sleep(5000);
-            dodgeLeft();
-        }
-        else {
-            robot.forwardOnce();                //mi sposto nella cella a sinistra
-            //TODO aggiorna posizione robot
-            Utility.sleep(5000);
-            robot.autoMove90Left();             //mi raddrizzo verso l'alto
-            Utility.sleep(5000);
-        }
-    }
-
-    public void alignToBall(){
-        if(true){ //todo posizione robot diversa da riga della mina
-            if(robot.identifyBall() && !rightBallAhead()){               //trovo una pallina davanti
-                dodgeRight();
-            }
-            else if(rightBallAhead()){
-                //todo raccoglie la mina
-            }
-            else {
-                robot.forwardOnce();
-                alignToBall();
-            }
-        }
     }
 
     private boolean rightBallAhead() {
@@ -610,5 +538,72 @@ public class Test2 extends Test {
     public void printPlayerPositionInMatrix(){
         mainField[convertToX("NOW")][convertToY("NOW")]=2;
     }
+
+
+
+    /*
+     * Right90, FW, Left90 se può
+     * se non ha una mina davanti, termina
+     * altrimenti se ha una cella a destra prova dodgeRight
+     * */
+    /*public void dodgeRight(){
+        robot.autoMove90Right();
+        Utility.sleep(5000);
+        if(robot.identifyBall()){               //trovo una pallina a destra
+            robot.autoMove90Left();             //mi raddrizzo verso l'alto
+            Utility.sleep(5000);
+            dodgeLeft();                        //tento il dodge verso sinistra
+        }
+        else if (true) {                        //TODO ho muro a destra e voglio andare verso l'alto
+            robot.autoMove90Left();             //mi raddrizzo verso l'alto
+            Utility.sleep(5000);
+            dodgeLeft();                        //tento il dodge verso sinistra
+        }
+        else {
+            robot.forwardOnce();                //mi sposto nella cella a destra
+            //TODO aggiorna posizione robot
+            Utility.sleep(5000);
+            robot.autoMove90Left();             //mi raddrizzo verso l'alto
+            Utility.sleep(5000);
+        }
+    }
+
+    public void dodgeLeft(){
+        robot.autoMove90Left();
+        Utility.sleep(5000);
+        if(robot.identifyBall()){               //trovo una pallina a sinistra
+            robot.autoMove90Right();
+            Utility.sleep(5000);
+            //TODO tornare indietro e provare a passare a sinistra da riga piu in basso
+            // o a destra da riga piu in basso
+        }
+        else if (true) {                        //TODO ho muro a sinistra e voglio andare verso l'alto
+            robot.autoMove90Left();
+            Utility.sleep(5000);
+            dodgeLeft();
+        }
+        else {
+            robot.forwardOnce();                //mi sposto nella cella a sinistra
+            //TODO aggiorna posizione robot
+            Utility.sleep(5000);
+            robot.autoMove90Left();             //mi raddrizzo verso l'alto
+            Utility.sleep(5000);
+        }
+    }
+
+    public void alignToBall(){
+        if(true){ //todo posizione robot diversa da riga della mina
+            if(robot.identifyBall() && !rightBallAhead()){               //trovo una pallina davanti
+                dodgeRight();
+            }
+            else if(rightBallAhead()){
+                //todo raccoglie la mina
+            }
+            else {
+                robot.forwardOnce();
+                alignToBall();
+            }
+        }
+    }*/
 }
 
