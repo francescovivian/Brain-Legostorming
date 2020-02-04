@@ -96,7 +96,7 @@ public class ManualActivity extends AppCompatActivity {
                 btnLeft, btnRight, btnOpen,
                 btnClose, btnCancel);
 
-        btnStart.setOnClickListener(v -> robot.startRLEngines('f'));
+        btnStart.setOnClickListener(v -> robot.forwardOnce());
 
         btnStop.setOnClickListener(v -> robot.stopAllEngines());
 

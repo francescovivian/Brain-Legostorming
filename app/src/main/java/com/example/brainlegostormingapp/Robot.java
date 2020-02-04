@@ -35,6 +35,7 @@ public class Robot {
     private final UltrasonicSensor us;
     private final LightSensor ls;
     private final GyroSensor gs;
+    private float scartogs = -1;
 
 
     private ArrayList<Ball> balls;
@@ -233,9 +234,7 @@ public class Robot {
             rm.setPolarity(TachoMotor.Polarity.FORWARD);
             rm.setTimeSpeed(SPEED, step1, step2, step3, true);
             if (isPresent)
-            {
                 catchBall();
-            }
             rm.waitCompletion();
             lm.waitCompletion();
         } catch (IOException e) {
@@ -363,18 +362,19 @@ public class Robot {
         return false; // Non dovrebbe mai arrivare qua
     }
 
-    public float identifyOrientation()
+    public Float identifyOrientation()
     {
-        try
-        {
-            return this.getAngle().get();
+        try {
+            float angle = this.getAngle().get();
+            if(scartogs == -1)
+                scartogs = angle;
+            return angle - scartogs;
         }
-        catch (InterruptedException | ExecutionException e)
-        {
+        catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
 
-        return 0;
+        return 0.f;
     }
 
     public void catchBall() {
@@ -383,14 +383,49 @@ public class Robot {
         this.setMinePickedUp(true);
     }
 
-    public void minaCheck(int c, int r)
-    {
+    public void minaCheck(int c, int r) {
         pixelGrid.cellCheck(c,r,"MINA");
     }
-
-    public void fixOrientationGS()
-    {
-        Float orientation = identifyOrientation();
+    public void straightenMeGS(float angle) {
+        int step1 = 0, step2 = 1000, step3 = 0;
+        try {//Destra
+            if (angle > 0) {
+                step2 = -step2; //ricavo il valore postivo
+                lm.setPolarity(TachoMotor.Polarity.FORWARD);
+                lm.setTimeSpeed(2, step1, step2, step3, true);
+                rm.setPolarity(TachoMotor.Polarity.BACKWARDS);
+                rm.setTimeSpeed(2, step1, step2, step3, true);
+            }//Sinistra
+            else if (angle < 0) {
+                rm.setPolarity(TachoMotor.Polarity.FORWARD);
+                rm.setTimeSpeed(2, step1, step2, step3, true);
+                lm.setPolarity(TachoMotor.Polarity.BACKWARDS);
+                lm.setTimeSpeed(2, step1, step2, step3, true);
+            }
+            rm.waitCompletion();
+            lm.waitCompletion();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    public void fixOrientationGS() {
+        Float angle = identifyOrientation() % 90;
+        if (angle > 45){
+            angle -= 90;
+        }
+        if (angle < -45)
+            angle += 90;
+        while (angle <= -3 || angle >= 3) {
+            Utility.sleep(500);
+            straightenMeGS(angle);
+            angle = identifyOrientation() % 90;
+            if (angle > 45){
+                angle -= 90;
+            }
+            if (angle < -45)
+                angle += 90;
+        }
+        scartogs = -1;
     }
 
     //region Vecchio Raddrizzamento
