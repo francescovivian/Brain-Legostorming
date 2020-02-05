@@ -1165,12 +1165,12 @@ public class AutoActivity extends ConnectionsActivity /*implements MyRecyclerVie
     }
 
     /** {@see ConnectionsActivity#getRequiredPermissions()} */
-    @Override
+    /*@Override
     protected String[] getRequiredPermissions() {
         return join(
                 super.getRequiredPermissions(),
                 Manifest.permission.RECORD_AUDIO);
-    }
+    }*/
 
     /** Joins 2 arrays together. */
     private static String[] join(String[] a, String... b) {

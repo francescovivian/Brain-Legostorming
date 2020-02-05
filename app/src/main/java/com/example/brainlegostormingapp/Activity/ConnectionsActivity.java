@@ -477,9 +477,9 @@ public abstract class ConnectionsActivity extends AppCompatActivity {
      *
      * @return All permissions required for the app to properly function.
      */
-    protected String[] getRequiredPermissions() {
+    /*protected String[] getRequiredPermissions() {
         return REQUIRED_PERMISSIONS;
-    }
+    }*/
 
     /** Returns the client's name. Visible to others when connecting. */
     protected abstract String getName();
