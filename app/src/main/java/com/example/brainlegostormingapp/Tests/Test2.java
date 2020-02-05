@@ -35,6 +35,7 @@ public class Test2 extends Test {
     //Variabili algoritmo
     int robotOrientation;
     Position finish; //todo: servirà a contenere la posizione da raggiungere in quel momento
+    Position target;
 
     private ArrayList<String> movements=new ArrayList<String>();
     private ArrayList<Position> positionList=new ArrayList<Position>();
@@ -182,6 +183,9 @@ public class Test2 extends Test {
 
     @Override
     public void movement(){
+        robot.openHand(15);
+        field.setRobotPosition(field.getRobotPosition().getX(), field.getRobotPosition().getY());
+        printPlayerPositionInMatrix();
         /*while(securedMine<totMine){
             if(positionList.isEmpty()){
                 //codice per attendere l'arrivo di una posizione
@@ -263,16 +267,23 @@ public class Test2 extends Test {
         //todo: while che "consuma" tutte le posizioni ricevute tramite nearby
         //int md_best=md(field.getStartPosition(),finish);
 
-        ArrayList<Position> mosse=new ArrayList<Position>();
+        //ArrayList<Position> mosse=new ArrayList<Position>();
+
+
+        //simulo il consumatore di posizioni ricevute
+        target = new Position(1,3);
+        positionList.add(target);
+        target = new Position(1,2);
+        positionList.add(target);
+
 
         while(this.securedMine<this.totMine){
             //todo: togliere il commento sotto qua una volta che implementato il riempimento del vettore di posizioni
-            /*while(positionList.size()<1){
+            while(positionList.size()<1) {
                 Utility.sleep(100);
             }
-            Position target=positionList.remove(0);*/
-            Position target = new Position(1,2);
-            //Position target = new Position(1,2);
+            target=positionList.remove(0);
+
             vaiA(target);
             vaiA(field.getStartPosition());
         }
@@ -280,7 +291,7 @@ public class Test2 extends Test {
 
     private void vaiA(Position target) {
         finish = target;
-        while(field.getRobotPosition().getX()!=finish.getX() || field.getRobotPosition().getY()!=finish.getY()){
+        while(finish != null && (field.getRobotPosition().getX()!=finish.getX() || field.getRobotPosition().getY()!=finish.getY())){
             if (!minaRaccolta && devoRaccogliere()) {
                 raccogliMina();
             }
@@ -298,12 +309,16 @@ public class Test2 extends Test {
                     best_dir = randomDirection();
                 }
                 this.setOrientation(best_dir);
-                robot.forwardOnce();
-                movements.add("FW");
-                Utility.sleep(5000);
-
-                Position p = getNextPosition(best_dir);
-                field.setRobotPosition(p.getX(), p.getY());
+                if(!devoRaccogliere()) {
+                    robot.forwardOnce();
+                    movements.add("FW");
+                    Utility.sleep(5000);
+                    Position p = getNextPosition(best_dir);
+                    field.setRobotPosition(p.getX(), p.getY());
+                }
+                else{
+                    raccogliMina();
+                }
                 //cronologiaMovimenti.add(new Position(p.getX(), p.getY()));
             }
             /*mosse.add(new Position(field.now.x,field.now.y));
@@ -335,14 +350,16 @@ public class Test2 extends Test {
     }
 
     private void mollaMina() {
+        target = null;
+        this.securedMine++;
+        this.minaRaccolta = false;
         robot.openHand(15);       //apre la mano
         robot.forwardHalf();            //avanza un poco
         Utility.sleep(5000);
-        this.securedMine++;
-        minaRaccolta = false;
         robot.backwardHalf();           //torna indietro
         Utility.sleep(5000);
         robot.autoMove180Right();       //si gira di 180°
+        Utility.sleep(5000);
     }
 
     private boolean sonoSuStart() {
@@ -352,13 +369,15 @@ public class Test2 extends Test {
     private void raccogliMina() {
         //setto la flag a true per i cicli successivi
         minaRaccolta = true;
-        //setto la posizione della mina che ho appena raccolto nella matrice
-        Position p = getNextPosition(robotOrientation);
-        robot.minaCheck(p.getX(), p.getY());
         //muovo effettivamente il robot per racccogliere la mina
         robot.forwardOnceSearch();
         movements.add("FW");
         Utility.sleep(5000);
+        //setto la posizione della mina che ho appena raccolto nella matrice
+        Position p = getNextPosition(robotOrientation);
+        robot.minaCheck(p.getX(), p.getY());
+        //aggiorno la posizione del robot
+        field.setRobotPosition(p.getX(), p.getY());
         robot.autoMove180Right();
         Utility.sleep(5000);
         robotOrientation = (robotOrientation + 2)%4;
@@ -389,10 +408,15 @@ public class Test2 extends Test {
 
         //creo un vettore con le direzioni che non hanno 2
         ArrayList<Integer> newDirs=new ArrayList<Integer>();
+        ArrayList<Integer> allDirs=new ArrayList<Integer>();
+
 
         for(int i=0;i<4;i++){                                   //per tutte le direzioni
             Position current=getNextPosition(i);                //prendo la posizione virtuale
-            if(mainField[current.getX()][current.getY()]!=2)    //se non ci sono mai statp
+            if (current != null){
+                allDirs.add(i);
+            }
+            if( current != null && mainField[current.getX()][current.getY()]!=2)    //se non ci sono mai statp
                 newDirs.add(i);                                 //la aggiungo al vettore
         }
 
@@ -400,17 +424,20 @@ public class Test2 extends Test {
             setOrientation(newDirs.get(i));                     //mi giro nella posizione corrente
             if(!robot.identifyBall())                           //se posso andarci
                 return newDirs.get(i);                          //ritorno tale direzione
+            else {
+                for (int j = 0; j < allDirs.size(); j++){       //todo ci piace l'autismo
+                    if(allDirs.get(j) == newDirs.get(i))
+                        allDirs.remove(j);
+                }
+            }
         }
 
                                                                 //non ho trovato una direzione in cui non sono mai stato ed in cui non ci sono mine
-        for(int i=0;i<4;i++){                                   //per le 4 direzioni
-            dir=(robotOrientation+1)%4;
-            setOrientation(dir);                                //mi giro nella direzione corrente
-            if(!robot.identifyBall())                           //se non ci sono mine
-                return dir;                                     //restituisco tale direzione
-        }
+        int random = ( int )(Math.random()*(allDirs.size()-1));
+        setOrientation(random);
+        return allDirs.get(random);
 
-        return dir;                                             //se arriva qui, qualcosa è andato storto
+        //return dir;                                             //se arriva qui, qualcosa è andato storto
     }
 
     private void setOrientation(int newOrientation) {
@@ -451,10 +478,10 @@ public class Test2 extends Test {
         for(int i=0;i<betterDirections.size();i++){         //per tutte le direzioni
             int direction=betterDirections.get(i);          //prendo quella corrente
             Position p=getNextPosition(direction);          //fake posizione andando in quella direzione
-            if(mainField[p.getX()][p.getY()]!=2){           //se non ci sono mai passato
+            if( p != null && mainField[p.getX()][p.getY()]!=2){           //se non ci sono mai passato
                 setOrientation(direction);                  //mi giro da quella parte
                 Utility.sleep(3000);
-                if(!robot.identifyBall())                   //se non c'è una mina
+                if(devoRaccogliere() || !robot.identifyBall())                   //se non c'è una mina oppure ho davanti quella che devo raccogliere
                     return direction;                       //ritorno la direzione corrente che userò per muovermi
             }
         }
