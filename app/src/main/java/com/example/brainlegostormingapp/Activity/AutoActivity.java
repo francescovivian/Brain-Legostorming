@@ -188,7 +188,7 @@ public class AutoActivity extends AppCompatActivity /*implements MyRecyclerViewA
                 eTxtStartX.setText("0");
                 eTxtStartY.setText("0");
                 spnOrientation.setSelection(1);
-                Utility.elementVisibilityToggle(btnResetMatrix,btnStart,btnSetMatrix);
+                Utility.elementVisibilityToggle(btnResetMatrix,btnStart,btnSetMatrix,eTxtStartX,eTxtStartY,eTxtMatrixC,eTxtMatrixR,spnOrientation,eTxtMine,txtCronometro);
                 Utility.elementToggle(eTxtMatrixR, eTxtMatrixC, eTxtStartX, eTxtStartY, eTxtMine, spnOrientation);
             } catch (NumberFormatException ignored) {
                 ignored.printStackTrace();
@@ -227,7 +227,7 @@ public class AutoActivity extends AppCompatActivity /*implements MyRecyclerViewA
             //ev3.cancel();
             //bluechan.close();
             Utility.elementToggle(btnMain, btnManual);
-            Utility.elementVisibilityToggle(btnStop,txtCronometro,btnSetMatrix);
+            Utility.elementVisibilityToggle(btnStop,txtCronometro,btnResetMatrix,eTxtStartX,eTxtStartY,eTxtMatrixC,eTxtMatrixR,spnOrientation,eTxtMine);
         });
 
         /*
