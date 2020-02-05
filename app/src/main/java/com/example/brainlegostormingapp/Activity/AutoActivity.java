@@ -114,8 +114,8 @@ public class AutoActivity extends ConnectionsActivity /*implements MyRecyclerVie
     private int dimR, dimC, startX, startY, mine;
     private char orientation;
 
-    private CameraBridgeViewBase camera;
-    private Camera myCamera;
+    //private CameraBridgeViewBase camera;
+    //private Camera myCamera;
     LinearLayout matrixView;
     private TextView txtCronometro, txtDistance;
     private Button btnMain, btnManual, btnStart, btnStop, btnSetMatrix, btnResetMatrix;
@@ -131,6 +131,17 @@ public class AutoActivity extends ConnectionsActivity /*implements MyRecyclerVie
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_auto);
         getSupportActionBar().hide();
+
+        // Comment here to generate a random name for the GroundStation
+        //mName = generateRandomName();
+        mName = "BrainLegostorming";
+
+        /*((TextView) findViewById(R.id.edit_key)).setText(KEY);
+        ((TextView) findViewById(R.id.edit_key)).setTypeface(null, Typeface.BOLD);*/
+
+        mStop = new boolean[6];
+        // all the robot are assumed to be in move
+        Arrays.fill(mStop, true);
 
         choosen = getIntent().getIntExtra("choosen", 0);
 
@@ -170,15 +181,15 @@ public class AutoActivity extends ConnectionsActivity /*implements MyRecyclerVie
         matrixView = findViewById(R.id.matrixView);
         spnOrientation = findViewById(R.id.direction_spinner);
         spnOrientation.setSelection(1);
-        camera = findViewById(R.id.cameraView);
+        //camera = findViewById(R.id.cameraView);
         eTxtMine = findViewById(R.id.eTxtMine);
         //endregion
 
 
-        if (!OpenCVLoader.initDebug())
+        /*if (!OpenCVLoader.initDebug())
             Log.e(TAG, "Unable to load OpenCV");
         else
-            Log.d(TAG, "OpenCV loaded");
+            Log.d(TAG, "OpenCV loaded");*/
 
         /*if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, 1);
@@ -298,7 +309,7 @@ public class AutoActivity extends ConnectionsActivity /*implements MyRecyclerVie
     private void legoMain(EV3.Api api) {
         //final String TAG = Prelude.ReTAG("legoMain");
 
-        robot = new Robot(api, camera, pixelGrid, this, txtDistance);
+        robot = new Robot(api, pixelGrid, this, txtDistance);
 
         //selezione della prova
         if (choosen == 1) {
@@ -430,33 +441,6 @@ public class AutoActivity extends ConnectionsActivity /*implements MyRecyclerVie
                 }
             };
 
-    /*@Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        getSupportActionBar()
-                .setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.actionBar));
-
-        mPreviousStateView = (TextView) findViewById(R.id.previous_state);
-        mCurrentStateView = (TextView) findViewById(R.id.current_state);
-
-        mDebugLogView = (TextView) findViewById(R.id.debug_log);
-        mDebugLogView.setVisibility(DEBUG ? View.VISIBLE : View.GONE);
-        mDebugLogView.setMovementMethod(new ScrollingMovementMethod());
-
-        // Comment here to generate a random name for the GroundStation
-        //mName = generateRandomName();
-        mName = "GroundStation";
-
-        ((TextView) findViewById(R.id.name)).setText(mName);
-        ((TextView) findViewById(R.id.edit_key)).setText(KEY);
-        ((TextView) findViewById(R.id.edit_key)).setTypeface(null, Typeface.BOLD);
-
-        mStop = new boolean[6];
-        // all the robot are assumed to be in move
-        Arrays.fill(mStop, true);
-    }*/
-
     private static String generateRandomName() {
         String name = "";
         Random random = new Random();
@@ -470,8 +454,8 @@ public class AutoActivity extends ConnectionsActivity /*implements MyRecyclerVie
     protected void onStart() {
         super.onStart();
         // Swap the two functions below if you want to start on Discovering rather than Advertising.
-        //setState(State.DISCOVERING);
-        setState(State.ADVERTISING);
+        setState(State.DISCOVERING);
+        //setState(State.ADVERTISING);
     }
 
     @Override
@@ -486,15 +470,6 @@ public class AutoActivity extends ConnectionsActivity /*implements MyRecyclerVie
         }
 
         super.onStop();
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (getState() == State.CONNECTED || getState() == State.ADVERTISING) {
-            setState(State.DISCOVERING);
-            return;
-        }
-        super.onBackPressed();
     }
 
     @Override
@@ -613,16 +588,16 @@ public class AutoActivity extends ConnectionsActivity /*implements MyRecyclerVie
             case UNKNOWN:
                 // Unknown is our initial state. Whatever state we move to,
                 // we're transitioning forwards.
-                transitionForward(oldState, newState);
+                //transitionForward(oldState, newState);
                 break;
             case DISCOVERING:
                 switch (newState) {
                     case UNKNOWN:
-                        transitionBackward(oldState, newState);
+                        //transitionBackward(oldState, newState);
                         break;
                     case ADVERTISING:
                     case CONNECTED:
-                        transitionForward(oldState, newState);
+                        //transitionForward(oldState, newState);
                         break;
                     default:
                         // no-op
@@ -633,10 +608,10 @@ public class AutoActivity extends ConnectionsActivity /*implements MyRecyclerVie
                 switch (newState) {
                     case UNKNOWN:
                     case DISCOVERING:
-                        transitionBackward(oldState, newState);
+                        //transitionBackward(oldState, newState);
                         break;
                     case CONNECTED:
-                        transitionForward(oldState, newState);
+                        //transitionForward(oldState, newState);
                         break;
                     default:
                         // no-op
@@ -646,7 +621,7 @@ public class AutoActivity extends ConnectionsActivity /*implements MyRecyclerVie
             case CONNECTED:
                 // Connected is our final state. Whatever new state we move to,
                 // we're transitioning backwards.
-                transitionBackward(oldState, newState);
+                //transitionBackward(oldState, newState);
                 break;
             default:
                 // no-op
@@ -657,7 +632,7 @@ public class AutoActivity extends ConnectionsActivity /*implements MyRecyclerVie
     /**
      * Transitions from the old state to the new state with an animation implying moving forward.
      */
-    @UiThread
+    /*@UiThread
     private void transitionForward(State oldState, final State newState) {
         mPreviousStateView.setVisibility(View.VISIBLE);
         mCurrentStateView.setVisibility(View.VISIBLE);
@@ -666,7 +641,8 @@ public class AutoActivity extends ConnectionsActivity /*implements MyRecyclerVie
         updateTextView(mCurrentStateView, newState);
 
         if (ViewCompat.isLaidOut(mCurrentStateView)) {
-            mCurrentAnimator = createAnimator(false /* reverse */);
+            mCurrentAnimator = createAnimator(false);
+            //reverse nelo metodo sopra
             mCurrentAnimator.addListener(
                     new AnimatorListener() {
                         @Override
@@ -676,12 +652,12 @@ public class AutoActivity extends ConnectionsActivity /*implements MyRecyclerVie
                     });
             mCurrentAnimator.start();
         }
-    }
+    }*/
 
     /**
      * Transitions from the old state to the new state with an animation implying moving backward.
      */
-    @UiThread
+    /*@UiThread
     private void transitionBackward(State oldState, final State newState) {
         mPreviousStateView.setVisibility(View.VISIBLE);
         mCurrentStateView.setVisibility(View.VISIBLE);
@@ -690,7 +666,8 @@ public class AutoActivity extends ConnectionsActivity /*implements MyRecyclerVie
         updateTextView(mPreviousStateView, newState);
 
         if (ViewCompat.isLaidOut(mCurrentStateView)) {
-            mCurrentAnimator = createAnimator(true /* reverse */);
+            mCurrentAnimator = createAnimator(true);
+            //reverse nella riga sopra
             mCurrentAnimator.addListener(
                     new AnimatorListener() {
                         @Override
@@ -701,6 +678,7 @@ public class AutoActivity extends ConnectionsActivity /*implements MyRecyclerVie
             mCurrentAnimator.start();
         }
     }
+    */
 
     @NonNull
     private Animator createAnimator(boolean reverse) {
@@ -965,8 +943,8 @@ public class AutoActivity extends ConnectionsActivity /*implements MyRecyclerVie
 
     // function called by the pop-up written above ... move along
     public void doneInput(String input) {
-        KEY = input;
-        ((TextView) findViewById(R.id.edit_key)).setText(KEY);
+        /*KEY = input;
+        ((TextView) findViewById(R.id.edit_key)).setText(KEY);*/
         // Do anything else with input!
     }
     /**
@@ -1051,11 +1029,10 @@ public class AutoActivity extends ConnectionsActivity /*implements MyRecyclerVie
         if (payload.getType() == Payload.Type.BYTES) {
             byte[] bytes = payload.asBytes();
             // comment this send if we are not the Groundstation anymore
-            send(payload);
+            //send(payload);
             String str_bytes = new String(bytes);
 
             // those are needed if you are a robot!
-            /*
             Integer aux = Character.getNumericValue(str_bytes.charAt(0));
             if((aux >= 0 && aux <=6) && ((str_bytes.charAt(1)=='S'))){
                 if(aux == 0 || aux == 1) {
@@ -1077,15 +1054,20 @@ public class AutoActivity extends ConnectionsActivity /*implements MyRecyclerVie
             }
 
 
-                if (str_bytes.toLowerCase().contains("obiettivo")) {
-                    logD(
-                            String.format(
-                                    "Recovery message: %s",
-                                    str_bytes));
-                    // messaggio del protocollo passivo
-                    return;
-                }
-              */
+            if (str_bytes.toLowerCase().contains("obiettivo")) {
+                logD(
+                        String.format(
+                                "Recovery message: %s",
+                                str_bytes));
+                // messaggio del protocollo passivo
+                String testoRicevuto = str_bytes.toLowerCase();
+                testoRicevuto = testoRicevuto.replace("coordinate obiettivo:", "");
+                testoRicevuto = testoRicevuto.substring(0,testoRicevuto.length()-1);
+                String coordinata[]= testoRicevuto.split(";");
+                System.out.println(coordinata);
+                //positionReceived = new Position(Integer.parseInt(coordinata[0]),Integer.parseInt(coordinata[1]));
+                return;
+            }
 
             if (str_bytes.toLowerCase().contains("recupero")) {
                 logD(
@@ -1093,6 +1075,11 @@ public class AutoActivity extends ConnectionsActivity /*implements MyRecyclerVie
                                 "Recovery message: %s",
                                 str_bytes));
                 // messaggio del protocollo passivo (broadcast) terza prova
+                String testoRicevuto = str_bytes.toLowerCase();
+                testoRicevuto = testoRicevuto.replace("coordinate recupero:", "");
+                testoRicevuto = testoRicevuto.substring(0,testoRicevuto.length()-1);
+                String coordinata[]= testoRicevuto.split(";");
+                System.out.println(coordinata);
                 return;
             }
 
@@ -1102,6 +1089,7 @@ public class AutoActivity extends ConnectionsActivity /*implements MyRecyclerVie
                                 "Welcome message: %s",
                                 str_bytes));
                 // messaggio di benvenuto
+                System.out.println(str_bytes);
                 return;
             }
 
@@ -1231,38 +1219,38 @@ public class AutoActivity extends ConnectionsActivity /*implements MyRecyclerVie
     @Override
     protected void logV(String msg) {
         super.logV(msg);
-        appendToLogs(toColor(msg, getResources().getColor(R.color.log_verbose)));
+        //appendToLogs(toColor(msg, getResources().getColor(R.color.log_verbose)));
     }
 
     @Override
     protected void logD(String msg) {
         super.logD(msg);
-        appendToLogs(toColor(msg, getResources().getColor(R.color.log_debug)));
+        //appendToLogs(toColor(msg, getResources().getColor(R.color.log_debug)));
     }
 
     @Override
     protected void logW(String msg) {
         super.logW(msg);
-        appendToLogs(toColor(msg, getResources().getColor(R.color.log_warning)));
+        //appendToLogs(toColor(msg, getResources().getColor(R.color.log_warning)));
     }
 
     @Override
     protected void logW(String msg, Throwable e) {
         super.logW(msg, e);
-        appendToLogs(toColor(msg, getResources().getColor(R.color.log_warning)));
+        //appendToLogs(toColor(msg, getResources().getColor(R.color.log_warning)));
     }
 
     @Override
     protected void logE(String msg, Throwable e) {
         super.logE(msg, e);
-        appendToLogs(toColor(msg, getResources().getColor(R.color.log_error)));
+        //appendToLogs(toColor(msg, getResources().getColor(R.color.log_error)));
     }
 
-    private void appendToLogs(CharSequence msg) {
+    /*private void appendToLogs(CharSequence msg) {
         mDebugLogView.append("\n");
         mDebugLogView.append(DateFormat.format("hh:mm", System.currentTimeMillis()) + ": ");
         mDebugLogView.append(msg);
-    }
+    }*/
 
     private static CharSequence toColor(String msg, int color) {
         SpannableString spannable = new SpannableString(msg);

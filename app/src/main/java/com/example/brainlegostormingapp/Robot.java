@@ -41,12 +41,12 @@ public class Robot {
     private ArrayList<Ball> balls;
     private ArrayList<Line> lines;
 
-    CameraBridgeViewBase camera;
-    Camera myCamera;
-    Mat frame;
+    //CameraBridgeViewBase camera;
+    //Camera myCamera;
+    //Mat frame;
 
-    Activity activity;
-    TextView txtDistance;
+    //Activity activity;
+    //TextView txtDistance;
 
     private PixelGridView pixelGrid;
 
@@ -70,17 +70,16 @@ public class Robot {
         }
     }
 
-    public Robot(EV3.Api api, CameraBridgeViewBase camera, PixelGridView pixelGrid, Activity activity, TextView txtDistance) {
-        this.activity = activity;
+    public Robot(EV3.Api api, PixelGridView pixelGrid, Activity activity, TextView txtDistance) {
+        /*this.activity = activity;
         this.txtDistance = txtDistance;
         this.pixelGrid = pixelGrid;
-        this.camera = camera;
-        myCamera = new Camera();
+
         camera.setVisibility(SurfaceView.VISIBLE);
         camera.setMaxFrameSize(640, 480);
         camera.disableFpsMeter();
         camera.setCvCameraViewListener(myCamera);
-        frame = new Mat();
+        frame = new Mat();*/
 
         minePickedUp=false;
 
@@ -353,7 +352,6 @@ public class Robot {
                 Float dist = this.getDistance().get();
                 if (dist<35)
                     count++;
-                activity.runOnUiThread(() -> txtDistance.setText(dist.toString()));
             }
             return !this.minePickedUp && count >= 8;
         } catch (InterruptedException | ExecutionException e) {
@@ -424,7 +422,7 @@ public class Robot {
     }
 
     //region Vecchio Raddrizzamento
-
+/*
     //funzione che mi dice se sono dritto
     public void amIStraight() {
         skew = 0;
@@ -446,7 +444,7 @@ public class Robot {
 //                    dy = Math.abs(line.p1.y - line.p2.y);
 //                    weight = dx + dy;
 //                    totWeight += weight;
-                    skew += ((frame.height()/2 - line.p2.y) /** weight*/);
+                    skew += ((frame.height()/2 - line.p2.y) * weight);
                     linesConsidered++;
                 }
 
@@ -456,7 +454,7 @@ public class Robot {
 //                    dy = Math.abs(line.p1.y - line.p2.y);
 //                    weight = dx + dy;
 //                    totWeight += weight;
-                    skew += ((frame.height()/2 - line.p2.y) /** weight*/);
+                    skew += ((frame.height()/2 - line.p2.y) * weight);
                     linesConsidered++;
                 }
             }
@@ -511,6 +509,6 @@ public class Robot {
             this.amIStraight();
         }
     }
-
+*/
     //endregion
 }

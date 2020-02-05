@@ -161,7 +161,7 @@ public abstract class ConnectionsActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        if (!hasPermissions(this, getRequiredPermissions())) {
+        /*if (!hasPermissions(this, getRequiredPermissions())) {
             if (!hasPermissions(this, getRequiredPermissions())) {
                 if (Build.VERSION.SDK_INT < 23) {
                     ActivityCompat.requestPermissions(
@@ -170,11 +170,11 @@ public abstract class ConnectionsActivity extends AppCompatActivity {
                     requestPermissions(getRequiredPermissions(), REQUEST_CODE_REQUIRED_PERMISSIONS);
                 }
             }
-        }
+        }*/
     }
 
     /** Called when the user has accepted (or denied) our permission request. */
-    @CallSuper
+    /*@CallSuper
     @Override
     public void onRequestPermissionsResult(
             int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -189,7 +189,7 @@ public abstract class ConnectionsActivity extends AppCompatActivity {
             recreate();
         }
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-    }
+    }*/
 
     /**
      * Sets the device to advertising mode. It will broadcast to other devices in discovery mode.

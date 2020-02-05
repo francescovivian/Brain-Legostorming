@@ -1,13 +1,17 @@
 package com.example.brainlegostormingapp.Activity;
 
+import android.Manifest;
 import android.content.Intent; //questo a cosa ti serve Denny? Perche il prof non lo usa
 
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.example.brainlegostormingapp.R;
 
@@ -63,6 +67,12 @@ public class MainActivity extends AppCompatActivity
 
         btnTest2.setOnClickListener(v ->
         {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+            }
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
+            }
             Intent autoIntent = new Intent(getBaseContext(),AutoActivity.class);
             autoIntent.putExtra("choosen",2);
             startActivity(autoIntent);
