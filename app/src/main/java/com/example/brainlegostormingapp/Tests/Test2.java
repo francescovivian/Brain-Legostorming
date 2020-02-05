@@ -46,8 +46,8 @@ public class Test2 extends Test {
     public Test2(Robot robot, GameField field, char cRO, Context context) {
         super(robot, field);
         this.context = context;
-        //todo cambiare con il valore definitivo
-        this.totMine = 9;
+        //todo cambiare con il valore definitivo (dovrebbe essere 9)
+        this.totMine = 2;
         this.securedMine = 0;
         int nRO=0;
         if(cRO=='s')
@@ -286,7 +286,14 @@ public class Test2 extends Test {
 
             vaiA(target);
             vaiA(field.getStartPosition());
+            inizializzaTutto();
         }
+    }
+
+    private void inizializzaTutto() {
+        this.movements = new ArrayList<>();
+        this.mainField = new int[field.getRow()][field.getColumn()];
+
     }
 
     private void vaiA(Position target) {
@@ -350,7 +357,7 @@ public class Test2 extends Test {
     }
 
     private void mollaMina() {
-        target = null;
+        this.target = null;
         this.securedMine++;
         this.minaRaccolta = false;
         robot.openHand(15);       //apre la mano
@@ -416,7 +423,7 @@ public class Test2 extends Test {
             if (current != null){
                 allDirs.add(i);
             }
-            if( current != null && mainField[current.getX()][current.getY()]!=2)    //se non ci sono mai statp
+            if( current != null && mainField[convertToR(current.getY())][convertToC(current.getX())]!=2)    //se non ci sono mai statp
                 newDirs.add(i);                                 //la aggiungo al vettore
         }
 
@@ -452,20 +459,18 @@ public class Test2 extends Test {
         if (movement == 1){
             robot.autoMove90Right();
             movements.add("90RIGHT");
-            Utility.sleep(5000);
         }
         else if (movement == 2){
             robot.autoMove180Right();
             movements.add("180RIGHT");
-            Utility.sleep(5000);
         }
         else if (movement == 3){
             robot.autoMove90Left();
             movements.add("90LEFT");
-            Utility.sleep(5000);
         }
         //aggiorno l'orientamento scritto del robot
         //robotOrientation = (robotOrientation + movement)%4;
+        Utility.sleep(5000);
         robotOrientation = newOrientation;
     }
 
@@ -478,7 +483,7 @@ public class Test2 extends Test {
         for(int i=0;i<betterDirections.size();i++){         //per tutte le direzioni
             int direction=betterDirections.get(i);          //prendo quella corrente
             Position p=getNextPosition(direction);          //fake posizione andando in quella direzione
-            if( p != null && mainField[p.getX()][p.getY()]!=2){           //se non ci sono mai passato
+            if( p != null && mainField[convertToR(p.getY())][convertToC(p.getX())]!=2){           //se non ci sono mai passato
                 setOrientation(direction);                  //mi giro da quella parte
                 Utility.sleep(3000);
                 if(devoRaccogliere() || !robot.identifyBall())                   //se non c'è una mina oppure ho davanti quella che devo raccogliere
@@ -509,6 +514,14 @@ public class Test2 extends Test {
     public int abs(int x){
         if (x<0)
             x=-x;
+        return x;
+    }
+
+    public int convertToR(int y){
+        return this.field.getRow() - 1 - y;
+    }
+
+    public int convertToC(int x){
         return x;
     }
 
