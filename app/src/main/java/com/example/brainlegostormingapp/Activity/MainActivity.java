@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -67,15 +68,17 @@ public class MainActivity extends AppCompatActivity
 
         btnTest2.setOnClickListener(v ->
         {
+            boolean p1= false, p2=false;
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+                p1=true;
             }
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
+                p2=true;
             }
-            Intent autoIntent = new Intent(getBaseContext(),AutoActivity.class);
-            autoIntent.putExtra("choosen",2);
-            startActivity(autoIntent);
+            if (p1 && p2) passtotest2();
+            else Toast.makeText(this, "Permessi non concessi", Toast.LENGTH_LONG).show();
         });
 
         btnTest3.setOnClickListener(v ->
@@ -88,5 +91,18 @@ public class MainActivity extends AppCompatActivity
             Intent nearbyIntent = new Intent(getBaseContext(), NearbySimulatorActivity.class);
             startActivity(nearbyIntent);
         });
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResult) {
+        if (requestCode == 1 && grantResult.length > 0 && grantResult[0] == PackageManager.PERMISSION_GRANTED)
+            passtotest2();
+    }
+
+    public void passtotest2()
+    {
+        Intent autoIntent = new Intent(getBaseContext(),AutoActivity.class);
+        autoIntent.putExtra("choosen",2);
+        startActivity(autoIntent);
     }
 }
