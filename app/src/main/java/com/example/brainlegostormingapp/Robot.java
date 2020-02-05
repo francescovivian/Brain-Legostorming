@@ -71,10 +71,10 @@ public class Robot {
     }
 
     public Robot(EV3.Api api, PixelGridView pixelGrid, Activity activity, TextView txtDistance) {
-        /*this.activity = activity;
-        this.txtDistance = txtDistance;
+        //this.activity = activity;
+        //this.txtDistance = txtDistance;
         this.pixelGrid = pixelGrid;
-
+        /*
         camera.setVisibility(SurfaceView.VISIBLE);
         camera.setMaxFrameSize(640, 480);
         camera.disableFpsMeter();
