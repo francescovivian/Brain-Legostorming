@@ -230,13 +230,13 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <org.opencv.android.JavaCameraView
+            <!--<org.opencv.android.JavaCameraView
                 android:id="@+id/cameraView"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:visibility="gone"
                 opencv:camera_id="any"
-                opencv:show_fps="true" />
+                opencv:show_fps="true" />-->
         </LinearLayout>
 
         <LinearLayout
@@ -246,12 +246,6 @@
             android:orientation="horizontal">
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/edit_key"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_width="wrap_content">
-        </TextView>
     </RelativeLayout>
 
     <!--<RelativeLayout
