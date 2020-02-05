@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Intent; //questo a cosa ti serve Denny? Perche il prof non lo usa
 
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
@@ -68,16 +69,12 @@ public class MainActivity extends AppCompatActivity
 
         btnTest2.setOnClickListener(v ->
         {
-            boolean p1= false, p2=false;
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-                p1=true;
+            boolean permessi = false;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.READ_EXTERNAL_STORAGE}, 123);
+                permessi = true;
             }
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
-                p2=true;
-            }
-            if (p1 && p2) passtotest2();
+            if (permessi) passtotest2();
             else Toast.makeText(this, "Permessi non concessi", Toast.LENGTH_LONG).show();
         });
 
@@ -91,12 +88,6 @@ public class MainActivity extends AppCompatActivity
             Intent nearbyIntent = new Intent(getBaseContext(), NearbySimulatorActivity.class);
             startActivity(nearbyIntent);
         });
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResult) {
-        if (requestCode == 1 && grantResult.length > 0 && grantResult[0] == PackageManager.PERMISSION_GRANTED)
-            passtotest2();
     }
 
     public void passtotest2()
