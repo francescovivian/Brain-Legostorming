@@ -36,6 +36,7 @@ public class Test2 extends Test {
     int robotOrientation;
     Position finish; //todo: servirà a contenere la posizione da raggiungere in quel momento
     Position target;
+    int nRO;
 
     private ArrayList<String> movements=new ArrayList<String>();
     private ArrayList<Position> positionList=new ArrayList<Position>();
@@ -49,7 +50,7 @@ public class Test2 extends Test {
         //todo cambiare con il valore definitivo (dovrebbe essere 9)
         this.totMine = 2;
         this.securedMine = 0;
-        int nRO=0;
+        nRO=0;
         if(cRO=='s')
             nRO=0;
         else if(cRO=='o')
@@ -271,21 +272,24 @@ public class Test2 extends Test {
 
 
         //simulo il consumatore di posizioni ricevute
-        target = new Position(1,3);
+        target = new Position(1,1);
         positionList.add(target);
         target = new Position(1,2);
         positionList.add(target);
+        target = new Position(1,3);
+        positionList.add(target);
 
-
+        inizializzaTutto();
         while(this.securedMine<this.totMine){
             //todo: togliere il commento sotto qua una volta che implementato il riempimento del vettore di posizioni
             while(positionList.size()<1) {
                 Utility.sleep(100);
             }
-            target=positionList.remove(0);
+            target = positionList.remove(0);
 
             vaiA(target);
             vaiA(field.getStartPosition());
+            mollaMina();
             inizializzaTutto();
         }
     }
@@ -304,7 +308,6 @@ public class Test2 extends Test {
             }
             else if (minaRaccolta && sonoSuStart()){
                 setOrientation(2);
-                mollaMina();
             }
             else if (minaRaccolta){
                 //se ho raccolto la mina devo tornare indietro seguendo il percorso inverso
@@ -357,7 +360,8 @@ public class Test2 extends Test {
     }
 
     private void mollaMina() {
-        this.target = null;
+        //this.target = new Position(0,0);
+        robot.setMinePickedUp(false);
         this.securedMine++;
         this.minaRaccolta = false;
         robot.openHand(15);       //apre la mano
@@ -366,6 +370,7 @@ public class Test2 extends Test {
         robot.backwardHalf();           //torna indietro
         Utility.sleep(5000);
         robot.autoMove180Right();       //si gira di 180°
+        robotOrientation = nRO;
         Utility.sleep(5000);
     }
 
