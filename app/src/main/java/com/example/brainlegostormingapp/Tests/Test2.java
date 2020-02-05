@@ -271,7 +271,7 @@ public class Test2 extends Test {
                 Utility.sleep(100);
             }
             Position target=positionList.remove(0);*/
-            Position target = new Position(4,4);
+            Position target = new Position(1,2);
             //Position target = new Position(1,2);
             vaiA(target);
             vaiA(field.getStartPosition());
