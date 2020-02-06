@@ -16,6 +16,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.example.brainlegostormingapp.R;
+import com.example.brainlegostormingapp.Utility.Utility;
 
 
 public class MainActivity extends AppCompatActivity
@@ -54,6 +55,10 @@ public class MainActivity extends AppCompatActivity
         btnTest3 = findViewById(R.id.btnTest3);
         btnFakeNearby = findViewById(R.id.btnNearby);
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.READ_EXTERNAL_STORAGE}, 123);
+        }
+
         btnManual.setOnClickListener(v ->
         {
             Intent manualIntent = new Intent(getBaseContext(),ManualActivity.class);
@@ -69,13 +74,16 @@ public class MainActivity extends AppCompatActivity
 
         btnTest2.setOnClickListener(v ->
         {
-            boolean permessi = false;
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.READ_EXTERNAL_STORAGE}, 123);
-                permessi = true;
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                    ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this, "Permessi non concessi", Toast.LENGTH_LONG).show();
             }
-            if (permessi) passtotest2();
-            else Toast.makeText(this, "Permessi non concessi", Toast.LENGTH_LONG).show();
+            else
+            {
+                Intent autoIntent = new Intent(getBaseContext(),AutoActivity.class);
+                autoIntent.putExtra("choosen",2);
+                startActivity(autoIntent);
+            }
         });
 
         btnTest3.setOnClickListener(v ->
@@ -88,12 +96,5 @@ public class MainActivity extends AppCompatActivity
             Intent nearbyIntent = new Intent(getBaseContext(), NearbySimulatorActivity.class);
             startActivity(nearbyIntent);
         });
-    }
-
-    public void passtotest2()
-    {
-        Intent autoIntent = new Intent(getBaseContext(),AutoActivity.class);
-        autoIntent.putExtra("choosen",2);
-        startActivity(autoIntent);
     }
 }

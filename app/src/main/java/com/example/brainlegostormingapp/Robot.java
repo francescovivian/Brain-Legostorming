@@ -38,19 +38,16 @@ public class Robot {
     private Float scartogs = null;
 
 
-    private ArrayList<Ball> balls;
-    private ArrayList<Line> lines;
+    //private ArrayList<Ball> balls;
+    //private ArrayList<Line> lines;
 
     //CameraBridgeViewBase camera;
     //Camera myCamera;
     //Mat frame;
 
-    //Activity activity;
-    //TextView txtDistance;
-
     private PixelGridView pixelGrid;
 
-    private double skew, maxAcceptedSkew;
+    //private double skew, maxAcceptedSkew;
 
     public Robot(EV3.Api api) {
         rm = new Motor(api, EV3.OutputPort.D);
@@ -70,16 +67,15 @@ public class Robot {
         }
     }
 
-    public Robot(EV3.Api api, PixelGridView pixelGrid, Activity activity, TextView txtDistance) {
-        //this.activity = activity;
-        //this.txtDistance = txtDistance;
-        this.pixelGrid = pixelGrid;
+    public Robot(EV3.Api api, PixelGridView pixelGrid) {
         /*
         camera.setVisibility(SurfaceView.VISIBLE);
         camera.setMaxFrameSize(640, 480);
         camera.disableFpsMeter();
         camera.setCvCameraViewListener(myCamera);
         frame = new Mat();*/
+
+        this.pixelGrid = pixelGrid;
 
         minePickedUp=false;
 
@@ -91,8 +87,8 @@ public class Robot {
         ls = api.getLightSensor(EV3.InputPort._4);
         gs = api.getGyroSensor(EV3.InputPort._2);
 
-        skew = 0;
-        maxAcceptedSkew = 300;
+        /*skew = 0;
+        maxAcceptedSkew = 300;*/
 
         try {
             rm.setType(TachoMotor.Type.LARGE);

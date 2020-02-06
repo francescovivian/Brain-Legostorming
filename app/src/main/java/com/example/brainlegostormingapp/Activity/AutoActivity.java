@@ -117,7 +117,7 @@ public class AutoActivity extends ConnectionsActivity /*implements MyRecyclerVie
     //private CameraBridgeViewBase camera;
     //private Camera myCamera;
     LinearLayout matrixView;
-    private TextView txtCronometro, txtDistance;
+    private TextView txtCronometro;
     private Button btnMain, btnManual, btnStart, btnStop, btnSetMatrix, btnResetMatrix;
     private EditText eTxtMatrixR, eTxtMatrixC, eTxtStartX, eTxtStartY, eTxtMine;
     private Spinner spnOrientation;
@@ -167,7 +167,6 @@ public class AutoActivity extends ConnectionsActivity /*implements MyRecyclerVie
 
         //region FINDVIEW
         txtCronometro = findViewById(R.id.cronometro);
-        txtDistance = findViewById(R.id.distance);
         btnMain = findViewById(R.id.mainButton);
         btnManual = findViewById(R.id.manualButton);
         btnStart = findViewById(R.id.btnStartButton);
@@ -309,7 +308,7 @@ public class AutoActivity extends ConnectionsActivity /*implements MyRecyclerVie
     private void legoMain(EV3.Api api) {
         //final String TAG = Prelude.ReTAG("legoMain");
 
-        robot = new Robot(api, pixelGrid, this, txtDistance);
+        robot = new Robot(api, pixelGrid);
 
         //selezione della prova
         if (choosen == 1) {
