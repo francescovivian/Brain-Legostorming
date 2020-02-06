@@ -188,6 +188,24 @@ public class Robot {
     }
 
     public void forwardOnce() {
+        int step1 = 0, step2 = 635, step3 = 0;
+        try {
+            //fixOrientation();
+            fixOrientationGS();
+            fixTranslation();
+            Utility.sleep(1000);
+            lm.setPolarity(TachoMotor.Polarity.FORWARD);
+            lm.setStepSpeed(SPEED, step1, step2, step3, true);
+            rm.setPolarity(TachoMotor.Polarity.FORWARD);
+            rm.setStepSpeed(SPEED, step1, step2, step3, true);
+            rm.waitCompletion();
+            lm.waitCompletion();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void forwardOnce0() {
         int step1 = 0, step2 = 3100, step3 = 0;
         try {
             //fixOrientation();
@@ -384,20 +402,20 @@ public class Robot {
         pixelGrid.cellCheck(c,r,"MINA");
     }
     public void straightenMeGS(float angle) {
-        int step1 = 0, step2 = 400, step3 = 0;
+        int step1 = 0, step2 = 3, step3 = 0;
         try {//Destra
             if (angle > 0) {
                 step2 = -step2; //ricavo il valore postivo
                 lm.setPolarity(TachoMotor.Polarity.FORWARD);
-                lm.setTimeSpeed(4, step1, step2, step3, true);
+                lm.setStepSpeed(4, step1, step2, step3, true);
                 rm.setPolarity(TachoMotor.Polarity.BACKWARDS);
-                rm.setTimeSpeed(4, step1, step2, step3, true);
+                rm.setStepSpeed(4, step1, step2, step3, true);
             }//Sinistra
             else if (angle < 0) {
                 rm.setPolarity(TachoMotor.Polarity.FORWARD);
-                rm.setTimeSpeed(4, step1, step2, step3, true);
+                rm.setStepSpeed(4, step1, step2, step3, true);
                 lm.setPolarity(TachoMotor.Polarity.BACKWARDS);
-                lm.setTimeSpeed(4, step1, step2, step3, true);
+                lm.setStepSpeed(4, step1, step2, step3, true);
             }
             rm.waitCompletion();
             lm.waitCompletion();
@@ -414,12 +432,12 @@ public class Robot {
             else if (angle < -45)
                 angle += 90;
 
-            if (angle <= -2 || angle >= 2) {
+            if (angle <= -1 || angle >= 1) {
                 Utility.sleep(500);
                 straightenMeGS(angle);
                 Utility.sleep(250);
             }
-        }while (angle <= -2 || angle >= 2);
+        }while (angle <= -1 || angle >= 1);
     }
 
     //region Vecchio Raddrizzamento
