@@ -64,6 +64,7 @@ import com.example.brainlegostormingapp.ObjectOfInterest.Ball;
 import com.example.brainlegostormingapp.ObjectOfInterest.Line;
 import com.example.brainlegostormingapp.ObjectOfInterest.ObjectFind;
 import com.example.brainlegostormingapp.PixelGridView;
+import com.example.brainlegostormingapp.Position;
 import com.example.brainlegostormingapp.R;
 import com.example.brainlegostormingapp.Robot;
 import com.example.brainlegostormingapp.Tests.Test1;
@@ -103,8 +104,9 @@ public class AutoActivity extends ConnectionsActivity /*implements MyRecyclerVie
     private EV3 ev3;
     private Robot robot;
     private Mat frame;
-    private ArrayList<Ball> balls;
-    private ArrayList<Line> lines;
+    //private ArrayList<Ball> balls;
+    //private ArrayList<Line> lines;
+    private ArrayList<Position> positions;
     private GameField gameField;
     private Test1 test1;
     private Test2 test2;
@@ -135,6 +137,8 @@ public class AutoActivity extends ConnectionsActivity /*implements MyRecyclerVie
         // Comment here to generate a random name for the GroundStation
         //mName = generateRandomName();
         mName = "BrainLegostorming";
+
+        positions = new ArrayList<>();
 
         /*((TextView) findViewById(R.id.edit_key)).setText(KEY);
         ((TextView) findViewById(R.id.edit_key)).setTypeface(null, Typeface.BOLD);*/
@@ -1064,7 +1068,7 @@ public class AutoActivity extends ConnectionsActivity /*implements MyRecyclerVie
                 testoRicevuto = testoRicevuto.substring(0,testoRicevuto.length()-1);
                 String coordinata[]= testoRicevuto.split(";");
                 System.out.println(coordinata);
-                //positionReceived = new Position(Integer.parseInt(coordinata[0]),Integer.parseInt(coordinata[1]));
+                positions.add(new Position(Integer.parseInt(coordinata[0]),Integer.parseInt(coordinata[1])));
                 return;
             }
 
