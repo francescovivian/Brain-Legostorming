@@ -192,6 +192,7 @@ public class Robot {
         try {
             //fixOrientation();
             fixOrientationGS();
+            fixTranslation();
             lm.setPolarity(TachoMotor.Polarity.FORWARD);
             lm.setTimeSpeed(SPEED, step1, step2, step3, true);
             rm.setPolarity(TachoMotor.Polarity.FORWARD);
@@ -201,6 +202,10 @@ public class Robot {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void fixTranslation() {
+
     }
 
     public void forwardHalf() {
