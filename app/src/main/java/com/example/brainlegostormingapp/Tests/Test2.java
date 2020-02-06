@@ -48,7 +48,7 @@ public class Test2 extends Test {
         super(robot, field);
         this.context = context;
         //todo cambiare con il valore definitivo (dovrebbe essere 9)
-        this.totMine = 2;
+        this.totMine = 3;
         this.securedMine = 0;
         nRO=0;
         if(cRO=='s')
@@ -272,14 +272,13 @@ public class Test2 extends Test {
 
 
         //simulo il consumatore di posizioni ricevute
+        target = new Position(6,6);
+        positionList.add(target);
+        target = new Position(1,6);
+        positionList.add(target);
         target = new Position(1,1);
         positionList.add(target);
-        target = new Position(1,2);
-        positionList.add(target);
-        target = new Position(1,3);
-        positionList.add(target);
 
-        inizializzaTutto();
         while(this.securedMine<this.totMine){
             //todo: togliere il commento sotto qua una volta che implementato il riempimento del vettore di posizioni
             while(positionList.size()<1) {
@@ -287,10 +286,13 @@ public class Test2 extends Test {
             }
             target = positionList.remove(0);
 
+            inizializzaTutto();
             vaiA(target);
             vaiA(field.getStartPosition());
+            setOrientation((nRO+2)%4);
+            while (robotOrientation != ((nRO + 2) % 4))
+                Utility.sleep(100);
             mollaMina();
-            inizializzaTutto();
         }
     }
 
@@ -307,7 +309,7 @@ public class Test2 extends Test {
                 raccogliMina();
             }
             else if (minaRaccolta && sonoSuStart()){
-                setOrientation(2);
+                setOrientation((nRO+2)%4);
             }
             else if (minaRaccolta){
                 //se ho raccolto la mina devo tornare indietro seguendo il percorso inverso
@@ -461,17 +463,22 @@ public class Test2 extends Test {
             NewOrientationAux = newOrientation;
         }
         int movement = (NewOrientationAux - robotOrientation)%4;
+        if(movement<0)
+            movement+=4;
         if (movement == 1){
             robot.autoMove90Right();
-            movements.add("90RIGHT");
+            if(!minaRaccolta)
+                movements.add("90RIGHT");
         }
         else if (movement == 2){
             robot.autoMove180Right();
-            movements.add("180RIGHT");
+            if(!minaRaccolta)
+                movements.add("180RIGHT");
         }
         else if (movement == 3){
             robot.autoMove90Left();
-            movements.add("90LEFT");
+            if(!minaRaccolta)
+               movements.add("90LEFT");
         }
         //aggiorno l'orientamento scritto del robot
         //robotOrientation = (robotOrientation + movement)%4;
