@@ -321,7 +321,7 @@ public class AutoActivity extends ConnectionsActivity /*implements MyRecyclerVie
         }
         if (choosen == 2)
         {
-            test2 = new Test2(robot, gameField, orientation, getApplicationContext());
+            test2 = new Test2(robot, gameField, orientation, mine, getApplicationContext());
             //test2.startDiscovery();
             test2.start();
         }
@@ -1068,7 +1068,8 @@ public class AutoActivity extends ConnectionsActivity /*implements MyRecyclerVie
                 testoRicevuto = testoRicevuto.substring(0,testoRicevuto.length()-1);
                 String coordinata[]= testoRicevuto.split(";");
                 System.out.println(coordinata);
-                positions.add(new Position(Integer.parseInt(coordinata[0]),Integer.parseInt(coordinata[1])));
+                //positions.add(new Position(Integer.parseInt(coordinata[0]),Integer.parseInt(coordinata[1])));
+                test2.addNewPosition(new Position(Integer.parseInt(coordinata[0]),Integer.parseInt(coordinata[1])));
                 return;
             }
 

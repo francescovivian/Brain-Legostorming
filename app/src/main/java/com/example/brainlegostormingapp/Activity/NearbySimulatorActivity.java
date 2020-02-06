@@ -181,7 +181,7 @@ public class NearbySimulatorActivity extends AppCompatActivity {
 
         robot = new Robot(api);
 
-        test2 = new Test2(robot,gameField,orientation,getApplicationContext());
+        test2 = new Test2(robot,gameField,orientation,mine,getApplicationContext());
         test2.start();
     }
 }

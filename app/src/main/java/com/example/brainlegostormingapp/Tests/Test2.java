@@ -44,11 +44,11 @@ public class Test2 extends Test {
     private ArrayList<Position> cronologiaMovimenti;
     //Fine
 
-    public Test2(Robot robot, GameField field, char cRO, Context context) {
+    public Test2(Robot robot, GameField field, char cRO, int mine, Context context) {
         super(robot, field);
         this.context = context;
         //todo cambiare con il valore definitivo (dovrebbe essere 9)
-        this.totMine = 3;
+        this.totMine = mine;
         this.securedMine = 0;
         nRO=0;
         if(cRO=='s')
@@ -63,6 +63,13 @@ public class Test2 extends Test {
         this.finish=null;
         this.mainField=new int[field.getRow()][field.getColumn()];
     }
+
+    public void addNewPosition(Position p)
+    {
+        this.positionList.add(p);
+    }
+
+    // region NearbyPaolo
 
     public void sendPosition(Position position){
         //TODO implement the movement
@@ -178,7 +185,7 @@ public class Test2 extends Test {
 
             };
 
-
+    // endregion
 
     /*Inizio funzioni dell'algoritmo della seconda prova*/
 
@@ -272,13 +279,13 @@ public class Test2 extends Test {
 
 
         //simulo il consumatore di posizioni ricevute
-        target = new Position(6,6);
+        /*target = new Position(6,6);
         positionList.add(target);
         target = new Position(1,6);
         positionList.add(target);
         target = new Position(1,1);
         positionList.add(target);
-
+        */
         while(this.securedMine<this.totMine){
             //todo: togliere il commento sotto qua una volta che implementato il riempimento del vettore di posizioni
             while(positionList.size()<1) {
