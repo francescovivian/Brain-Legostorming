@@ -128,19 +128,19 @@ public class Robot {
     }
 
     public void autoMove90(char direction) {
-        int step1 = 0, step2 = 1000, step3 = 0;
+        int step1 = 0, step2 = 210, step3 = 0;
         try {
             fixOrientationGS();
             if (direction == 'r') {
                 lm.setPolarity(TachoMotor.Polarity.FORWARD);
-                lm.setTimeSpeed(SPEED, step1, step2, step3, true);
+                lm.setStepSpeed(SPEED, step1, step2, step3, true);
                 rm.setPolarity(TachoMotor.Polarity.BACKWARDS);
-                rm.setTimeSpeed(SPEED, step1, step2, step3, true);
+                rm.setStepSpeed(SPEED, step1, step2, step3, true);
             } else if (direction == 'l') {
                 rm.setPolarity(TachoMotor.Polarity.FORWARD);
-                rm.setTimeSpeed(SPEED, step1, step2, step3, true);
+                rm.setStepSpeed(SPEED, step1, step2, step3, true);
                 lm.setPolarity(TachoMotor.Polarity.BACKWARDS);
-                lm.setTimeSpeed(SPEED, step1, step2, step3, true);
+                lm.setStepSpeed(SPEED, step1, step2, step3, true);
             }
             rm.waitCompletion();
             lm.waitCompletion();
@@ -150,19 +150,19 @@ public class Robot {
     }
 
     public void autoMove180(char direction) {
-        int step1 = 0, step2 = 2000, step3 = 0;
+        int step1 = 0, step2 = 420, step3 = 0;
         try {
             fixOrientationGS();
             if (direction == 'r') {
                 lm.setPolarity(TachoMotor.Polarity.FORWARD);
-                lm.setTimeSpeed(SPEED, step1, step2, step3, true);
+                lm.setStepSpeed(SPEED, step1, step2, step3, true);
                 rm.setPolarity(TachoMotor.Polarity.BACKWARDS);
-                rm.setTimeSpeed(SPEED, step1, step2, step3, true);
+                rm.setStepSpeed(SPEED, step1, step2, step3, true);
             } else if (direction == 'l') {
                 rm.setPolarity(TachoMotor.Polarity.FORWARD);
-                rm.setTimeSpeed(SPEED, step1, step2, step3, true);
+                rm.setStepSpeed(SPEED, step1, step2, step3, true);
                 lm.setPolarity(TachoMotor.Polarity.BACKWARDS);
-                lm.setTimeSpeed(SPEED, step1, step2, step3, true);
+                lm.setStepSpeed(SPEED, step1, step2, step3, true);
             }
             rm.waitCompletion();
             lm.waitCompletion();
@@ -193,7 +193,6 @@ public class Robot {
             //fixOrientation();
             fixOrientationGS();
             fixTranslation();
-            Utility.sleep(1000);
             lm.setPolarity(TachoMotor.Polarity.FORWARD);
             lm.setStepSpeed(SPEED, step1, step2, step3, true);
             rm.setPolarity(TachoMotor.Polarity.FORWARD);
@@ -227,13 +226,13 @@ public class Robot {
     }
 
     public void forwardHalf() {
-        int step1 = 0, step2 = 1500, step3 = 0;
+        int step1 = 0, step2 = 300, step3 = 0;
         try {
             fixOrientationGS();
             lm.setPolarity(TachoMotor.Polarity.FORWARD);
-            lm.setTimeSpeed(SPEED, step1, step2, step3, true);
+            lm.setStepSpeed(SPEED, step1, step2, step3, true);
             rm.setPolarity(TachoMotor.Polarity.FORWARD);
-            rm.setTimeSpeed(SPEED, step1, step2, step3, true);
+            rm.setStepSpeed(SPEED, step1, step2, step3, true);
             rm.waitCompletion();
             lm.waitCompletion();
         } catch (IOException e) {
@@ -261,13 +260,13 @@ public class Robot {
     }
 
     public void backwardOnce() {
-        int step1 = 0, step2 = 3100, step3 = 0;
+        int step1 = 0, step2 = 635, step3 = 0;
         try {
             fixOrientationGS();
             lm.setPolarity(TachoMotor.Polarity.BACKWARDS);
-            lm.setTimeSpeed(SPEED, step1, step2, step3, true);
+            lm.setStepSpeed(SPEED, step1, step2, step3, true);
             rm.setPolarity(TachoMotor.Polarity.BACKWARDS);
-            rm.setTimeSpeed(SPEED, step1, step2, step3, true);
+            rm.setStepSpeed(SPEED, step1, step2, step3, true);
             rm.waitCompletion();
             lm.waitCompletion();
         } catch (IOException e) {
@@ -276,13 +275,13 @@ public class Robot {
     }
 
     public void backwardHalf() {
-        int step1 = 0, step2 = 1500, step3 = 0;
+        int step1 = 0, step2 = 300, step3 = 0;
         try {
             fixOrientationGS();
             lm.setPolarity(TachoMotor.Polarity.BACKWARDS);
-            lm.setTimeSpeed(SPEED, step1, step2, step3, true);
+            lm.setStepSpeed(SPEED, step1, step2, step3, true);
             rm.setPolarity(TachoMotor.Polarity.BACKWARDS);
-            rm.setTimeSpeed(SPEED, step1, step2, step3, true);
+            rm.setStepSpeed(SPEED, step1, step2, step3, true);
             rm.waitCompletion();
             lm.waitCompletion();
         } catch (IOException e) {
