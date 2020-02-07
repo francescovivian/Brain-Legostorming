@@ -98,6 +98,8 @@ public class AutoActivity extends ConnectionsActivity /*implements MyRecyclerVie
     private long tempoInizio, attuale;
     private int secondi, minuti, ore, millisecondi, myId;
 
+    private boolean test = false;
+
     int choosen;
 
     private BluetoothConnection.BluetoothChannel bluechan;
@@ -121,7 +123,7 @@ public class AutoActivity extends ConnectionsActivity /*implements MyRecyclerVie
     LinearLayout matrixView;
     private TextView txtCronometro;
     private Button btnMain, btnManual, btnStart, btnStop, btnSetMatrix, btnResetMatrix;
-    private EditText eTxtMatrixR, eTxtMatrixC, eTxtStartX, eTxtStartY, eTxtMine, eTxtIdRobot;
+    private EditText eTxtMatrixR, eTxtMatrixC, eTxtStartX, eTxtStartY, eTxtMine, eTxtIdRobot, eTxtKey;
     private Spinner spnOrientation;
     PixelGridView pixelGrid;
 
@@ -182,6 +184,7 @@ public class AutoActivity extends ConnectionsActivity /*implements MyRecyclerVie
         eTxtStartX = findViewById(R.id.eTxtStartX);
         eTxtStartY = findViewById(R.id.eTxtStartY);
         eTxtIdRobot = findViewById(R.id.eTxtIdRobot);
+        eTxtKey = findViewById(R.id.eTxtKey);
         matrixView = findViewById(R.id.matrixView);
         spnOrientation = findViewById(R.id.direction_spinner);
         spnOrientation.setSelection(1);
@@ -218,6 +221,7 @@ public class AutoActivity extends ConnectionsActivity /*implements MyRecyclerVie
                 startY = Integer.parseInt(eTxtStartY.getText().toString());
                 mine = Integer.parseInt(eTxtMine.getText().toString());
                 myId = Integer.parseInt(eTxtIdRobot.getText().toString());
+                KEY = eTxtKey.getText().toString();
                 orientation = Character.toLowerCase(String.valueOf(spnOrientation.getSelectedItem()).charAt(0));
                 Utility.elementToggle(eTxtMatrixR, eTxtMatrixC, eTxtStartX, eTxtStartY, eTxtMine, spnOrientation);
                 //compare btnStart e btnReset, scompare btnsetdim
@@ -329,6 +333,7 @@ public class AutoActivity extends ConnectionsActivity /*implements MyRecyclerVie
         }
         if (choosen == 3)
         {
+            test = true;
             test3 = new Test3(robot, gameField,mine);
             test3.start();
         }
@@ -1040,7 +1045,7 @@ public class AutoActivity extends ConnectionsActivity /*implements MyRecyclerVie
             // those are needed if you are a robot!
             Integer aux = Character.getNumericValue(str_bytes.charAt(0));
             if((aux >= 0 && aux <=6) && ((str_bytes.charAt(1)=='S'))){
-                if(aux == 0 || aux == myId) {
+                if((aux == 0 || aux == myId) && test) {
                     logD(
                             String.format(
                                     "STOP/RESUME message intercepted %s",
@@ -1060,7 +1065,7 @@ public class AutoActivity extends ConnectionsActivity /*implements MyRecyclerVie
             }
 
             if((aux >= 0 && aux <=6) && ((str_bytes.charAt(1)=='R'))){
-                if(aux == 0 || aux == myId) {
+                if((aux == 0 || aux == myId) && test) {
                     logD(
                             String.format(
                                     "STOP/RESUME message intercepted %s",
