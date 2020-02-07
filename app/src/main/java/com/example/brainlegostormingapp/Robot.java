@@ -145,7 +145,7 @@ public class Robot {
         try {
             fixOrientationGS();
             while (stop){
-                Utility.sleep(1000);
+                blinkForPause();
             }
             if (direction == 'r') {
                 lm.setPolarity(TachoMotor.Polarity.FORWARD);
@@ -170,7 +170,7 @@ public class Robot {
         try {
             fixOrientationGS();
             while (stop){
-                Utility.sleep(1000);
+                blinkForPause();
             }
             if (direction == 'r') {
                 lm.setPolarity(TachoMotor.Polarity.FORWARD);
@@ -213,7 +213,7 @@ public class Robot {
             fixOrientationGS();
             fixTranslation();
             while (stop){
-                Utility.sleep(1000);
+                blinkForPause();
             }
             lm.setPolarity(TachoMotor.Polarity.FORWARD);
             lm.setStepSpeed(SPEED, step1, step2, step3, true);
@@ -224,6 +224,13 @@ public class Robot {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void blinkForPause() {
+        pixelGrid.stopSignal();
+        Utility.sleep(500);
+        pixelGrid.stopSignal();
+        Utility.sleep(500);
     }
 
     public void forwardOnce0() {
@@ -251,8 +258,8 @@ public class Robot {
         int step1 = 0, step2 = 300, step3 = 0;
         try {
             fixOrientationGS();
-            while (stop){
-                Utility.sleep(1000);
+            while(stop){
+                blinkForPause();
             }
             lm.setPolarity(TachoMotor.Polarity.FORWARD);
             lm.setStepSpeed(SPEED, step1, step2, step3, true);
@@ -270,8 +277,8 @@ public class Robot {
         try {
             //fixOrientation();
             fixOrientationGS();
-            while (stop){
-                Utility.sleep(1000);
+            while(stop){
+                blinkForPause();
             }
             boolean isPresent = identifyBall();
             lm.setPolarity(TachoMotor.Polarity.FORWARD);
@@ -291,8 +298,8 @@ public class Robot {
         int step1 = 0, step2 = 635, step3 = 0;
         try {
             fixOrientationGS();
-            while (stop){
-                Utility.sleep(1000);
+            while(stop){
+                blinkForPause();
             }
             lm.setPolarity(TachoMotor.Polarity.BACKWARDS);
             lm.setStepSpeed(SPEED, step1, step2, step3, true);
@@ -309,8 +316,8 @@ public class Robot {
         int step1 = 0, step2 = 300, step3 = 0;
         try {
             fixOrientationGS();
-            while (stop){
-                Utility.sleep(1000);
+            while(stop){
+                blinkForPause();
             }
             lm.setPolarity(TachoMotor.Polarity.BACKWARDS);
             lm.setStepSpeed(SPEED, step1, step2, step3, true);

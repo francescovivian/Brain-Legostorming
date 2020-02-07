@@ -210,4 +210,12 @@ public class PixelGridView extends View {
 
         invalidate();
     }
+
+    public void stopSignal()
+    {
+        if (cellChecked[0][numRows-1] == 0) cellChecked[0][numRows-1] = 4;
+        else cellChecked[0][numRows-1] = 0;
+
+        invalidate();
+    }
 }
