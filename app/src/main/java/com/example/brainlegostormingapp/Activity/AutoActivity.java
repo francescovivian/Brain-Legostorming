@@ -98,7 +98,7 @@ public class AutoActivity extends ConnectionsActivity /*implements MyRecyclerVie
     private long tempoInizio, attuale;
     private int secondi, minuti, ore, millisecondi, myId;
 
-    private boolean test = false;
+    private boolean testTre = false, nearbyNeeded = false;
 
     int choosen;
 
@@ -203,8 +203,13 @@ public class AutoActivity extends ConnectionsActivity /*implements MyRecyclerVie
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, 1);
         } else avviaFotocamera();*/
 
+        if(choosen==2 || choosen == 3)
+        {
+            nearbyNeeded = true;
+        }
+
         if(choosen==3) {
-            test = true;
+            testTre = true;
             Utility.elementVisibilityToggle(txtKey, eTxtKey);
         }
 
@@ -1041,136 +1046,139 @@ public class AutoActivity extends ConnectionsActivity /*implements MyRecyclerVie
     /** {@see ConnectionsActivity#onReceive(Endpoint, Payload)} */
     @Override
     protected void onReceive(Endpoint endpoint, Payload payload) {
-        if (payload.getType() == Payload.Type.BYTES) {
-            byte[] bytes = payload.asBytes();
-            // comment this send if we are not the Groundstation anymore
-            //send(payload);
-            String str_bytes = new String(bytes);
+        if (nearbyNeeded){
+            if (payload.getType() == Payload.Type.BYTES) {
+                byte[] bytes = payload.asBytes();
+                // comment this send if we are not the Groundstation anymore
+                //send(payload);
+                String str_bytes = new String(bytes);
 
-            // those are needed if you are a robot!
-            Integer aux = Character.getNumericValue(str_bytes.charAt(0));
-            if((aux >= 0 && aux <=6) && ((str_bytes.charAt(1)=='S'))){
-                if((aux == 0 || aux == myId) && test) {
+                // those are needed if you are a robot!
+                Integer aux = Character.getNumericValue(str_bytes.charAt(0));
+                if((aux >= 0 && aux <=6) && ((str_bytes.charAt(1)=='S'))){
+                    if((aux == 0 || aux == myId) && testTre) {
+                        logD(
+                                String.format(
+                                        "STOP/RESUME message intercepted %s",
+                                        str_bytes));
+                        robot.stop();
+                        // il messaggio è per noi!
+                        return;
+                    }
+                    else {
+                        logD(
+                                String.format(
+                                        "STOP/RESUME message ignored %s",
+                                        str_bytes));
+                        // altrimenti lo ignoriamo
+                        return;
+                    }
+                }
+
+                if((aux >= 0 && aux <=6) && ((str_bytes.charAt(1)=='R'))){
+                    if((aux == 0 || aux == myId) && testTre) {
+                        logD(
+                                String.format(
+                                        "STOP/RESUME message intercepted %s",
+                                        str_bytes));
+                        robot.start();
+                        // il messaggio è per noi!
+                        return;
+                    }
+                    else {
+                        logD(
+                                String.format(
+                                        "STOP/RESUME message ignored %s",
+                                        str_bytes));
+                        // altrimenti lo ignoriamo
+                        return;
+                    }
+                }
+
+
+                if (str_bytes.toLowerCase().contains("obiettivo")) {
                     logD(
                             String.format(
-                                    "STOP/RESUME message intercepted %s",
+                                    "Recovery message: %s",
                                     str_bytes));
-                    robot.stop();
-                    // il messaggio è per noi!
+                    // messaggio del protocollo passivo
+                    String testoRicevuto = str_bytes.toLowerCase();
+                    testoRicevuto = testoRicevuto.replace("coordinate obiettivo:", "");
+                    testoRicevuto = testoRicevuto.substring(0,testoRicevuto.length()-1);
+                    String coordinata[]= testoRicevuto.split(";");
+                    System.out.println(coordinata);
+                    //positions.add(new Position(Integer.parseInt(coordinata[0]),Integer.parseInt(coordinata[1])));
+                    test2.addNewPosition(new Position(Integer.parseInt(coordinata[0]),Integer.parseInt(coordinata[1])));
                     return;
                 }
-                else {
+
+                if (str_bytes.toLowerCase().contains("recupero")) {
                     logD(
                             String.format(
-                                    "STOP/RESUME message ignored %s",
+                                    "Recovery message: %s",
                                     str_bytes));
-                    // altrimenti lo ignoriamo
+                    // messaggio del protocollo passivo (broadcast) terza prova
+                    String testoRicevuto = str_bytes.toLowerCase();
+                    testoRicevuto = testoRicevuto.replace("coordinate recupero:", "");
+                    testoRicevuto = testoRicevuto.substring(0,testoRicevuto.length()-1);
+                    String coordinata[]= testoRicevuto.split(";");
+                    System.out.println(coordinata);
                     return;
                 }
-            }
 
-            if((aux >= 0 && aux <=6) && ((str_bytes.charAt(1)=='R'))){
-                if((aux == 0 || aux == myId) && test) {
+                if (str_bytes.toLowerCase().contains("benvenuto")) {
                     logD(
                             String.format(
-                                    "STOP/RESUME message intercepted %s",
+                                    "Welcome message: %s",
                                     str_bytes));
-                    robot.start();
-                    // il messaggio è per noi!
+                    // messaggio di benvenuto
+                    System.out.println(str_bytes);
                     return;
                 }
-                else {
+
+                try {
+                    SecretKeySpec key = new SecretKeySpec(KEY.getBytes(), "DES");
+                    Cipher c = Cipher.getInstance("DES/ECB/ISO10126Padding");
+                    c.init(c.DECRYPT_MODE, key);
+
+                    byte[] plaintext = c.doFinal(bytes);
+                    String s = new String(plaintext);
+
                     logD(
                             String.format(
-                                    "STOP/RESUME message ignored %s",
-                                    str_bytes));
-                    // altrimenti lo ignoriamo
-                    return;
+                                    "BYTE received %s from endpoint %s",
+                                    s, endpoint.getName()));
+
+                } catch (NoSuchAlgorithmException e) {
+                    e.printStackTrace();
+                } catch (InvalidKeyException e) {
+                    logD(
+                            String.format(
+                                    "BYTE (crypted) received from %s unreadable (InvalidKeyException)",
+                                    endpoint.getName()));
+                    e.printStackTrace();
+                } catch (NoSuchPaddingException e) {
+                    logD(
+                            String.format(
+                                    "BYTE (crypted) received from %s unreadable (NoSuchPaddingException)",
+                                    endpoint.getName()));
+                    e.printStackTrace();
+                } catch (BadPaddingException e) {
+                    logD(
+                            String.format(
+                                    "BYTE (crypted) received from %s unreadable (BadPaddingException)",
+                                    endpoint.getName()));
+                    e.printStackTrace();
+                } catch (IllegalBlockSizeException e) {
+                    logD(
+                            String.format(
+                                    "BYTE (crypted) received from %s unreadable (IllegalBlockSizeException)",
+                                    endpoint.getName()));
+                    e.printStackTrace();
                 }
-            }
-
-
-            if (str_bytes.toLowerCase().contains("obiettivo")) {
-                logD(
-                        String.format(
-                                "Recovery message: %s",
-                                str_bytes));
-                // messaggio del protocollo passivo
-                String testoRicevuto = str_bytes.toLowerCase();
-                testoRicevuto = testoRicevuto.replace("coordinate obiettivo:", "");
-                testoRicevuto = testoRicevuto.substring(0,testoRicevuto.length()-1);
-                String coordinata[]= testoRicevuto.split(";");
-                System.out.println(coordinata);
-                //positions.add(new Position(Integer.parseInt(coordinata[0]),Integer.parseInt(coordinata[1])));
-                test2.addNewPosition(new Position(Integer.parseInt(coordinata[0]),Integer.parseInt(coordinata[1])));
-                return;
-            }
-
-            if (str_bytes.toLowerCase().contains("recupero")) {
-                logD(
-                        String.format(
-                                "Recovery message: %s",
-                                str_bytes));
-                // messaggio del protocollo passivo (broadcast) terza prova
-                String testoRicevuto = str_bytes.toLowerCase();
-                testoRicevuto = testoRicevuto.replace("coordinate recupero:", "");
-                testoRicevuto = testoRicevuto.substring(0,testoRicevuto.length()-1);
-                String coordinata[]= testoRicevuto.split(";");
-                System.out.println(coordinata);
-                return;
-            }
-
-            if (str_bytes.toLowerCase().contains("benvenuto")) {
-                logD(
-                        String.format(
-                                "Welcome message: %s",
-                                str_bytes));
-                // messaggio di benvenuto
-                System.out.println(str_bytes);
-                return;
-            }
-
-            try {
-                SecretKeySpec key = new SecretKeySpec(KEY.getBytes(), "DES");
-                Cipher c = Cipher.getInstance("DES/ECB/ISO10126Padding");
-                c.init(c.DECRYPT_MODE, key);
-
-                byte[] plaintext = c.doFinal(bytes);
-                String s = new String(plaintext);
-
-                logD(
-                        String.format(
-                                "BYTE received %s from endpoint %s",
-                                s, endpoint.getName()));
-
-            } catch (NoSuchAlgorithmException e) {
-                e.printStackTrace();
-            } catch (InvalidKeyException e) {
-                logD(
-                        String.format(
-                                "BYTE (crypted) received from %s unreadable (InvalidKeyException)",
-                                endpoint.getName()));
-                e.printStackTrace();
-            } catch (NoSuchPaddingException e) {
-                logD(
-                        String.format(
-                                "BYTE (crypted) received from %s unreadable (NoSuchPaddingException)",
-                                endpoint.getName()));
-                e.printStackTrace();
-            } catch (BadPaddingException e) {
-                logD(
-                        String.format(
-                                "BYTE (crypted) received from %s unreadable (BadPaddingException)",
-                                endpoint.getName()));
-                e.printStackTrace();
-            } catch (IllegalBlockSizeException e) {
-                logD(
-                        String.format(
-                                "BYTE (crypted) received from %s unreadable (IllegalBlockSizeException)",
-                                endpoint.getName()));
-                e.printStackTrace();
             }
         }
+
 
     }
 

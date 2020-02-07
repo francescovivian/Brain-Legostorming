@@ -141,9 +141,9 @@ public class Robot {
     }
 
     public void autoMove90(char direction) {
-        int step1 = 0, step2 = 210, step3 = 0;
+        int step1 = 0, step2 = 205, step3 = 0;
         try {
-            fixOrientationGS();
+            //fixOrientationGS();
             while (stop){
                 blinkForPause();
             }
@@ -166,9 +166,9 @@ public class Robot {
     }
 
     public void autoMove180(char direction) {
-        int step1 = 0, step2 = 420, step3 = 0;
+        int step1 = 0, step2 = 398, step3 = 0;
         try {
-            fixOrientationGS();
+            //fixOrientationGS();
             while (stop){
                 blinkForPause();
             }
