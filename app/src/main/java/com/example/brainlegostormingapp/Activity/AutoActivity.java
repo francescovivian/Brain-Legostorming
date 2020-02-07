@@ -1045,6 +1045,7 @@ public class AutoActivity extends ConnectionsActivity /*implements MyRecyclerVie
                             String.format(
                                     "STOP/RESUME message intercepted %s",
                                     str_bytes));
+                    robot.stop();
                     // il messaggio è per noi!
                     return;
                 }
@@ -1064,6 +1065,7 @@ public class AutoActivity extends ConnectionsActivity /*implements MyRecyclerVie
                             String.format(
                                     "STOP/RESUME message intercepted %s",
                                     str_bytes));
+                    robot.start();
                     // il messaggio è per noi!
                     return;
                 }

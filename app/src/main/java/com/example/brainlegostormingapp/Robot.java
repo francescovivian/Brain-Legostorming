@@ -30,7 +30,7 @@ import static com.example.brainlegostormingapp.Utility.Constant.*;
 public class Robot {
     private Motor rm, lm, hand;
 
-    private boolean minePickedUp;
+    private boolean minePickedUp, stop;
 
     private final UltrasonicSensor us;
     private final LightSensor ls;
@@ -102,6 +102,16 @@ public class Robot {
         }
     }
 
+    public void stop()
+    {
+        stop = true;
+    }
+
+    public void start()
+    {
+        stop = false;
+    }
+
     public boolean getMinePickedUp(){
         return this.minePickedUp;
     }
@@ -134,6 +144,9 @@ public class Robot {
         int step1 = 0, step2 = 210, step3 = 0;
         try {
             fixOrientationGS();
+            while (stop){
+                Utility.sleep(1000);
+            }
             if (direction == 'r') {
                 lm.setPolarity(TachoMotor.Polarity.FORWARD);
                 lm.setStepSpeed(SPEED, step1, step2, step3, true);
@@ -156,6 +169,9 @@ public class Robot {
         int step1 = 0, step2 = 420, step3 = 0;
         try {
             fixOrientationGS();
+            while (stop){
+                Utility.sleep(1000);
+            }
             if (direction == 'r') {
                 lm.setPolarity(TachoMotor.Polarity.FORWARD);
                 lm.setStepSpeed(SPEED, step1, step2, step3, true);
@@ -196,6 +212,9 @@ public class Robot {
             //fixOrientation();
             fixOrientationGS();
             fixTranslation();
+            while (stop){
+                Utility.sleep(1000);
+            }
             lm.setPolarity(TachoMotor.Polarity.FORWARD);
             lm.setStepSpeed(SPEED, step1, step2, step3, true);
             rm.setPolarity(TachoMotor.Polarity.FORWARD);
@@ -232,6 +251,9 @@ public class Robot {
         int step1 = 0, step2 = 300, step3 = 0;
         try {
             fixOrientationGS();
+            while (stop){
+                Utility.sleep(1000);
+            }
             lm.setPolarity(TachoMotor.Polarity.FORWARD);
             lm.setStepSpeed(SPEED, step1, step2, step3, true);
             rm.setPolarity(TachoMotor.Polarity.FORWARD);
@@ -248,6 +270,9 @@ public class Robot {
         try {
             //fixOrientation();
             fixOrientationGS();
+            while (stop){
+                Utility.sleep(1000);
+            }
             boolean isPresent = identifyBall();
             lm.setPolarity(TachoMotor.Polarity.FORWARD);
             lm.setTimeSpeed(SPEED, step1, step2, step3, true);
@@ -266,6 +291,9 @@ public class Robot {
         int step1 = 0, step2 = 635, step3 = 0;
         try {
             fixOrientationGS();
+            while (stop){
+                Utility.sleep(1000);
+            }
             lm.setPolarity(TachoMotor.Polarity.BACKWARDS);
             lm.setStepSpeed(SPEED, step1, step2, step3, true);
             rm.setPolarity(TachoMotor.Polarity.BACKWARDS);
@@ -281,6 +309,9 @@ public class Robot {
         int step1 = 0, step2 = 300, step3 = 0;
         try {
             fixOrientationGS();
+            while (stop){
+                Utility.sleep(1000);
+            }
             lm.setPolarity(TachoMotor.Polarity.BACKWARDS);
             lm.setStepSpeed(SPEED, step1, step2, step3, true);
             rm.setPolarity(TachoMotor.Polarity.BACKWARDS);
