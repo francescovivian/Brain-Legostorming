@@ -80,7 +80,7 @@
             android:digits="0123456789"
             android:importantForAutofill="no"
             android:inputType="number"
-            android:text="5"
+            android:text="0"
             android:textSize="25sp" />
 
         <TextView
@@ -98,7 +98,7 @@
             android:digits="0123456789"
             android:importantForAutofill="no"
             android:inputType="number"
-            android:text="3"
+            android:text="0"
             android:textSize="25sp" />
 
         <TextView
@@ -114,7 +114,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="25sp"
-            android:text="1"
+            android:text="0"
             android:inputType="numberSigned"
             android:importantForAutofill="no" />
 
@@ -156,7 +156,24 @@
             android:layout_height="wrap_content"
             android:importantForAutofill="no"
             android:inputType="numberSigned"
-            android:text="3"
+            android:text="0"
+            android:textSize="25sp" />
+
+        <TextView
+            android:id="@+id/txtIdRobot"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="ID:"
+            android:textSize="25sp"
+            tools:ignore="HardcodedText" />
+
+        <EditText
+            android:id="@+id/eTxtIdRobot"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:importantForAutofill="no"
+            android:inputType="numberSigned"
+            android:text="0"
             android:textSize="25sp" />
 
     </LinearLayout>

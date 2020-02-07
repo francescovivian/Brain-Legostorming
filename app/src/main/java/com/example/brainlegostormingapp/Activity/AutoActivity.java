@@ -96,7 +96,7 @@ public class AutoActivity extends ConnectionsActivity /*implements MyRecyclerVie
 {
     private static final String TAG = "AutoActivity";
     private long tempoInizio, attuale;
-    private int secondi, minuti, ore, millisecondi;
+    private int secondi, minuti, ore, millisecondi, myId;
 
     int choosen;
 
@@ -121,7 +121,7 @@ public class AutoActivity extends ConnectionsActivity /*implements MyRecyclerVie
     LinearLayout matrixView;
     private TextView txtCronometro;
     private Button btnMain, btnManual, btnStart, btnStop, btnSetMatrix, btnResetMatrix;
-    private EditText eTxtMatrixR, eTxtMatrixC, eTxtStartX, eTxtStartY, eTxtMine;
+    private EditText eTxtMatrixR, eTxtMatrixC, eTxtStartX, eTxtStartY, eTxtMine, eTxtIdRobot;
     private Spinner spnOrientation;
     PixelGridView pixelGrid;
 
@@ -181,6 +181,7 @@ public class AutoActivity extends ConnectionsActivity /*implements MyRecyclerVie
         eTxtMatrixC = findViewById(R.id.eTxtDimC);
         eTxtStartX = findViewById(R.id.eTxtStartX);
         eTxtStartY = findViewById(R.id.eTxtStartY);
+        eTxtIdRobot = findViewById(R.id.eTxtIdRobot);
         matrixView = findViewById(R.id.matrixView);
         spnOrientation = findViewById(R.id.direction_spinner);
         spnOrientation.setSelection(1);
@@ -216,6 +217,7 @@ public class AutoActivity extends ConnectionsActivity /*implements MyRecyclerVie
                 startX = Integer.parseInt(eTxtStartX.getText().toString());
                 startY = Integer.parseInt(eTxtStartY.getText().toString());
                 mine = Integer.parseInt(eTxtMine.getText().toString());
+                myId = Integer.parseInt(eTxtIdRobot.getText().toString());
                 orientation = Character.toLowerCase(String.valueOf(spnOrientation.getSelectedItem()).charAt(0));
                 Utility.elementToggle(eTxtMatrixR, eTxtMatrixC, eTxtStartX, eTxtStartY, eTxtMine, spnOrientation);
                 //compare btnStart e btnReset, scompare btnsetdim
@@ -312,7 +314,7 @@ public class AutoActivity extends ConnectionsActivity /*implements MyRecyclerVie
     private void legoMain(EV3.Api api) {
         //final String TAG = Prelude.ReTAG("legoMain");
 
-        robot = new Robot(api, pixelGrid);
+        robot = new Robot(api, pixelGrid, myId);
 
         //selezione della prova
         if (choosen == 1) {
@@ -1038,7 +1040,26 @@ public class AutoActivity extends ConnectionsActivity /*implements MyRecyclerVie
             // those are needed if you are a robot!
             Integer aux = Character.getNumericValue(str_bytes.charAt(0));
             if((aux >= 0 && aux <=6) && ((str_bytes.charAt(1)=='S'))){
-                if(aux == 0 || aux == 1) {
+                if(aux == 0 || aux == myId) {
+                    logD(
+                            String.format(
+                                    "STOP/RESUME message intercepted %s",
+                                    str_bytes));
+                    // il messaggio è per noi!
+                    return;
+                }
+                else {
+                    logD(
+                            String.format(
+                                    "STOP/RESUME message ignored %s",
+                                    str_bytes));
+                    // altrimenti lo ignoriamo
+                    return;
+                }
+            }
+
+            if((aux >= 0 && aux <=6) && ((str_bytes.charAt(1)=='R'))){
+                if(aux == 0 || aux == myId) {
                     logD(
                             String.format(
                                     "STOP/RESUME message intercepted %s",

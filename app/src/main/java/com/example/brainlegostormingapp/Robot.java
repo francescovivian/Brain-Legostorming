@@ -37,6 +37,7 @@ public class Robot {
     private final GyroSensor gs;
     private Float scartogs = null;
 
+    private int myId;
 
     //private ArrayList<Ball> balls;
     //private ArrayList<Line> lines;
@@ -67,7 +68,7 @@ public class Robot {
         }
     }
 
-    public Robot(EV3.Api api, PixelGridView pixelGrid) {
+    public Robot(EV3.Api api, PixelGridView pixelGrid, int myId) {
         /*
         camera.setVisibility(SurfaceView.VISIBLE);
         camera.setMaxFrameSize(640, 480);
@@ -76,6 +77,8 @@ public class Robot {
         frame = new Mat();*/
 
         this.pixelGrid = pixelGrid;
+
+        this.myId = myId;
 
         minePickedUp=false;
 
