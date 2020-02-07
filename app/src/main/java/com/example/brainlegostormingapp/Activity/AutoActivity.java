@@ -121,7 +121,7 @@ public class AutoActivity extends ConnectionsActivity /*implements MyRecyclerVie
     //private CameraBridgeViewBase camera;
     //private Camera myCamera;
     LinearLayout matrixView;
-    private TextView txtCronometro;
+    private TextView txtCronometro, txtKey;
     private Button btnMain, btnManual, btnStart, btnStop, btnSetMatrix, btnResetMatrix;
     private EditText eTxtMatrixR, eTxtMatrixC, eTxtStartX, eTxtStartY, eTxtMine, eTxtIdRobot, eTxtKey;
     private Spinner spnOrientation;
@@ -179,6 +179,7 @@ public class AutoActivity extends ConnectionsActivity /*implements MyRecyclerVie
         btnStop = findViewById(R.id.btnStopButton);
         btnSetMatrix = findViewById(R.id.btnSetDimMatrix);
         btnResetMatrix = findViewById(R.id.btnResetDimMatrix);
+        txtKey = findViewById(R.id.txtKey);
         eTxtMatrixR = findViewById(R.id.eTxtDimR);
         eTxtMatrixC = findViewById(R.id.eTxtDimC);
         eTxtStartX = findViewById(R.id.eTxtStartX);
@@ -201,6 +202,11 @@ public class AutoActivity extends ConnectionsActivity /*implements MyRecyclerVie
         /*if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, 1);
         } else avviaFotocamera();*/
+
+        if(choosen==3) {
+            test = true;
+            Utility.elementVisibilityToggle(txtKey, eTxtKey);
+        }
 
         btnMain.setOnClickListener(v -> {
             Intent mainIntent = new Intent(getBaseContext(), MainActivity.class);
@@ -333,7 +339,6 @@ public class AutoActivity extends ConnectionsActivity /*implements MyRecyclerVie
         }
         if (choosen == 3)
         {
-            test = true;
             test3 = new Test3(robot, gameField,mine);
             test3.start();
         }

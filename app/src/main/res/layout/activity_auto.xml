@@ -187,6 +187,7 @@
             android:id="@+id/txtKey"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             android:text="ID:"
             android:textSize="25sp"
             tools:ignore="HardcodedText" />
@@ -195,6 +196,7 @@
             android:id="@+id/eTxtKey"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             android:layout_weight="1"
             android:importantForAutofill="no"
             android:text="Inserire Key Nearby"
