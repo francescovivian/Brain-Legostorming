@@ -283,6 +283,7 @@ public class AutoActivity extends ConnectionsActivity /*implements MyRecyclerVie
             } catch (IOException e) {
                 e.printStackTrace();
                 Toast.makeText(this, "Connessione non stabilita", Toast.LENGTH_SHORT).show();
+                Utility.playMp3Audio(getApplicationContext(),"Error.m4a");
             }
         });
 
