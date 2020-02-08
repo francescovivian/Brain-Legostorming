@@ -274,7 +274,7 @@ public class AutoActivity extends ConnectionsActivity /*implements MyRecyclerVie
                 BluetoothConnection blueconn = new BluetoothConnection("EV3BL");
                 bluechan = blueconn.connect();
                 ev3 = new EV3(bluechan);
-                Utility.playMp3Audio(getApplicationContext(),"rally.mp3");
+                Utility.playMp3Audio(getApplicationContext(),"Startup.ogg");
                 Prelude.trap(() -> ev3.run(this::legoMain));
                 Toast.makeText(this, "Connessione stabilita con successo", Toast.LENGTH_SHORT).show();
                 Utility.elementToggle(btnMain, btnManual);
@@ -350,7 +350,7 @@ public class AutoActivity extends ConnectionsActivity /*implements MyRecyclerVie
 
         //suono di fine prova
         Utility.sleep(5000);
-        Utility.playMp3Audio(getApplicationContext(),"mammamia.mp3");
+        Utility.playMp3Audio(getApplicationContext(),"Shutdown.m4a");
         //Utility.sleep(5000);
         //btnStop.performClick();
     }
