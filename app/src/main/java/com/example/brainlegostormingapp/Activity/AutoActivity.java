@@ -203,11 +203,6 @@ public class AutoActivity extends ConnectionsActivity /*implements MyRecyclerVie
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, 1);
         } else avviaFotocamera();*/
 
-        if(choosen==2 || choosen == 3)
-        {
-            nearbyNeeded = true;
-        }
-
         if(choosen==3) {
             testTre = true;
             Utility.elementVisibilityToggle(txtKey, eTxtKey);
@@ -329,6 +324,10 @@ public class AutoActivity extends ConnectionsActivity /*implements MyRecyclerVie
 
     private void legoMain(EV3.Api api) {
         //final String TAG = Prelude.ReTAG("legoMain");
+        if(choosen==2 || choosen == 3)
+        {
+            nearbyNeeded = true;
+        }
 
         robot = new Robot(api, pixelGrid, myId);
 
