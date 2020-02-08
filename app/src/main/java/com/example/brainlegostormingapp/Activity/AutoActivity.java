@@ -281,7 +281,7 @@ public class AutoActivity extends ConnectionsActivity /*implements MyRecyclerVie
             }
         });
 
-        //termina la prova, calcola e mostra il tempo finale e TODO mostra la matrice
+        //termina la prova, calcola e mostra il tempo finale e mostra la matrice
         btnStop.setOnClickListener(v ->
         {
             robot.stopRLEngines();
@@ -298,12 +298,12 @@ public class AutoActivity extends ConnectionsActivity /*implements MyRecyclerVie
         });
 
         /*
-        //todo la matrice viene inizializzata qui. ma poi andrebbe aggiornata
+        //la matrice viene inizializzata qui. ma poi andrebbe aggiornata
         // (oppure inizializata in un onlick da qualche altra parte)
         //data to populate the RecyclerView with
         String[] data = {"0","0","0","MINA","0","0","0","ROBOT","0",};
 
-        //TODO sto codice va spostato ma intanto teniamolo qui finche ci lavoriamo sopra
+        //sto codice va spostato ma intanto teniamolo qui finche ci lavoriamo sopra
         //set up the RecyclerView
         RecyclerView recyclerView = findViewById(R.id.matrixField);
         //numberOfColumns andrebbe cambiato con il valore di colonne della matrice
@@ -315,7 +315,7 @@ public class AutoActivity extends ConnectionsActivity /*implements MyRecyclerVie
     }
 
     /*
-    //TODO: qui va messa la logica che si vuole implementare per un click sulla matrice
+    //qui va messa la logica che si vuole implementare per un click sulla matrice
     @Override
     public void onItemClick(View view, int position) {
         Log.i("TAG", "You clicked " + adapter.getItem(position) + ", which is at cell position " + position);

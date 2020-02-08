@@ -70,7 +70,7 @@ public class Test1 extends Test {
         backToStart();                  //torna alla posizione di partenza
         secureMine();                   //deposita la mina
         if(securedMine>=totMine)        //se ho finito di raccogliere mine
-            testEnded=true;             //TODO ma e se invece facessimo terminare la prova senza dover usare una miriade di if ovunque? (ditemi se e' fattibile)
+            testEnded=true;
         else                            //altrimenti torno alla posizione in cui ero
             backToLastMinePos();
     }

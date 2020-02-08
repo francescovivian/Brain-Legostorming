@@ -34,7 +34,7 @@ public class Test2 extends Test {
 
     //Variabili algoritmo
     int robotOrientation;
-    Position finish; //todo: servirà a contenere la posizione da raggiungere in quel momento
+    Position finish; //servirà a contenere la posizione da raggiungere in quel momento
     Position target;
     int nRO;
 
@@ -47,7 +47,6 @@ public class Test2 extends Test {
     public Test2(Robot robot, GameField field, char cRO, int mine, Context context) {
         super(robot, field);
         this.context = context;
-        //todo cambiare con il valore definitivo (dovrebbe essere 9)
         this.totMine = mine;
         this.securedMine = 0;
         nRO=0;
@@ -72,7 +71,7 @@ public class Test2 extends Test {
     // region NearbyPaolo
 
     public void sendPosition(Position position){
-        //TODO implement the movement
+
     }
 
     //start discovery è chiamata al click del btn Start nella AutoActivity
@@ -234,7 +233,7 @@ public class Test2 extends Test {
     }
 
     private boolean rightBallAhead() {
-        return true; //todo controlla che davanti a se ci sia la cella con la mina da raccogliere
+        return true; //controlla che davanti a se ci sia la cella con la mina da raccogliere
     }
 
     public void sorpassaSX(){
@@ -271,8 +270,6 @@ public class Test2 extends Test {
 
     public void algorithm(){
 
-
-        //todo: while che "consuma" tutte le posizioni ricevute tramite nearby
         //int md_best=md(field.getStartPosition(),finish);
 
         //ArrayList<Position> mosse=new ArrayList<Position>();
@@ -287,7 +284,6 @@ public class Test2 extends Test {
         positionList.add(target);
         */
         while(this.securedMine<this.totMine){
-            //todo: togliere il commento sotto qua una volta che implementato il riempimento del vettore di posizioni
             while(positionList.size()<1) {
                 Utility.sleep(100);
             }
@@ -446,7 +442,7 @@ public class Test2 extends Test {
             if(!robot.identifyBall())                           //se posso andarci
                 return newDirs.get(i);                          //ritorno tale direzione
             else {
-                for (int j = 0; j < allDirs.size(); j++){       //todo ci piace l'autismo
+                for (int j = 0; j < allDirs.size(); j++){       //rimuovo le posizioni non valide per il random successivo
                     if(allDirs.get(j) == newDirs.get(i))
                         allDirs.remove(j);
                 }
@@ -613,14 +609,14 @@ public class Test2 extends Test {
             Utility.sleep(5000);
             dodgeLeft();                        //tento il dodge verso sinistra
         }
-        else if (true) {                        //TODO ho muro a destra e voglio andare verso l'alto
+        else if (true) {                        //ho muro a destra e voglio andare verso l'alto
             robot.autoMove90Left();             //mi raddrizzo verso l'alto
             Utility.sleep(5000);
             dodgeLeft();                        //tento il dodge verso sinistra
         }
         else {
             robot.forwardOnce();                //mi sposto nella cella a destra
-            //TODO aggiorna posizione robot
+            //aggiorna posizione robot
             Utility.sleep(5000);
             robot.autoMove90Left();             //mi raddrizzo verso l'alto
             Utility.sleep(5000);
@@ -633,17 +629,17 @@ public class Test2 extends Test {
         if(robot.identifyBall()){               //trovo una pallina a sinistra
             robot.autoMove90Right();
             Utility.sleep(5000);
-            //TODO tornare indietro e provare a passare a sinistra da riga piu in basso
+            //tornare indietro e provare a passare a sinistra da riga piu in basso
             // o a destra da riga piu in basso
         }
-        else if (true) {                        //TODO ho muro a sinistra e voglio andare verso l'alto
+        else if (true) {                        //ho muro a sinistra e voglio andare verso l'alto
             robot.autoMove90Left();
             Utility.sleep(5000);
             dodgeLeft();
         }
         else {
             robot.forwardOnce();                //mi sposto nella cella a sinistra
-            //TODO aggiorna posizione robot
+            //aggiorna posizione robot
             Utility.sleep(5000);
             robot.autoMove90Left();             //mi raddrizzo verso l'alto
             Utility.sleep(5000);
@@ -651,12 +647,12 @@ public class Test2 extends Test {
     }
 
     public void alignToBall(){
-        if(true){ //todo posizione robot diversa da riga della mina
+        if(true){ //posizione robot diversa da riga della mina
             if(robot.identifyBall() && !rightBallAhead()){               //trovo una pallina davanti
                 dodgeRight();
             }
             else if(rightBallAhead()){
-                //todo raccoglie la mina
+                //raccoglie la mina
             }
             else {
                 robot.forwardOnce();
