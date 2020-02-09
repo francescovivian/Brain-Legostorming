@@ -296,6 +296,7 @@ public class AutoActivity extends ConnectionsActivity /*implements MyRecyclerVie
             //bluechan.close();
             Utility.elementToggle(btnMain, btnManual);
             Utility.elementVisibilityToggle(btnStop,txtCronometro,btnResetMatrix,eTxtStartX,eTxtStartY,eTxtMatrixC,eTxtMatrixR,spnOrientation,eTxtMine);
+            Utility.playMp3Audio(getApplicationContext(),"ThatsAllFolks.mp3");
         });
 
         /*
