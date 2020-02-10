@@ -361,6 +361,8 @@ public class Test2 extends Test {
         else if (nextMove == "90RIGHT") {
             robot.autoMove90Left();
             robotOrientation = (robotOrientation - 1)%4;
+            if(robotOrientation<0)
+                robotOrientation+=4;
         }
         Utility.sleep(5000);
     }
