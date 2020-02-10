@@ -329,6 +329,7 @@ public class Test2 extends Test {
                     movements.add("FW");
                     Utility.sleep(5000);
                     Position p = getNextPosition(best_dir);
+                    //
                     field.setRobotPosition(p.getX(), p.getY());
                 }
                 else{

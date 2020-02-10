@@ -232,7 +232,12 @@ public class AutoActivity extends ConnectionsActivity /*implements MyRecyclerVie
                 Utility.elementToggle(eTxtMatrixR, eTxtMatrixC, eTxtStartX, eTxtStartY, eTxtMine, spnOrientation);
                 //compare btnStart e btnReset, scompare btnsetdim
                 Utility.elementVisibilityToggle(btnStart,btnSetMatrix,btnResetMatrix);
-                pixelGrid = new PixelGridView(this, orientation);
+
+                if (choosen == 1)
+                    pixelGrid = new PixelGridView(this, orientation);
+                else
+                    pixelGrid = new PixelGridView(this, 's');
+
                 pixelGrid.setNumRows(dimR);
                 pixelGrid.setNumColumns(dimC);
 
