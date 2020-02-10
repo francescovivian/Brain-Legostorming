@@ -141,7 +141,7 @@ public class Robot {
     }
 
     public void autoMove90(char direction) {
-        int step1 = 0, step2 = 205, step3 = 0;
+        int step1 = 0, step2 = 1000, step3 = 0;
         try {
             //fixOrientationGS();
             while (stop){
@@ -149,14 +149,14 @@ public class Robot {
             }
             if (direction == 'r') {
                 lm.setPolarity(TachoMotor.Polarity.FORWARD);
-                lm.setStepSpeed(SPEED, step1, step2, step3, true);
+                lm.setTimeSpeed(SPEED, step1, step2, step3, true);
                 rm.setPolarity(TachoMotor.Polarity.BACKWARDS);
-                rm.setStepSpeed(SPEED, step1, step2, step3, true);
+                rm.setTimeSpeed(SPEED, step1, step2, step3, true);
             } else if (direction == 'l') {
                 rm.setPolarity(TachoMotor.Polarity.FORWARD);
-                rm.setStepSpeed(SPEED, step1, step2, step3, true);
+                rm.setTimeSpeed(SPEED, step1, step2, step3, true);
                 lm.setPolarity(TachoMotor.Polarity.BACKWARDS);
-                lm.setStepSpeed(SPEED, step1, step2, step3, true);
+                lm.setTimeSpeed(SPEED, step1, step2, step3, true);
             }
             rm.waitCompletion();
             lm.waitCompletion();
@@ -166,7 +166,7 @@ public class Robot {
     }
 
     public void autoMove180(char direction) {
-        int step1 = 0, step2 = 398, step3 = 0;
+        int step1 = 0, step2 = 2000, step3 = 0;
         try {
             //fixOrientationGS();
             while (stop){
@@ -174,14 +174,14 @@ public class Robot {
             }
             if (direction == 'r') {
                 lm.setPolarity(TachoMotor.Polarity.FORWARD);
-                lm.setStepSpeed(SPEED, step1, step2, step3, true);
+                lm.setTimeSpeed(SPEED, step1, step2, step3, true);
                 rm.setPolarity(TachoMotor.Polarity.BACKWARDS);
-                rm.setStepSpeed(SPEED, step1, step2, step3, true);
+                rm.setTimeSpeed(SPEED, step1, step2, step3, true);
             } else if (direction == 'l') {
                 rm.setPolarity(TachoMotor.Polarity.FORWARD);
-                rm.setStepSpeed(SPEED, step1, step2, step3, true);
+                rm.setTimeSpeed(SPEED, step1, step2, step3, true);
                 lm.setPolarity(TachoMotor.Polarity.BACKWARDS);
-                lm.setStepSpeed(SPEED, step1, step2, step3, true);
+                lm.setTimeSpeed(SPEED, step1, step2, step3, true);
             }
             rm.waitCompletion();
             lm.waitCompletion();
@@ -255,16 +255,16 @@ public class Robot {
     }
 
     public void forwardHalf() {
-        int step1 = 0, step2 = 300, step3 = 0;
+        int step1 = 0, step2 = 1500, step3 = 0;
         try {
             fixOrientationGS();
             while(stop){
                 blinkForPause();
             }
             lm.setPolarity(TachoMotor.Polarity.FORWARD);
-            lm.setStepSpeed(SPEED, step1, step2, step3, true);
+            lm.setTimeSpeed(SPEED, step1, step2, step3, true);
             rm.setPolarity(TachoMotor.Polarity.FORWARD);
-            rm.setStepSpeed(SPEED, step1, step2, step3, true);
+            rm.setTimeSpeed(SPEED, step1, step2, step3, true);
             rm.waitCompletion();
             lm.waitCompletion();
         } catch (IOException e) {
@@ -295,16 +295,16 @@ public class Robot {
     }
 
     public void backwardOnce() {
-        int step1 = 0, step2 = 635, step3 = 0;
+        int step1 = 0, step2 = 3100, step3 = 0;
         try {
             fixOrientationGS();
             while(stop){
                 blinkForPause();
             }
             lm.setPolarity(TachoMotor.Polarity.BACKWARDS);
-            lm.setStepSpeed(SPEED, step1, step2, step3, true);
+            lm.setTimeSpeed(SPEED, step1, step2, step3, true);
             rm.setPolarity(TachoMotor.Polarity.BACKWARDS);
-            rm.setStepSpeed(SPEED, step1, step2, step3, true);
+            rm.setTimeSpeed(SPEED, step1, step2, step3, true);
             rm.waitCompletion();
             lm.waitCompletion();
         } catch (IOException e) {
@@ -313,16 +313,16 @@ public class Robot {
     }
 
     public void backwardHalf() {
-        int step1 = 0, step2 = 300, step3 = 0;
+        int step1 = 0, step2 = 1500, step3 = 0;
         try {
             fixOrientationGS();
             while(stop){
                 blinkForPause();
             }
             lm.setPolarity(TachoMotor.Polarity.BACKWARDS);
-            lm.setStepSpeed(SPEED, step1, step2, step3, true);
+            lm.setTimeSpeed(SPEED, step1, step2, step3, true);
             rm.setPolarity(TachoMotor.Polarity.BACKWARDS);
-            rm.setStepSpeed(SPEED, step1, step2, step3, true);
+            rm.setTimeSpeed(SPEED, step1, step2, step3, true);
             rm.waitCompletion();
             lm.waitCompletion();
         } catch (IOException e) {
@@ -442,20 +442,20 @@ public class Robot {
         pixelGrid.cellCheck(c,r,"MINA");
     }
     public void straightenMeGS(float angle) {
-        int step1 = 0, step2 = 3, step3 = 0;
+        int step1 = 0, step2 = 400, step3 = 0;
         try {//Destra
             if (angle > 0) {
                 step2 = -step2; //ricavo il valore postivo
                 lm.setPolarity(TachoMotor.Polarity.FORWARD);
-                lm.setStepSpeed(4, step1, step2, step3, true);
+                lm.setTimeSpeed(4, step1, step2, step3, true);
                 rm.setPolarity(TachoMotor.Polarity.BACKWARDS);
-                rm.setStepSpeed(4, step1, step2, step3, true);
+                rm.setTimeSpeed(4, step1, step2, step3, true);
             }//Sinistra
             else if (angle < 0) {
                 rm.setPolarity(TachoMotor.Polarity.FORWARD);
-                rm.setStepSpeed(4, step1, step2, step3, true);
+                rm.setTimeSpeed(4, step1, step2, step3, true);
                 lm.setPolarity(TachoMotor.Polarity.BACKWARDS);
-                lm.setStepSpeed(4, step1, step2, step3, true);
+                lm.setTimeSpeed(4, step1, step2, step3, true);
             }
             rm.waitCompletion();
             lm.waitCompletion();
@@ -472,12 +472,12 @@ public class Robot {
             else if (angle < -45)
                 angle += 90;
 
-            if (angle <= -1 || angle >= 1) {
+            if (angle <= -2 || angle >= 2) {
                 Utility.sleep(500);
                 straightenMeGS(angle);
                 Utility.sleep(250);
             }
-        }while (angle <= -1 || angle >= 1);
+        }while (angle <= -2 || angle >= 2);
     }
 
     //region Vecchio Raddrizzamento
