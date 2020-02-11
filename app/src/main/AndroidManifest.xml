@@ -36,7 +36,6 @@
         android:theme="@style/AppTheme">
         <activity android:name=".Activity.ConnectionsActivity"></activity>
         <activity android:name=".Activity.AutoActivity" />
-        <activity android:name=".Activity.NearbySimulatorActivity" />
         <activity android:name=".Activity.ManualActivity" />
         <activity android:name=".Activity.MainActivity">
             <intent-filter>
