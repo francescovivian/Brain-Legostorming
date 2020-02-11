@@ -114,6 +114,7 @@ public class AutoActivity extends ConnectionsActivity /*implements MyRecyclerVie
     private Test2 test2;
     private Test3 test3;
 
+    private String KEY;
 
     private int dimR, dimC, startX, startY, mine;
     private char orientation;
@@ -441,7 +442,7 @@ public class AutoActivity extends ConnectionsActivity /*implements MyRecyclerVie
      */
     private TextView mDebugLogView;
 
-    private String KEY = "abcdefgh";
+    //private String KEY = "abcdefgh";
     PopupWindow popupWindow;
 
     /**
@@ -518,6 +519,9 @@ public class AutoActivity extends ConnectionsActivity /*implements MyRecyclerVie
                 this, getString(R.string.toast_connected, endpoint.getName()), Toast.LENGTH_SHORT)
                 .show();
         setState(State.CONNECTED);
+        String x = "Benvenuto sono BrainLegostorming";
+        byte[] bytes = x.getBytes();
+        send(Payload.fromBytes(bytes));
     }
 
     @Override
