@@ -244,6 +244,10 @@ public class Test2 extends Test {
             if(robotOrientation<0)
                 robotOrientation+=4;
         }
+        else if(nextMove == "180RIGHT"){
+            robot.autoMove180Right();
+            robotOrientation = (robotOrientation + 2)%4;
+        }
         Utility.sleep(5000);
     }
 
