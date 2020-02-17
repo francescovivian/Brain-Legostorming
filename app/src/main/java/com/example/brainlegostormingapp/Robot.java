@@ -206,7 +206,7 @@ public class Robot {
         lm.startEngine(speed, direction);
     }
 
-    public void forwardOnce() {
+    public void forwardOnce0() {
         int step1 = 0, step2 = 635, step3 = 0;
         try {
             //fixOrientation();
@@ -233,7 +233,7 @@ public class Robot {
         Utility.sleep(500);
     }
 
-    public void forwardOnce0() {
+    public void forwardOnce() {
         int step1 = 0, step2 = 3100, step3 = 0;
         try {
             //fixOrientation();

@@ -114,6 +114,7 @@ public class AutoActivity extends ConnectionsActivity /*implements MyRecyclerVie
     private Test2 test2;
     private Test3 test3;
 
+    private String KEY;
 
     private int dimR, dimC, startX, startY, mine;
     private char orientation;
@@ -121,7 +122,7 @@ public class AutoActivity extends ConnectionsActivity /*implements MyRecyclerVie
     //private CameraBridgeViewBase camera;
     //private Camera myCamera;
     LinearLayout matrixView;
-    private TextView txtCronometro, txtKey;
+    private TextView txtCronometro, txtKey, txtR, txtC, txtStartX, txtStartY, txtMine, txtIdRobot;
     private Button btnMain, btnManual, btnStart, btnStop, btnSetMatrix, btnResetMatrix;
     private EditText eTxtMatrixR, eTxtMatrixC, eTxtStartX, eTxtStartY, eTxtMine, eTxtIdRobot, eTxtKey;
     private Spinner spnOrientation;
@@ -179,6 +180,12 @@ public class AutoActivity extends ConnectionsActivity /*implements MyRecyclerVie
         btnStop = findViewById(R.id.btnStopButton);
         btnSetMatrix = findViewById(R.id.btnSetDimMatrix);
         btnResetMatrix = findViewById(R.id.btnResetDimMatrix);
+        txtR = findViewById(R.id.txtR);
+        txtC = findViewById(R.id.txtC);
+        txtStartX = findViewById(R.id.txtStartX);
+        txtStartY = findViewById(R.id.txtStartY);
+        txtMine = findViewById(R.id.txtMine);
+        txtIdRobot = findViewById(R.id.txtIdRobot);
         txtKey = findViewById(R.id.txtKey);
         eTxtMatrixR = findViewById(R.id.eTxtDimR);
         eTxtMatrixC = findViewById(R.id.eTxtDimC);
@@ -229,7 +236,7 @@ public class AutoActivity extends ConnectionsActivity /*implements MyRecyclerVie
                 myId = Integer.parseInt(eTxtIdRobot.getText().toString());
                 KEY = eTxtKey.getText().toString();
                 orientation = Character.toLowerCase(String.valueOf(spnOrientation.getSelectedItem()).charAt(0));
-                Utility.elementToggle(eTxtMatrixR, eTxtMatrixC, eTxtStartX, eTxtStartY, eTxtMine, spnOrientation);
+                Utility.elementToggle(eTxtMatrixR, eTxtMatrixC, eTxtStartX, eTxtStartY, eTxtMine, spnOrientation, eTxtIdRobot);
                 //compare btnStart e btnReset, scompare btnsetdim
                 Utility.elementVisibilityToggle(btnStart,btnSetMatrix,btnResetMatrix);
 
@@ -237,6 +244,8 @@ public class AutoActivity extends ConnectionsActivity /*implements MyRecyclerVie
                     pixelGrid = new PixelGridView(this, orientation);
                 else
                     pixelGrid = new PixelGridView(this, 's');
+
+                if (choosen == 3) Utility.elementToggle(eTxtKey);
 
                 pixelGrid.setNumRows(dimR);
                 pixelGrid.setNumColumns(dimC);
@@ -260,8 +269,9 @@ public class AutoActivity extends ConnectionsActivity /*implements MyRecyclerVie
                 eTxtStartX.setText("0");
                 eTxtStartY.setText("0");
                 spnOrientation.setSelection(1);
-                Utility.elementVisibilityToggle(btnResetMatrix,btnStart,btnSetMatrix,eTxtStartX,eTxtStartY,eTxtMatrixC,eTxtMatrixR,spnOrientation,eTxtMine,txtCronometro);
-                Utility.elementToggle(eTxtMatrixR, eTxtMatrixC, eTxtStartX, eTxtStartY, eTxtMine, spnOrientation);
+                Utility.elementVisibilityToggle(btnResetMatrix,btnSetMatrix,txtR,txtC,txtStartX,txtStartY,txtMine,txtIdRobot,eTxtStartX,eTxtStartY,eTxtMatrixC,eTxtMatrixR,spnOrientation,eTxtMine,eTxtIdRobot,txtCronometro);
+                Utility.elementToggle(eTxtMatrixR, eTxtMatrixC, eTxtStartX, eTxtStartY, eTxtMine, spnOrientation, eTxtIdRobot);
+                if (choosen == 3) Utility.elementToggle(eTxtKey);
             } catch (NumberFormatException ignored) {
                 ignored.printStackTrace();
             }
@@ -300,7 +310,7 @@ public class AutoActivity extends ConnectionsActivity /*implements MyRecyclerVie
             //ev3.cancel();
             //bluechan.close();
             Utility.elementToggle(btnMain, btnManual);
-            Utility.elementVisibilityToggle(btnStop,txtCronometro,btnResetMatrix,eTxtStartX,eTxtStartY,eTxtMatrixC,eTxtMatrixR,spnOrientation,eTxtMine);
+            Utility.elementVisibilityToggle(btnStop,txtCronometro,btnResetMatrix,txtR,txtC,txtStartX,txtStartY,txtMine,txtIdRobot,eTxtStartX,eTxtStartY,eTxtMatrixC,eTxtMatrixR,spnOrientation,eTxtMine,eTxtIdRobot);
             Utility.playMp3Audio(getApplicationContext(),"ThatsAllFolks.mp3");
         });
 
@@ -345,7 +355,6 @@ public class AutoActivity extends ConnectionsActivity /*implements MyRecyclerVie
         if (choosen == 2)
         {
             test2 = new Test2(robot, gameField, orientation, mine, getApplicationContext());
-            //test2.startDiscovery();
             test2.start();
         }
         if (choosen == 3)
@@ -441,7 +450,7 @@ public class AutoActivity extends ConnectionsActivity /*implements MyRecyclerVie
      */
     private TextView mDebugLogView;
 
-    private String KEY = "abcdefgh";
+    //private String KEY = "abcdefgh";
     PopupWindow popupWindow;
 
     /**
@@ -518,6 +527,9 @@ public class AutoActivity extends ConnectionsActivity /*implements MyRecyclerVie
                 this, getString(R.string.toast_connected, endpoint.getName()), Toast.LENGTH_SHORT)
                 .show();
         setState(State.CONNECTED);
+        String x = "Benvenuto sono BrainLegostorming";
+        byte[] bytes = x.getBytes();
+        send(Payload.fromBytes(bytes));
     }
 
     @Override

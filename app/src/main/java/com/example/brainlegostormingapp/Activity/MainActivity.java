@@ -53,7 +53,6 @@ public class MainActivity extends AppCompatActivity
         btnTest1 = findViewById(R.id.btnTest1);
         btnTest2 = findViewById(R.id.btnTest2);
         btnTest3 = findViewById(R.id.btnTest3);
-        btnFakeNearby = findViewById(R.id.btnNearby);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.READ_EXTERNAL_STORAGE}, 123);
@@ -91,10 +90,6 @@ public class MainActivity extends AppCompatActivity
             Intent autoIntent = new Intent(getBaseContext(),AutoActivity.class);
             autoIntent.putExtra("choosen",3);
             startActivity(autoIntent);
-        });
-        btnFakeNearby.setOnClickListener(v -> {
-            Intent nearbyIntent = new Intent(getBaseContext(), NearbySimulatorActivity.class);
-            startActivity(nearbyIntent);
         });
     }
 }
