@@ -354,7 +354,7 @@ public class AutoActivity extends ConnectionsActivity /*implements MyRecyclerVie
         }
         if (choosen == 2)
         {
-            test2 = new Test2(robot, gameField, orientation, mine, getApplicationContext());
+            test2 = new Test2(robot, gameField, orientation, mine);
             test2.start();
         }
         if (choosen == 3)

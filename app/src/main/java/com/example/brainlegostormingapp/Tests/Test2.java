@@ -23,7 +23,6 @@ import java.util.Random;
 
 public class Test2 extends Test {
 
-    private Context context;
     private String testoRicevuto;
     private static final Strategy STRATEGY = Strategy.P2P_STAR;
     private int IDRobot;
@@ -44,9 +43,8 @@ public class Test2 extends Test {
     private ArrayList<Position> cronologiaMovimenti;
     //Fine
 
-    public Test2(Robot robot, GameField field, char cRO, int mine, Context context) {
+    public Test2(Robot robot, GameField field, char cRO, int mine) {
         super(robot, field);
-        this.context = context;
         this.totMine = mine;
         this.securedMine = 0;
         nRO=0;
