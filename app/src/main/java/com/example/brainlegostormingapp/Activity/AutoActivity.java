@@ -360,7 +360,7 @@ public class AutoActivity extends ConnectionsActivity /*implements MyRecyclerVie
         if (choosen == 3)
         {
             test3 = new Test3(robot, gameField,mine);
-            test3.start();
+            //test3.start();
         }
 
         //suono di fine prova
