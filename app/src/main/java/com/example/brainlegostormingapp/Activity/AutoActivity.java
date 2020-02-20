@@ -1156,47 +1156,50 @@ public class AutoActivity extends ConnectionsActivity /*implements MyRecyclerVie
                     return;
                 }
 
-                try {
-                    SecretKeySpec key = new SecretKeySpec(KEY.getBytes(), "DES");
-                    Cipher c = Cipher.getInstance("DES/ECB/ISO10126Padding");
-                    c.init(c.DECRYPT_MODE, key);
+                if (testTre)
+                {
+                    try {
+                        SecretKeySpec key = new SecretKeySpec(KEY.getBytes(), "DES");
+                        Cipher c = Cipher.getInstance("DES/ECB/ISO10126Padding");
+                        c.init(c.DECRYPT_MODE, key);
 
-                    byte[] plaintext = c.doFinal(bytes);
-                    String s = new String(plaintext);
+                        byte[] plaintext = c.doFinal(bytes);
+                        String s = new String(plaintext);
 
-                    test3.addMessage(s);
+                        test3.addMessage(s);
 
-                    logD(
-                            String.format(
-                                    "BYTE received %s from endpoint %s",
-                                    s, endpoint.getName()));
+                        logD(
+                                String.format(
+                                        "BYTE received %s from endpoint %s",
+                                        s, endpoint.getName()));
 
-                } catch (NoSuchAlgorithmException e) {
-                    e.printStackTrace();
-                } catch (InvalidKeyException e) {
-                    logD(
-                            String.format(
-                                    "BYTE (crypted) received from %s unreadable (InvalidKeyException)",
-                                    endpoint.getName()));
-                    e.printStackTrace();
-                } catch (NoSuchPaddingException e) {
-                    logD(
-                            String.format(
-                                    "BYTE (crypted) received from %s unreadable (NoSuchPaddingException)",
-                                    endpoint.getName()));
-                    e.printStackTrace();
-                } catch (BadPaddingException e) {
-                    logD(
-                            String.format(
-                                    "BYTE (crypted) received from %s unreadable (BadPaddingException)",
-                                    endpoint.getName()));
-                    e.printStackTrace();
-                } catch (IllegalBlockSizeException e) {
-                    logD(
-                            String.format(
-                                    "BYTE (crypted) received from %s unreadable (IllegalBlockSizeException)",
-                                    endpoint.getName()));
-                    e.printStackTrace();
+                    } catch (NoSuchAlgorithmException e) {
+                        e.printStackTrace();
+                    } catch (InvalidKeyException e) {
+                        logD(
+                                String.format(
+                                        "BYTE (crypted) received from %s unreadable (InvalidKeyException)",
+                                        endpoint.getName()));
+                        e.printStackTrace();
+                    } catch (NoSuchPaddingException e) {
+                        logD(
+                                String.format(
+                                        "BYTE (crypted) received from %s unreadable (NoSuchPaddingException)",
+                                        endpoint.getName()));
+                        e.printStackTrace();
+                    } catch (BadPaddingException e) {
+                        logD(
+                                String.format(
+                                        "BYTE (crypted) received from %s unreadable (BadPaddingException)",
+                                        endpoint.getName()));
+                        e.printStackTrace();
+                    } catch (IllegalBlockSizeException e) {
+                        logD(
+                                String.format(
+                                        "BYTE (crypted) received from %s unreadable (IllegalBlockSizeException)",
+                                        endpoint.getName()));
+                        e.printStackTrace();
+                    }
                 }
             }
         }
