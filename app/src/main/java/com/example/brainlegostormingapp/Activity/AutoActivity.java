@@ -1098,7 +1098,7 @@ public class AutoActivity extends ConnectionsActivity /*implements MyRecyclerVie
                 }
 
                 if((aux >= 0 && aux <=6) && ((str_bytes.charAt(1)=='R'))){
-                    if((aux == 0 || aux == myId) && testTre) {
+                    if(endpoint.getName().equals("GroundStation") && (aux == 0 || aux == myId) && testTre) {
                         logD(
                                 String.format(
                                         "STOP/RESUME message intercepted %s",
