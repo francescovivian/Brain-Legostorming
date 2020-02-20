@@ -362,7 +362,7 @@ public class AutoActivity extends ConnectionsActivity /*implements MyRecyclerVie
         }
         if (choosen == 3)
         {
-            test3 = new Test3(robot, gameField,mine, getConnectionsClient(), getGsEndPointId());
+            test3 = new Test3(robot, gameField,mine, getConnectionsClient(), getGsEndPointId(), KEY);
             //test3.start();
         }
 
@@ -1128,7 +1128,6 @@ public class AutoActivity extends ConnectionsActivity /*implements MyRecyclerVie
                     testoRicevuto = testoRicevuto.replace("coordinate obiettivo:", "");
                     testoRicevuto = testoRicevuto.substring(0,testoRicevuto.length()-1);
                     String coordinata[]= testoRicevuto.split(";");
-                    System.out.println(coordinata);
                     //positions.add(new Position(Integer.parseInt(coordinata[0]),Integer.parseInt(coordinata[1])));
                     test2.addNewPosition(new Position(Integer.parseInt(coordinata[0]),Integer.parseInt(coordinata[1])));
                     return;
@@ -1144,7 +1143,6 @@ public class AutoActivity extends ConnectionsActivity /*implements MyRecyclerVie
                     testoRicevuto = testoRicevuto.replace("coordinate recupero:", "");
                     testoRicevuto = testoRicevuto.substring(0,testoRicevuto.length()-1);
                     String coordinata[]= testoRicevuto.split(";");
-                    System.out.println(coordinata);
                     return;
                 }
 
@@ -1154,7 +1152,6 @@ public class AutoActivity extends ConnectionsActivity /*implements MyRecyclerVie
                                     "Welcome message: %s",
                                     str_bytes));
                     // messaggio di benvenuto
-                    System.out.println(str_bytes);
                     return;
                 }
 
