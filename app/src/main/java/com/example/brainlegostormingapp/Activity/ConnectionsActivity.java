@@ -303,6 +303,7 @@ public abstract class ConnectionsActivity extends AppCompatActivity {
                                                 endpointId, info.getServiceId(), info.getEndpointName()));
 
                                 gsEndPointId = endpointId;
+
                                 if (getServiceId().equals(info.getServiceId())) {
                                     Endpoint endpoint = new Endpoint(endpointId, info.getEndpointName());
                                     mDiscoveredEndpoints.put(endpointId, endpoint);
