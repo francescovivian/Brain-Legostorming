@@ -91,15 +91,12 @@ import javax.crypto.spec.SecretKeySpec;
 import it.unive.dais.legodroid.lib.EV3;
 import it.unive.dais.legodroid.lib.comm.BluetoothConnection;
 import it.unive.dais.legodroid.lib.util.Prelude;
-import com.google.android.gms.nearby.connection.ConnectionsClient;
 
 public class AutoActivity extends ConnectionsActivity /*implements MyRecyclerViewAdapter.ItemClickListener*/
 {
     private static final String TAG = "AutoActivity";
     private long tempoInizio, attuale;
     private int secondi, minuti, ore, millisecondi, myId;
-
-    private ConnectionsClient connectionsClient;
 
     private boolean testTre = false, nearbyNeeded = false;
 
@@ -251,7 +248,7 @@ public class AutoActivity extends ConnectionsActivity /*implements MyRecyclerVie
                 if (choosen == 3)
                 {
                     Utility.elementToggle(eTxtKey);
-                    Test3 test = new Test3(robot, gameField, mine, connectionsClient, getGsEndPointId());
+                    Test3 test = new Test3(robot, gameField, mine, getConnectionsClient(), getGsEndPointId());
                     test.sendMessage();
                 }
 
@@ -367,7 +364,7 @@ public class AutoActivity extends ConnectionsActivity /*implements MyRecyclerVie
         }
         if (choosen == 3)
         {
-            test3 = new Test3(robot, gameField,mine, connectionsClient, getGsEndPointId());
+            test3 = new Test3(robot, gameField,mine, getConnectionsClient(), getGsEndPointId());
             //test3.start();
         }
 
@@ -538,8 +535,7 @@ public class AutoActivity extends ConnectionsActivity /*implements MyRecyclerVie
         String x = "Benvenuto sono BrainLegostorming";
         byte[] bytes = x.getBytes();
         //send(Payload.fromBytes(bytes));
-        connectionsClient = getConnectionsClient();
-        connectionsClient.sendPayload(getGsEndPointId(),Payload.fromBytes(bytes));
+        getConnectionsClient().sendPayload(getGsEndPointId(),Payload.fromBytes(bytes));
     }
 
     @Override
