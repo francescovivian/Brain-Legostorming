@@ -1143,6 +1143,7 @@ public class AutoActivity extends ConnectionsActivity /*implements MyRecyclerVie
                     testoRicevuto = testoRicevuto.replace("coordinate recupero:", "");
                     testoRicevuto = testoRicevuto.substring(0,testoRicevuto.length()-1);
                     String coordinata[]= testoRicevuto.split(";");
+                    test3.addNewPosition(new Position(Integer.parseInt(coordinata[0]),Integer.parseInt(coordinata[1])));
                     return;
                 }
 
@@ -1162,6 +1163,8 @@ public class AutoActivity extends ConnectionsActivity /*implements MyRecyclerVie
 
                     byte[] plaintext = c.doFinal(bytes);
                     String s = new String(plaintext);
+
+                    test3.addMessage(s);
 
                     logD(
                             String.format(
