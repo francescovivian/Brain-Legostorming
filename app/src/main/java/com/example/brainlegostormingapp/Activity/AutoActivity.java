@@ -248,8 +248,6 @@ public class AutoActivity extends ConnectionsActivity /*implements MyRecyclerVie
                 if (choosen == 3)
                 {
                     Utility.elementToggle(eTxtKey);
-                    Test3 test = new Test3(robot, gameField, mine, getConnectionsClient(), getGsEndPointId());
-                    test.sendMessage();
                 }
 
                 pixelGrid.setNumRows(dimR);
