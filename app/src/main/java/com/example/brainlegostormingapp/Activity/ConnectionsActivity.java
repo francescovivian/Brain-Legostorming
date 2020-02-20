@@ -61,6 +61,8 @@ public abstract class ConnectionsActivity extends AppCompatActivity {
 
     private static final int REQUEST_CODE_REQUIRED_PERMISSIONS = 1;
 
+    private String gsEndPointId;
+
     /** Our handler to Nearby Connections. */
     private ConnectionsClient mConnectionsClient;
 
@@ -300,6 +302,7 @@ public abstract class ConnectionsActivity extends AppCompatActivity {
                                                 "onEndpointFound(endpointId=%s, serviceId=%s, endpointName=%s)",
                                                 endpointId, info.getServiceId(), info.getEndpointName()));
 
+                                gsEndPointId = endpointId;
                                 if (getServiceId().equals(info.getServiceId())) {
                                     Endpoint endpoint = new Endpoint(endpointId, info.getEndpointName());
                                     mDiscoveredEndpoints.put(endpointId, endpoint);
@@ -590,5 +593,15 @@ public abstract class ConnectionsActivity extends AppCompatActivity {
         public String toString() {
             return String.format("Endpoint{id=%s, name=%s}", id, name);
         }
+    }
+
+    protected ConnectionsClient getConnectionsClient()
+    {
+        return mConnectionsClient;
+    }
+
+    protected String getGsEndPointId()
+    {
+        return gsEndPointId;
     }
 }
