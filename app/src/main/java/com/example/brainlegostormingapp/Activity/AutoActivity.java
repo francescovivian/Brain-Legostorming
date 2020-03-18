@@ -67,6 +67,7 @@ import com.example.brainlegostormingapp.PixelGridView;
 import com.example.brainlegostormingapp.Position;
 import com.example.brainlegostormingapp.R;
 import com.example.brainlegostormingapp.Robot;
+import com.example.brainlegostormingapp.Tests.Recovery;
 import com.example.brainlegostormingapp.Tests.Test1;
 import com.example.brainlegostormingapp.Tests.Test2;
 import com.example.brainlegostormingapp.Tests.Test3;
@@ -1166,7 +1167,13 @@ public class AutoActivity extends ConnectionsActivity /*implements MyRecyclerVie
                         byte[] plaintext = c.doFinal(bytes);
                         String s = new String(plaintext);
 
-                        test3.addMessage(s);
+                        String testoRicevuto = s.toLowerCase();
+                        testoRicevuto = testoRicevuto.replace("coordinate recupero:", "");
+                        testoRicevuto = testoRicevuto.substring(0,testoRicevuto.length()-1);
+                        String coordinata[]= testoRicevuto.split(";");
+                        Recovery r = new Recovery(Integer.parseInt(coordinata[0]),Integer.parseInt(coordinata[1]),Long.parseLong(coordinata[2]));
+
+                        test3.addMessage(r);
 
                         logD(
                                 String.format(
